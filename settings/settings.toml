@@ -1,0 +1,18 @@
+[appearance]
+colorscheme = 'warlock'
+syntax = 'on'
+
+[appearance.set]
+cursorline = ''
+lazyredraw = ''
+background = 'dark'
+guicursor = 'n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor'
+
+[appearance.set.termguicolors]
+if = 'has("termguicolors")'
+
+[folding]
+
+[folding.set]
+foldlevel = '0'
+foldmethod = 'marker'

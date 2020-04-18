@@ -1,0 +1,15 @@
+{
+  "coc.preferences.colorSupport": true,
+  "diagnostic.errorSign": "✖",
+  "diagnostic.warningSign":"•",
+  "diagnostic.infoSign":"⊡",
+  "javascript.validate.enable": false,
+  "python.formatting.provider": "black",
+  "python.linting.mypyEnabled": true,
+  "python.linting.banditEnabled": true,
+  "python.linting.prospectorEnabled": true,
+  "diagnostic-languageserver.filetypes": {
+    "sh": "shellcheck"
+  },
+  "coc.preferences.formatOnSaveFiletypes": ["css", "javascript", "javascript-react", "typescript"]
+}

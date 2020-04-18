@@ -1,0 +1,222 @@
+[[plugins]]
+repo = 'Shougo/context_filetype.vim'
+
+[[plugins]]
+repo='dstein64/vim-startuptime'
+on_cmd=['StartupTime']
+
+[[plugins]]
+repo = 'kristijanhusak/defx-icons'
+on_source=['defx.nvim']
+
+[[plugins]]
+repo='moll/vim-bbye'
+on_cmd=['Bdelete', 'Bwipeout']
+hook_add='''
+Shortcut (buffers) Delete buffer
+ \ nnoremap <Leader>q :Bdelete<CR>
+'''
+
+[[plugins]]
+repo='danro/rename.vim'
+on_cmd=['Rename', 'rename']
+
+[[plugins]]
+repo = 'thinca/vim-ft-diff_fold'
+on_ft='diff'
+
+[[plugins]]
+repo = 'thinca/vim-ft-help_fold'
+on_ft='help'
+
+[[plugins]]
+repo='rcmdnk/vim-markdown'
+on_ft="markdown"
+
+[[plugins]]
+repo='HerringtonDarkholme/yats.vim'
+on_ft="typescript"
+
+[[plugins]]
+repo='AndrewRadev/tagalong.vim'
+
+[[plugins]]
+repo='captbaritone/better-indent-support-for-php-with-html'
+on_ft='php'
+
+[[plugins]]
+repo = 'Shougo/defx.nvim'
+hook_post_source = '''
+Shortcut (defx) <Leader>\ load defx
+  \ nnoremap <Leader>\ :Defx<CR>
+'''
+hook_source = '''
+call defx#custom#option('_', {
+    \ 'winwidth': 30,
+    \ 'split': 'vertical',
+    \ 'direction': 'topleft',
+    \ 'show_ignored_files': 0,
+    \ 'buffer_name': 'defxplorer',
+    \ 'columns': 'icons:indent:filename:type',
+    \ 'toggle': 1,
+    \ 'resume': 1,
+    \ })
+'''
+[plugins.ftplugin]
+defx = '''
+nnoremap <silent><buffer><expr> <CR> defx#do_action('drop')
+nnoremap <silent><buffer><expr> c
+\ defx#do_action('copy')
+nnoremap <silent><buffer><expr> m
+\ defx#do_action('move')
+nnoremap <silent><buffer><expr> p
+\ defx#do_action('paste')
+nnoremap <silent><buffer><expr> l
+\ defx#do_action('open')
+nnoremap <silent><buffer><expr> E
+\ defx#do_action('open', 'vsplit')
+nnoremap <silent><buffer><expr> P
+\ defx#do_action('open', 'pedit')
+nnoremap <silent><buffer><expr> o
+\ defx#do_action('open_or_close_tree')
+nnoremap <silent><buffer><expr> K
+\ defx#do_action('new_directory')
+nnoremap <silent><buffer><expr> N
+\ defx#do_action('new_file')
+nnoremap <silent><buffer><expr> M
+\ defx#do_action('new_multiple_files')
+nnoremap <silent><buffer><expr> C
+\ defx#do_action('toggle_columns', 'mark:indent:icon:filename:type:size:time')
+nnoremap <silent><buffer><expr> S
+\ defx#do_action('toggle_sort', 'time')
+nnoremap <silent><buffer><expr> d
+\ defx#do_action('remove')
+nnoremap <silent><buffer><expr> r
+\ defx#do_action('rename')
+nnoremap <silent><buffer><expr> !
+\ defx#do_action('execute_command')
+nnoremap <silent><buffer><expr> x
+\ defx#do_action('execute_system')
+nnoremap <silent><buffer><expr> yy
+\ defx#do_action('yank_path')
+nnoremap <silent><buffer><expr> .
+\ defx#do_action('toggle_ignored_files')
+nnoremap <silent><buffer><expr> ;
+\ defx#do_action('repeat')
+nnoremap <silent><buffer><expr> h
+\ defx#do_action('cd', ['..'])
+nnoremap <silent><buffer><expr> ~
+\ defx#do_action('cd')
+nnoremap <silent><buffer><expr> q
+\ defx#do_action('quit')
+nnoremap <silent><buffer><expr> <Space>
+\ defx#do_action('toggle_select') . 'j'
+nnoremap <silent><buffer><expr> *
+\ defx#do_action('toggle_select_all')
+nnoremap <silent><buffer><expr> j
+\ line('.') == line('$') ? 'gg' : 'j'
+nnoremap <silent><buffer><expr> k
+\ line('.') == 1 ? 'G' : 'k'
+nnoremap <silent><buffer><expr> <C-l>
+\ defx#do_action('redraw')
+nnoremap <silent><buffer><expr> <C-g>
+\ defx#do_action('print')
+nnoremap <silent><buffer><expr> cd
+\ defx#do_action('change_vim_cwd')
+'''
+
+[[plugins]]
+repo = 'Shougo/echodoc.vim'
+on_event = 'CompleteDone'
+hook_source = '''
+let g:echodoc#type = 'virtual'
+call echodoc#enable()
+'''
+
+[[plugins]]
+repo = 'ncm2/float-preview.nvim'
+on_source = 'deoplete.nvim'
+if = 'has("nvim")'
+hook_source = '''
+let g:float_preview#docked = 0
+let g:float_preview#max_width = 60
+let g:float_preview#max_height = 20
+'''
+
+[[plugins]]
+repo = 'dankneon/vim' 
+
+[[plugins]]
+repo = 'matze/vim-move'
+
+[[plugins]]
+repo = 'ntk148v/vim-horizon' 
+
+[[plugins]]
+repo = 'romainl/Apprentice' 
+
+[[plugins]]
+repo = 'pgdouyon/vim-yin-yang' 
+
+[[plugins]]
+repo = 'kana/vim-repeat'
+
+[[plugins]]
+repo = 'tyru/caw.vim'
+on_map = {nx = '<Plug>'}
+hook_add = '''
+function! InitCaw() abort
+  if !&l:modifiable
+    silent! nunmap <buffer> gc
+    silent! xunmap <buffer> gc
+    silent! nunmap <buffer> gcc
+    silent! xunmap <buffer> gcc
+  else
+    nmap <buffer> gc <Plug>(caw:prefix)
+    xmap <buffer> gc <Plug>(caw:prefix)
+    nmap <buffer> gcc <Plug>(caw:hatpos:toggle)
+    xmap <buffer> gcc <Plug>(caw:hatpos:toggle)
+  endif
+endfunction
+autocmd MyAutoCmd FileType * call InitCaw()
+call InitCaw()
+'''
+
+[[plugins]]
+repo = 'Olical/vim-enmasse'
+
+[[plugins]]
+repo = 'moll/vim-bbye'
+
+[[plugins]]
+repo = 'matze/vim-move'
+
+[[plugins]]
+repo = 'tpope/vim-surround'
+
+[[plugins]]
+repo = 'tpope/vim-fugitive'
+
+[[plugins]]
+repo = 'tpope/vim-repeat'
+
+[[plugins]]
+repo = 'christoomey/vim-conflicted'
+
+# [[plugins]]
+# repo = 'chrisbra/NrrwRgn'
+
+[[plugins]]
+repo = 'junegunn/goyo.vim'
+
+[[plugins]]
+repo = 'easymotion/vim-easymotion'
+
+[[plugins]]
+repo = 'wellle/targets.vim'
+
+[[plugins]]
+repo = 'xolox/vim-reload'
+
+[[plugins]]
+repo = 'xolox/vim-misc'
