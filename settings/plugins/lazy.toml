@@ -34,8 +34,18 @@ repo='rcmdnk/vim-markdown'
 on_ft="markdown"
 
 [[plugins]]
-repo='HerringtonDarkholme/yats.vim'
+repo='leafgarland/typescript-vim'
 on_ft="typescript"
+
+[[plugins]]
+repo='neoclide/jsonc.vim'
+on_ft=['json', 'jsonc']
+hook_add='''
+augroup jsonc_ft
+  au!
+  autocmd BufNewFile,BufRead *.json set syntax=jsonc
+augroup END
+'''
 
 [[plugins]]
 repo='AndrewRadev/tagalong.vim'

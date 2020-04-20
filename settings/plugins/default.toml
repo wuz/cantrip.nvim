@@ -62,7 +62,7 @@ Shortcut (sessions) <Leader>ms Make and save new vim session
 [[plugins]]
 repo = 'sheerun/vim-polyglot'
 hook_add = '''
-let g:polyglot_disabled = ['markdown', 'tsx', 'typescript', 'csv']
+let g:polyglot_disabled = ['markdown', 'tsx', 'typescript', 'csv', 'json']
 '''
 
 [[plugins]]

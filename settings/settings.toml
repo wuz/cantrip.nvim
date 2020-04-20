@@ -14,5 +14,5 @@ if = 'has("termguicolors")'
 [folding]
 
 [folding.set]
-foldlevel = '0'
+foldlevel = '2'
 foldmethod = 'marker'
