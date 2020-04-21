@@ -8,8 +8,7 @@ let maplocalleader = "\\"
 
 if &compatible
   set nocompatible
-endif
-
+endif 
 if has('vim_starting') && empty(argv())
   syntax off
 endif
@@ -26,8 +25,6 @@ augroup MyAutoCmd
   autocmd FileType,Syntax,BufNewFile,BufNew,BufRead *?
         \ call rc#on_filetype()
   autocmd CursorHold *.toml syntax sync minlines=300
-  autocmd VimEnter * call dein#call_hook('source')
-  autocmd VimEnter * call dein#call_hook('post_source')
 augroup END
 augroup filetypedetect
 augroup END
@@ -37,5 +34,10 @@ call rc#source_rc("settings.vim")
 
 if has('vim_starting') && !empty(argv())
   call rc#on_filetype()
+endif
+
+let s:backups_dir = expand('%:p:h').'/backups/'
+if !isdirectory(s:backups_dir)
+  silent execute '! mkdir' s:backups_dir
 endif
 
