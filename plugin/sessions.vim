@@ -1,9 +1,5 @@
 function! s:MakeSession(...)
-  if a:session_name
-    let b:sessiondir = $HOME . "/.config/nvim/sessions" . a:0
-  else
-    let b:sessiondir = $HOME . "/.config/nvim/sessions" . getcwd()
-  endif
+  let b:sessiondir = $HOME . "/.config/nvim/sessions" . getcwd()
   if (filewritable(b:sessiondir) != 2)
     exe 'silent !mkdir -p ' b:sessiondir
     redraw!
@@ -13,11 +9,7 @@ function! s:MakeSession(...)
 endfunction
 
 function! s:LoadSession(...)
-  if a:session_name
-    let b:sessiondir = $HOME . "/.config/nvim/sessions" . a:0
-  else
-    let b:sessiondir = $HOME . "/.config/nvim/sessions" . getcwd()
-  endif
+  let b:sessiondir = $HOME . "/.config/nvim/sessions" . getcwd()
   let b:sessionfile = b:sessiondir . "/session.vim"
   if (filereadable(b:sessionfile))
     exe 'source ' b:sessionfile

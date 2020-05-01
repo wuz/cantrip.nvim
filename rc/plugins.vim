@@ -12,6 +12,7 @@ endif
 
 let g:dein#install_progress_type = 'title'
 let g:dein#enable_notification = 1
+let g:dein#auto_recache = 1
 let g:dein#install_log_filename = '~/dein.log'
 
 let s:path = expand('$CACHE/dein')
@@ -23,7 +24,7 @@ if dein#load_state(s:path)
   let s:ft_toml = s:settings_base . 'filetype.toml'
 
   call dein#begin(s:path, [
-        \ expand('<sfile>'), s:default_toml, s:lazy_toml, s:ft_toml
+        \ '~/.config/nvim/vimrc', expand('<sfile>'), s:default_toml, s:lazy_toml, s:ft_toml
         \ ])
 
   call dein#load_toml(s:default_toml, {'lazy': 0})
@@ -32,10 +33,10 @@ if dein#load_state(s:path)
 
   call dein#end()
   call dein#save_state()
-  call dein#call_hook('source')
-  call dein#call_hook('post_source')
 endif
 
+call dein#call_hook('source')
+call dein#call_hook('post_source')
 
 if !has('vim_starting') && dein#check_install()
   call dein#install()

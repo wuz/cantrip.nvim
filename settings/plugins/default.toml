@@ -2,77 +2,87 @@
 repo = 'Shougo/dein.vim'
 
 [[plugins]]
-repo='sunaku/vim-shortcut'
-hook_post_source='''
-Shortcut (shortcuts) show shortcut menu and run chosen shortcut
-			\ noremap <Tab><Tab> :Shortcuts<CR>
+repo='https://git.sr.ht/~wuz/scuttle.vim'
+hook_add='''
+command! -nargs=+ Scuttle call scuttle#add(<q-args>, expand('<sfile>'), expand('<slnum>'))
+command! ScuttleList call scuttle#list()
 
-Shortcut (basics) insert line with <Leader>Enter
-			\ nnoremap <Leader><CR> o<esc>
+Scuttle <Tab><Tab> Show Scuttle List
+nnoremap <Tab><Tab> :ScuttleList<CR>
 
-Shortcut (basics) unhighlight everything
-			\ nnoremap <Leader>x :noh<CR>
+Scuttle <Leader>Enter (basics) insert new line in visual mode
+nnoremap <Leader><CR> o<esc>
+Scuttle <Leader>x (basics) unhighlight everything
+nnoremap <Leader>x :noh<CR>
 
-Shortcut (windows) open window in floating
-			\ nnoremap <Leader>+ :call CreateCenteredFloatingWindow(50, 50)<CR>:terminal<CR>a
+Scuttle <Leader>+ (windows) open floating terminal
+nnoremap <Leader>+ :call CreateCenteredFloatingWindow(50, 50)<CR>:terminal<CR>a
 
-Shortcut (buffers) <Leader>[ for previous buffer
-			\ nnoremap <Leader>[ :bprev<CR>
-Shortcut (buffers) <Leader>] for next buffer
-			\ nnoremap <Leader>] :bnext<CR>
+Scuttle <Leader>b (denite) show buffer list
+nmap <Leader>b :Denite buffer<CR>
+Scuttle <Leader>t (denite) show project dir
+nmap <Leader>t :DeniteProjectDir file/rec<CR>
+Scuttle <Leader>g (denite) grep with denit
+nnoremap <Leader>g :<C-u>Denite grep:. -no-empty<CR>
 
-Shortcut (movement) keep search term centered while navigating forward
-			\ nnoremap n nzzzv
-Shortcut (movement) keep search term centered while navigating forward
-			\ nnoremap N Nzzzv
+Scuttle <Leader>[ (buffers) previous buffer
+nnoremap <Leader>[ :bprev<CR>
+Scuttle <Leader] (buffers) next buffer
+nnoremap <Leader>] :bnext<CR>
 
-Shortcut (searching/replace) <Leader>a Open ripgrep search
-			\ nnoremap <Leader>a :Rg<CR>
-Shortcut (searching/replace) <Leader>G Ripgrep search for word under cursor
-			\ nmap <expr> <leader>G ':Rg \b'.expand('<cword>').'\b<cr>'
+Scuttle n (movement) keep search term centered while navigating forward
+nnoremap n nzzzv
+
+Scuttle N (movement) keep search term centered while navigating forward
+nnoremap N Nzzzv
+
+Scuttle <Leader>a (searching/replace) Open ripgrep search
+nnoremap <Leader>a :Rg<CR>
+Scuttle <Leader>G (searching/replace) Ripgrep search for word under cursor
+nmap <expr> <leader>G ':Rg \b'.expand('<cword>').'\b<cr>'
 
 " Shortcut (searching/replace) <Leader>f Edit quickfix buffer
-"			\ map <Leader>f :EnMasse<CR>
+" map <Leader>f :EnMasse<CR>
 
-Shortcut (copy/paste) <Leader>y Yank to system clipboard
-			\ vmap <Leader>y "+y 
-Shortcut (copy/paste) <Leader>d Delete to system clipboard
-			\ vmap <Leader>d "+d 
-Shortcut (copy/paste) <Leader>p Paste from system clipboard (below)
-			\ nmap <Leader>p "+p 
+Scuttle <Leader>y (copy/paste) Yank to system clipboard
+vmap <Leader>y "+y 
+Scuttle <Leader>d (copy/paste) Delete to system clipboard
+vmap <Leader>d "+d 
+Scuttle <Leader>p (copy/paste) Paste from system clipboard (below)
+nmap <Leader>p "+p 
 vmap <Leader>p "+p
 
-Shortcut (copy/paste) <Leader>P Paste from system clipboard (above)
-			\ nmap <Leader>P "+P
+Scuttle <Leader>P (copy/paste) Paste from system clipboard (above)
+nmap <Leader>P "+P
 vmap <Leader>P "+P
 
-Shortcut (searching/replace) <Leader>r Replace globally
-			\ vmap <Leader>r "hy:%s/<C-r>h//gc<left><left><left>
+Scuttle <Leader>r (searching/replace) Replace globally
+vmap <Leader>r "hy:%s/<C-r>h//gc<left><left><left>
 
+Scuttle <Leader>1 (colors) Toggle Semantic highlighting
 nnoremap <Leader>1 :SemanticHighlightToggle<cr>
 
-" nnoremap <leader>j :<C-u>DeniteCursorWord grep:.<CR>
+Scuttle <Leader>ls (sessions) Load last vim session
+nmap <Leader>ls <Plug>(load-session)
 
-Shortcut (sessions) <Leader>ls Load last vim session
-      \ nmap <Leader>ls <Plug>(load-session)
-Shortcut (sessions) <Leader>ms Make and save new vim session
-      \ nmap <Leader>ms <Plug>(make-session)
+Scuttle <Leader>ms (sessions) Make and save new vim session
+nmap <Leader>ms <Plug>(make-session)
+
+Scuttle <Leader><Tab> (wiki) Open VimwikiIndex
+nnoremap <Leader><Tab> :VimwikiIndex<CR>
 '''
 
 [[plugins]]
-repo = 'sheerun/vim-polyglot'
-hook_add = '''
+repo='chaoren/vim-wordmotion'
+
+[[plugins]]
+repo='sheerun/vim-polyglot'
+hook_add='''
 let g:polyglot_disabled = ['markdown', 'tsx', 'typescript', 'csv', 'json']
 '''
 
 [[plugins]]
 repo='matze/vim-move'
-hook_add='''
- echom "MOVE ADDED"
-'''
-hook_source='''
- echom "MOVE SOURCED"
-'''
 
 [[plugins]]
 repo = 'mhinz/vim-startify' 
@@ -149,14 +159,6 @@ endfunction
 
 call s:profile(s:denite_options)
 
-Shortcut (denite) <Leader>b show buffer list
- \ nmap <Leader>b :Denite buffer<CR>
-" Shortcut (denite) Y neoyank
-"  \ nmap Y :Denite neoyank<CR>
-Shortcut (denite) <Leader>t show project dir
-  \ nmap <Leader>t :DeniteProjectDir file/rec<CR>
-Shortcut (denite) <Leader>g grep with denit
- \ nnoremap <Leader>g :<C-u>Denite grep:. -no-empty<CR>
 '''
 [plugins.ftplugin]
 denite-filter='''
@@ -232,6 +234,9 @@ let g:buftabline_show = 2
 repo = 'https://git.sr.ht/~wuz/warlock'
 
 [[plugins]]
+repo = 'owickstrom/vim-colors-paramount'
+
+[[plugins]]
 repo = 'Shougo/deoplete.nvim'
 
 [[plugins]]
@@ -243,16 +248,16 @@ merged = 0
 repo = 'junegunn/fzf.vim'
 depends=['vim-shortcut']
 hook_post_source='''
-Shortcut (fzf) <C-P> Open files menu
- \ noremap <C-P> :Files<CR>
-Shortcut (fzf) <C-T> Open tags menu 
- \ noremap <C-T> :Tags<CR>
-Shortcut (fzf) Open editing history menu
- \ noremap <C-M> :History<CR>
-Shortcut (fzf) Open a sibling files 
- \ noremap <C-D> :Siblings<CR>
-Shortcut (fzf) <C-B> Open buffers selection menu
- \ nmap <C-B> :Buffers<CR>
+" Shortcut (fzf) <C-P> Open files menu
+noremap <C-P> :Files<CR>
+" Shortcut (fzf) <C-T> Open tags menu 
+noremap <C-T> :Tags<CR>
+" Shortcut (fzf) Open editing history menu
+noremap <C-M> :History<CR>
+" Shortcut (fzf) Open a sibling files 
+noremap <C-D> :Siblings<CR>
+" Shortcut (fzf) <C-B> Open buffers selection menu
+nmap <C-B> :Buffers<CR>
 '''
 
 [[plugins]]
@@ -265,44 +270,44 @@ highlight link CocInfoSign Comment
 highlight link CocWarningSign Search
 '''
 hook_post_source='''
-Shortcut (coc) <Leader>f Format current selection
- \ vmap <leader>f  <Plug>(coc-format-selected)
- \|nmap <leader>f  <Plug>(coc-format-selected)
+" Shortcut (coc) <Leader>f Format current selection
+vmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
 
-Shortcut (coc) K to show documentation in preview window.
- \ nnoremap <silent> K :call <SID>show_documentation()<CR>
+" Shortcut (coc) K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-Shortcut (coc) <Leader>cr Rename
- \ nmap <leader>cr  <Plug>(coc-rename)
+" Shortcut (coc) <Leader>cr Rename
+nmap <leader>cr  <Plug>(coc-rename)
 
-Shortcut (coc) <Leader>co show outline
- \ nnoremap <silent> <leader>co  :<C-u>CocList outline<cr>
+" Shortcut (coc) <Leader>co show outline
+nnoremap <silent> <leader>co  :<C-u>CocList outline<cr>
 
-Shortcut (coc) <Leader>cs coc show symbols
- \ nnoremap <silent> <leader>cs  :<C-u>CocList -I symbols<cr>
+" Shortcut (coc) <Leader>cs coc show symbols
+nnoremap <silent> <leader>cs  :<C-u>CocList -I symbols<cr>
 
-Shortcut (coc) <Leader>cl List errors
- \ nnoremap <silent> <leader>cl  :<C-u>CocList locationlist<cr>
+" Shortcut (coc) <Leader>cl List errors
+nnoremap <silent> <leader>cl  :<C-u>CocList locationlist<cr>
 
-Shortcut (coc) <Leader>cc list commands available in tsserver (and others)
- \ nnoremap <silent> <leader>cc  :<C-u>CocList commands<cr>
+" Shortcut (coc) <Leader>cc list commands available in tsserver (and others)
+nnoremap <silent> <leader>cc  :<C-u>CocList commands<cr>
 
-Shortcut (coc) <Leader>cR restart when tsserver gets wonky
- \ nnoremap <silent> <leader>cR  :<C-u>CocRestart<CR>
+" Shortcut (coc) <Leader>cR restart when tsserver gets wonky
+nnoremap <silent> <leader>cR  :<C-u>CocRestart<CR>
 
-Shortcut (coc) <Leader>cl view all errors
- \ nnoremap <silent> <leader>cl  :<C-u>CocList locationlist<CR>
+" Shortcut (coc) <Leader>cl view all errors
+nnoremap <silent> <leader>cl  :<C-u>CocList locationlist<CR>
 
-Shortcut (coc) <Leader>cx manage extensions
- \ nnoremap <silent> <leader>cx  :<C-u>CocList extensions<cr>
+" Shortcut (coc) <Leader>cx manage extensions
+nnoremap <silent> <leader>cx  :<C-u>CocList extensions<cr>
 
-Shortcut (coc) <Leader>cf rename the current word in the cursor
- \ nmap <leader>cf  <Plug>(coc-format-selected)
+" Shortcut (coc) <Leader>cf rename the current word in the cursor
+nmap <leader>cf  <Plug>(coc-format-selected)
 vmap <leader>cf  <Plug>(coc-format-selected)
 
-Shortcut (coc) <Leader>ca run code actions
- \ vmap <leader>ca  <Plug>(coc-codeaction-selected)
- \|nmap <leader>ca  <Plug>(coc-codeaction-selected)
+" Shortcut (coc) <Leader>ca run code actions
+vmap <leader>ca  <Plug>(coc-codeaction-selected)
+nmap <leader>ca  <Plug>(coc-codeaction-selected)
 '''
 hook_source='''
 autocmd CursorHold * silent call CocActionAsync('highlight')
@@ -363,3 +368,21 @@ nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 [[plugins]]
 repo="lambdalisue/gina.vim"
+
+
+# [[plugins]]
+# repo='michal-h21/vim-zettel'
+# hook_add='''
+# let g:zettel_format = "%y%m%d-%H%M"
+# let g:zettel_fzf_command = "rg --column --line-number --ignore-case --no-heading --color=always "
+# let g:zettel_default_mappings = 0 
+# " This is basically the same as the default configuration
+# augroup filetype_vimwiki
+#   autocmd!
+#   autocmd FileType vimwiki imap <silent> [[ [[<esc><Plug>ZettelSearchMap
+#   autocmd FileType vimwiki nmap T <Plug>ZettelYankNameMap
+#   autocmd FileType vimwiki xmap z <Plug>ZettelNewSelectedMap
+#   autocmd FileType vimwiki nmap gZ <Plug>ZettelReplaceFileWithLink
+# augroup END
+# '''
+
