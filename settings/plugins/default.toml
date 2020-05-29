@@ -44,6 +44,9 @@ nmap <expr> <leader>G ':Rg \b'.expand('<cword>').'\b<cr>'
 " Shortcut (searching/replace) <Leader>f Edit quickfix buffer
 " map <Leader>f :EnMasse<CR>
 
+Scuttle (buffers) Delete buffer
+nnoremap <Leader>q :Bdelete<CR>
+
 Scuttle <Leader>y (copy/paste) Yank to system clipboard
 vmap <Leader>y "+y 
 Scuttle <Leader>d (copy/paste) Delete to system clipboard
@@ -369,6 +372,11 @@ nnoremap <silent> K :call <SID>show_documentation()<CR>
 [[plugins]]
 repo="lambdalisue/gina.vim"
 
+[[plugins]]
+repo='moll/vim-bbye'
+
+[[plugins]]
+repo = 'tpope/vim-surround'
 
 # [[plugins]]
 # repo='michal-h21/vim-zettel'

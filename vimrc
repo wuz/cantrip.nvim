@@ -58,7 +58,7 @@ if has('vim_starting') && !empty(argv())
   call rc#on_filetype()
 endif
 
-let s:backups_dir = fnamemodify('$MYVIMRC',':p:h').'/backups/'
-if !isdirectory(s:backups_dir)
-  silent execute '! mkdir' s:backups_dir
-endif
+" let s:backups_dir = fnamemodify('$MYVIMRC',':p:h').'/backups/'
+" if !isdirectory(s:backups_dir)
+"   silent execute '! mkdir' s:backups_dir
+" endif

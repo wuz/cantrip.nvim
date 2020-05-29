@@ -20,19 +20,6 @@ repo='dstein64/vim-startuptime'
 on_cmd=['StartupTime']
 
 [[plugins]]
-repo = 'kristijanhusak/defx-icons'
-on_source=['defx.nvim']
-
-
-[[plugins]]
-repo='moll/vim-bbye'
-on_cmd=['Bdelete', 'Bwipeout']
-hook_add='''
-" Shortcut (buffers) Delete buffer
-nnoremap <Leader>q :Bdelete<CR>
-'''
-
-[[plugins]]
 repo='danro/rename.vim'
 on_cmd=['Rename', 'rename']
 
@@ -70,6 +57,14 @@ repo='captbaritone/better-indent-support-for-php-with-html'
 on_ft='php'
 
 [[plugins]]
+repo = 'kristijanhusak/defx-icons'
+on_source=['defx.nvim']
+
+[[plugins]]
+repo = 'kristijanhusak/defx-git'
+on_source=['defx.nvim']
+
+[[plugins]]
 repo = 'Shougo/defx.nvim'
 hook_post_source = '''
 " Shortcut (defx) <Leader>\ load defx
@@ -82,7 +77,7 @@ call defx#custom#option('_', {
     \ 'direction': 'topleft',
     \ 'show_ignored_files': 0,
     \ 'buffer_name': 'defxplorer',
-    \ 'columns': 'icons:indent:filename:type',
+    \ 'columns': 'git:icons:indent:filename:type',
     \ 'toggle': 1,
     \ 'resume': 1,
     \ })
@@ -215,9 +210,6 @@ repo = 'moll/vim-bbye'
 
 [[plugins]]
 repo = 'matze/vim-move'
-
-[[plugins]]
-repo = 'tpope/vim-surround'
 
 [[plugins]]
 repo = 'tpope/vim-fugitive'

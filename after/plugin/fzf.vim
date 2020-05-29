@@ -16,7 +16,7 @@ let g:fzf_action = {
 let $FZF_DEFAULT_COMMAND='fd --type f'
 let $FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all --ansi --reverse --multi --filepath-word
+let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all --ansi --reverse --multi
   \ --color=dark
   \ --color=bg+:#4f5987,bg:#1d1f30,spinner:#39ffba,hl:#858db7
   \ --color=fg:#eff0f6,header:#eff0f6,info:#858db7,pointer:#ff476e
@@ -34,10 +34,10 @@ command! -bang -nargs=? -complete=dir Siblings call fzf#vim#files(<q-args>,
 
 command! -bang -nargs=* Rg call fzf#vim#grep(
                                   \ 'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1, 
-                                  \ fzf#vim#with_preview({}), <bang>0
+                                  \ fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0
                               \ )
 
 command! -bang -nargs=* RgWord call fzf#vim#grep(
                                   \ 'rg --column --line-number  --no-heading --color=always --smart-case -w '.shellescape(<q-args>), 1, 
-                                  \ fzf#vim#with_preview({}), <bang>0
+                                  \ fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0
                               \ )
