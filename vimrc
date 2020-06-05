@@ -53,12 +53,13 @@ let $CACHE = expand('~/.cache')
 
 call rc#source_rc("plugins.vim")
 call rc#source_rc("settings.vim")
+call rc#source_rc("theme_overrides.vim")
 
 if has('vim_starting') && !empty(argv())
   call rc#on_filetype()
 endif
 
-" let s:backups_dir = fnamemodify('$MYVIMRC',':p:h').'/backups/'
-" if !isdirectory(s:backups_dir)
-"   silent execute '! mkdir' s:backups_dir
-" endif
+let s:backups_dir = fnamemodify(expand('$MYVIMRC'),':p:h').'/backups/'
+if !isdirectory(s:backups_dir)
+  silent execute '! mkdir' s:backups_dir
+endif
