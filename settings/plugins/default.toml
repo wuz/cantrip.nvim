@@ -44,8 +44,6 @@ nmap <expr> <leader>G ':Rg \b'.expand('<cword>').'\b<cr>'
 " Shortcut (searching/replace) <Leader>f Edit quickfix buffer
 " map <Leader>f :EnMasse<CR>
 
-Scuttle (buffers) Delete buffer
-nnoremap <Leader>q :Bdelete<CR>
 
 Scuttle <Leader>y (copy/paste) Yank to system clipboard
 vmap <Leader>y "+y 
@@ -434,6 +432,7 @@ hook_post_source='''
 nmap <Leader>a <Plug>RgRawSearch
 vmap <Leader>a <Plug>RgRawVisualSelection
 nmap <Leader>* <Plug>RgRawWordUnderCursor
+let g:agriculture#rg_options="--column --line-number --no-heading --color=always --smart-case"
 '''
 
 [[plugins]]
@@ -492,15 +491,15 @@ command! -bang -nargs=? -complete=dir Siblings call fzf#vim#files(<q-args>,
                                   \ fzf#vim#with_preview({'dir': expand('%:p:h'), 'options': ['--color', 'hl:9,hl+:14']}), <bang>0
                               \ )
 
-command! -bang -nargs=* Rg call fzf#vim#grep(
-                                  \ 'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1, 
-                                  \ fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0
-                              \ )
-
-command! -bang -nargs=* RgWord call fzf#vim#grep(
-                                  \ 'rg --column --line-number  --no-heading --color=always --smart-case -w '.shellescape(<q-args>), 1, 
-                                  \ fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0
-                              \ )
+" command! -bang -nargs=* Rg call fzf#vim#grep(
+"                                  \ 'rg '.shellescape(<q-args>), 1, 
+"                                  \ fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0
+"                              \ )
+" 
+" command! -bang -nargs=* RgWord call fzf#vim#grep(
+"                                  \ 'rg --column --line-number  --no-heading --color=always --smart-case -w '.shellescape(<q-args>), 1, 
+"                                  \ fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0
+"                              \ )
 '''
 
 [[plugins]]
@@ -614,6 +613,10 @@ repo="lambdalisue/gina.vim"
 
 [[plugins]]
 repo='moll/vim-bbye'
+hook_source='''
+Scuttle (buffers) Delete buffer
+nnoremap <Leader>q :Bdelete<CR>
+'''
 
 [[plugins]]
 repo = 'tpope/vim-surround'

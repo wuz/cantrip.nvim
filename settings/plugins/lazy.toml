@@ -70,6 +70,10 @@ hook_add = '''
 " Shortcut (defx) <Leader>\ load defx
 Scuttle <Leader>\ (defx) Show defx pane
 nnoremap <Leader>\ :Defx<CR>
+
+Scuttle <Leader>| (defx) Show current file in defx
+
+nnoremap <Leader>\| :Defx `expand('%:p:h')` -search=`expand('%:p')`<CR>
 '''
 hook_source = '''
 call defx#custom#option('_', {
@@ -206,8 +210,8 @@ call InitCaw()
 [[plugins]]
 repo = 'Olical/vim-enmasse'
 
-[[plugins]]
-repo = 'moll/vim-bbye'
+# [[plugins]]
+# repo = 'moll/vim-bbye'
 
 [[plugins]]
 repo = 'matze/vim-move'
