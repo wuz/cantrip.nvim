@@ -421,6 +421,9 @@ let g:buftabline_show = 2
 repo = 'https://git.sr.ht/~wuz/warlock'
 
 [[plugins]]
+repo = 'jeffkreeftmeijer/vim-dim'
+
+[[plugins]]
 repo = 'owickstrom/vim-colors-paramount'
 
 [[plugins]]

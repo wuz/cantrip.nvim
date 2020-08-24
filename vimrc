@@ -54,6 +54,7 @@ let $CACHE = expand('~/.cache')
 call rc#source_rc("plugins.vim")
 call rc#source_rc("settings.vim")
 call rc#source_rc("theme_overrides.vim")
+" call rc#source_rc("eldritch.vim")
 
 if has('vim_starting') && !empty(argv())
   call rc#on_filetype()

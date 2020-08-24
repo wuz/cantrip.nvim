@@ -23,6 +23,15 @@ on_cmd=['StartupTime']
 repo='danro/rename.vim'
 on_cmd=['Rename', 'rename']
 
+
+[[plugins]]
+repo = 'ap/vim-css-color'
+on_ft=['css', 'scss', 'sass', 'less']
+
+[[plugins]]
+repo='jocap/rich.vim'
+on_ft='markdown'
+
 [[plugins]]
 repo = 'thinca/vim-ft-diff_fold'
 on_ft='diff'
