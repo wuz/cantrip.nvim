@@ -46,7 +46,6 @@ endif
 
 " 	" display
 " 	call dein#add('nathanaelkane/vim-indent-guides')
-" 	call dein#add('airblade/vim-gitgutter')
 
 " 	" call dein#add('ryanoasis/vim-devicons')
 

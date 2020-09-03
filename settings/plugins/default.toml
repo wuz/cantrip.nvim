@@ -34,8 +34,7 @@ Scuttle n (movement) keep search term centered while navigating forward
 nnoremap n nzzzv
 
 Scuttle N (movement) keep search term centered while navigating forward
-nnoremap N Nzzzv
-
+nnoremap N Nzzzv 
 Scuttle <Leader>a (searching/replace) Open ripgrep search
 nnoremap <Leader>a :Rg<CR>
 Scuttle <Leader>G (searching/replace) Ripgrep search for word under cursor
@@ -623,6 +622,12 @@ nnoremap <Leader>q :Bdelete<CR>
 
 [[plugins]]
 repo = 'tpope/vim-surround'
+
+[[plugins]]
+repo='mhinz/vim-signify'
+
+[[plugins]]
+repo='tpope/vim-abolish'
 
 # [[plugins]]
 # repo='michal-h21/vim-zettel'

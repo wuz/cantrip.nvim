@@ -16,6 +16,15 @@ nmap <Space><Space> :VimwikiVSplitLink(1, 1)<CR>
 '''
 
 [[plugins]]
+repo='rhysd/git-messenger.vim'
+on_cmd='GitMessenger'
+on_map='<Plug>(git-messenger)'
+hook_add='''
+Scuttle <Leader>, (git) Show git message for current line
+nmap <Leader>, :GitMessenger<CR>
+'''
+
+[[plugins]]
 repo='dstein64/vim-startuptime'
 on_cmd=['StartupTime']
 
@@ -27,6 +36,10 @@ on_cmd=['Rename', 'rename']
 [[plugins]]
 repo = 'ap/vim-css-color'
 on_ft=['css', 'scss', 'sass', 'less']
+
+[[plugins]]
+repo='tpope/vim-rails'
+on_ft='ruby'
 
 [[plugins]]
 repo='jocap/rich.vim'
