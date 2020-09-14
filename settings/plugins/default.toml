@@ -25,10 +25,10 @@ nmap <Leader>t :DeniteProjectDir file/rec<CR>
 Scuttle <Leader>g (denite) grep with denit
 nnoremap <Leader>g :<C-u>Denite grep:. -no-empty<CR>
 
-Scuttle <Leader>[ (buffers) previous buffer
-nnoremap <Leader>[ :bprev<CR>
-Scuttle <Leader] (buffers) next buffer
-nnoremap <Leader>] :bnext<CR>
+Scuttle <C-h> (buffers) previous buffer
+nnoremap <C-h> :bprev<CR>
+Scuttle <C-l> (buffers) next buffer
+nnoremap <C-l> :bnext<CR>
 
 Scuttle n (movement) keep search term centered while navigating forward
 nnoremap n nzzzv
