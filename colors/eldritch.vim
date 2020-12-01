@@ -34,9 +34,9 @@ hi MatchParen          ctermfg=7     ctermbg=NONE  cterm=underline
 hi Pmenu               ctermfg=15    ctermbg=0
 hi PmenuThumb          ctermbg=7
 hi PmenuSBar           ctermbg=8
-hi PmenuSel            ctermfg=0     ctermbg=4
+hi PmenuSel            ctermfg=0     ctermbg=13
 hi ColorColumn         ctermbg=0
-hi SpellBad            ctermfg=1     ctermbg=NONE  cterm=underline
+hi SpellBad            ctermfg=9     ctermbg=NONE  cterm=underline
 hi SpellCap            ctermfg=13    ctermbg=NONE  cterm=underline
 hi SpellRare           ctermfg=11    ctermbg=NONE  cterm=underline
 hi SpellLocal          ctermfg=13    ctermbg=NONE  cterm=underline
@@ -55,12 +55,12 @@ hi Folded              ctermfg=6     ctermbg=0     cterm=bold
 hi Conceal             ctermfg=6     ctermbg=NONE
 hi Directory           ctermfg=12
 hi Title               ctermfg=3     cterm=bold
-hi ErrorMsg            ctermfg=15    ctermbg=1
+hi ErrorMsg            ctermfg=15    ctermbg=9
 hi DiffAdd             ctermfg=0     ctermbg=2
 hi DiffChange          ctermfg=0     ctermbg=3
 hi DiffDelete          ctermfg=0     ctermbg=1
 hi DiffText            ctermfg=0     ctermbg=11    cterm=bold
-hi User1               ctermfg=1     ctermbg=0
+hi User1               ctermfg=9     ctermbg=0
 hi User2               ctermfg=4     ctermbg=0
 hi User3               ctermfg=2     ctermbg=0
 hi User4               ctermfg=3     ctermbg=0
@@ -169,7 +169,7 @@ hi gitCommitBranch               ctermfg=3
 hi gitCommitSelectedType         ctermfg=13
 hi gitCommitSelectedFile         ctermfg=2
 hi gitCommitUnmergedType         ctermfg=9
-hi gitCommitUnmergedFile         ctermfg=1
+hi gitCommitUnmergedFile         ctermfg=9
 hi! link gitCommitFile           Directory
 hi! link gitCommitUntrackedFile  gitCommitUnmergedFile
 hi! link gitCommitDiscardedType  gitCommitUnmergedType
@@ -228,7 +228,7 @@ hi! link shDerefVar  shDerefSimple
 "}}}
 " Syntastic {{{
 hi SyntasticWarningSign       ctermfg=3  ctermbg=NONE
-hi SyntasticErrorSign         ctermfg=1  ctermbg=NONE
+hi SyntasticErrorSign         ctermfg=9  ctermbg=NONE
 hi SyntasticStyleWarningSign  ctermfg=2  ctermbg=NONE
 hi SyntasticStyleErrorSign    ctermfg=4  ctermbg=NONE
 
@@ -246,7 +246,7 @@ hi! link ledgerTransactionStatus  Statement
 "}}}
 " Diff {{{
 hi diffAdded  ctermfg=2
-hi diffRemoved  ctermfg=1
+hi diffRemoved  ctermfg=9
 hi! link diffFile  PreProc
 hi! link diffLine  Title
 

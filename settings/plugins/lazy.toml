@@ -206,9 +206,6 @@ repo = 'romainl/Apprentice'
 repo = 'pgdouyon/vim-yin-yang' 
 
 [[plugins]]
-repo = 'kana/vim-repeat'
-
-[[plugins]]
 repo = 'tyru/caw.vim'
 on_map = {nx = '<Plug>'}
 hook_add = '''
@@ -234,9 +231,6 @@ repo = 'Olical/vim-enmasse'
 
 # [[plugins]]
 # repo = 'moll/vim-bbye'
-
-[[plugins]]
-repo = 'matze/vim-move'
 
 [[plugins]]
 repo = 'tpope/vim-fugitive'

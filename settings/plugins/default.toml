@@ -33,8 +33,9 @@ nnoremap <C-l> :bnext<CR>
 Scuttle n (movement) keep search term centered while navigating forward
 nnoremap n nzzzv
 
-Scuttle N (movement) keep search term centered while navigating forward
+Scuttle N (movement) keep search term centered while navigating backward
 nnoremap N Nzzzv 
+
 Scuttle <Leader>a (searching/replace) Open ripgrep search
 nnoremap <Leader>a :Rg<CR>
 Scuttle <Leader>G (searching/replace) Ripgrep search for word under cursor
@@ -200,9 +201,6 @@ repo='sheerun/vim-polyglot'
 hook_add='''
 let g:polyglot_disabled = ['markdown', 'tsx', 'typescript', 'csv', 'json']
 '''
-
-[[plugins]]
-repo='matze/vim-move'
 
 [[plugins]]
 repo = 'mhinz/vim-startify' 
@@ -474,7 +472,7 @@ let g:fzf_action = {
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
-let $FZF_DEFAULT_COMMAND='fd --type f'
+let $FZF_DEFAULT_COMMAND='fd --type f -H -E .git'
 let $FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all --ansi --reverse --multi
@@ -492,16 +490,6 @@ command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>,
 command! -bang -nargs=? -complete=dir Siblings call fzf#vim#files(<q-args>,
                                   \ fzf#vim#with_preview({'dir': expand('%:p:h'), 'options': ['--color', 'hl:9,hl+:14']}), <bang>0
                               \ )
-
-" command! -bang -nargs=* Rg call fzf#vim#grep(
-"                                  \ 'rg '.shellescape(<q-args>), 1, 
-"                                  \ fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0
-"                              \ )
-" 
-" command! -bang -nargs=* RgWord call fzf#vim#grep(
-"                                  \ 'rg --column --line-number  --no-heading --color=always --smart-case -w '.shellescape(<q-args>), 1, 
-"                                  \ fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}), <bang>0
-"                              \ )
 '''
 
 [[plugins]]
@@ -509,47 +497,82 @@ repo = 'neoclide/coc.nvim'
 merged = 0
 rev = 'release'
 hook_add='''
+" Use tab for trigger completion with characters ahead and navigate.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+if has('patch8.1.1068')
+  " Use `complete_info` if your (Neo)Vim version supports it.
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
 highlight link CocErrorSign ErrorMsg
 highlight link CocInfoSign Comment
 highlight link CocWarningSign Search
 '''
 hook_post_source='''
-" Shortcut (coc) <Leader>f Format current selection
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+Scuttle <Leader>f (coc) Format current selection
 vmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
-" Shortcut (coc) K to show documentation in preview window.
+Scuttle K (coc) show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-" Shortcut (coc) <Leader>cr Rename
+Scuttle <Leader>cr (coc) Rename
 nmap <leader>cr  <Plug>(coc-rename)
 
 " Shortcut (coc) <Leader>co show outline
 nnoremap <silent> <leader>co  :<C-u>CocList outline<cr>
+nnoremap <silent> <Leader>cd :<C-u>CocList diagnostics<cr>
 
-" Shortcut (coc) <Leader>cs coc show symbols
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+Scuttle <Leader>cs (coc) coc show symbols
 nnoremap <silent> <leader>cs  :<C-u>CocList -I symbols<cr>
 
-" Shortcut (coc) <Leader>cl List errors
+Scuttle <Leader>cl (coc) List errors
 nnoremap <silent> <leader>cl  :<C-u>CocList locationlist<cr>
 
-" Shortcut (coc) <Leader>cc list commands available in tsserver (and others)
+Scuttle <Leader>cc (coc) list commands available in tsserver (and others)
 nnoremap <silent> <leader>cc  :<C-u>CocList commands<cr>
 
-" Shortcut (coc) <Leader>cR restart when tsserver gets wonky
+Scuttle <Leader>cR (coc) restart when tsserver gets wonky
 nnoremap <silent> <leader>cR  :<C-u>CocRestart<CR>
 
-" Shortcut (coc) <Leader>cl view all errors
+Scuttle <Leader>cl (coc) view all errors
 nnoremap <silent> <leader>cl  :<C-u>CocList locationlist<CR>
 
-" Shortcut (coc) <Leader>cx manage extensions
+Scuttle <Leader>cx (coc) manage extensions
 nnoremap <silent> <leader>cx  :<C-u>CocList extensions<cr>
 
-" Shortcut (coc) <Leader>cf rename the current word in the cursor
+Scuttle <Leader>cf (coc) rename the current word in the cursor
 nmap <leader>cf  <Plug>(coc-format-selected)
 vmap <leader>cf  <Plug>(coc-format-selected)
 
-" Shortcut (coc) <Leader>ca run code actions
+Scuttle <Leader>ca (coc) run code actions
 vmap <leader>ca  <Plug>(coc-codeaction-selected)
 nmap <leader>ca  <Plug>(coc-codeaction-selected)
 '''
@@ -612,6 +635,10 @@ nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 [[plugins]]
 repo="lambdalisue/gina.vim"
+hook_source='''
+command! -bang -nargs=? -complete=dir Owners ! git blame --line-porcelain % | sed -n 's/^author //p' | sort | uniq -c | sort -rn
+let g:gina#command#blame#formatter#format = "%au|%su%=%ti|%ma%in"
+'''
 
 [[plugins]]
 repo='moll/vim-bbye'

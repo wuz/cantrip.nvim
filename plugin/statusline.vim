@@ -39,7 +39,7 @@ endfunction
 
 " left
 set statusline=
-set statusline+=%#WarningMsg#
+set statusline+=%#User9#
 set statusline+=%{StatusSpace()}
 set statusline+=%{VimMode()}
 set statusline+=%{StatusSpace()}

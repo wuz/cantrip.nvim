@@ -3,11 +3,6 @@
 set hidden                            " remember buffer history
 set history=1000                      " increase history from 20 to 1000
 
-set undofile                                  " persistent undo
-set backupdir=~/.config/nvim/backups          " use global backup directory
-set directory=~/.config/nvim/swaps            " use global swaps directory
-set undodir=~/.config/nvim/undo               " use global undo directory
-
 " yank to system clipboard
 vmap <Leader>y "+y 
 " delete to system clipboard

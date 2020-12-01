@@ -12,7 +12,7 @@ function! s:set_value(name, value)
 endfunction
 
 function! s:parse_settings(setting)
-  if has_key(s:settings, 'appearance')
+  if has_key(s:settings, a:setting)
     for [name, setting] in items(s:settings[a:setting])
       if name == 'set'
         for [key, value] in items(s:settings[a:setting][name])
@@ -35,3 +35,6 @@ endfunction
 
 call s:parse_settings('appearance')
 call s:parse_settings('folding')
+call s:parse_settings('search')
+call s:parse_settings('indent')
+call s:parse_settings('undo')
