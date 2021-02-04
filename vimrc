@@ -1,16 +1,18 @@
 " This file is needed so Vim sets $MYVIMRC correctly
 " ------------------------------------------------------------ SETUP
+
+execute 'source' fnamemodify(expand('<sfile>'), ':h').'/cantrip.vim'
+
+call rc#source_rc("plugins.vim")
+call rc#source_rc("settings.vim")
+call rc#source_rc("theme_overrides.vim")
+
 if &compatible
   set nocompatible
 endif 
 if has('vim_starting') && empty(argv())
   syntax off
 endif
-
-" leader is <space>
-let mapleader="\<Space>"
-" local leader is \
-let maplocalleader = "\\"
 
 function! s:reload_settings() abort
   echom "Reloading dein settings"
@@ -19,12 +21,12 @@ function! s:reload_settings() abort
   call dein#call_hook('post_source')
 endfunction
 
-augroup MyAutoCmd
+augroup Cantrip
   autocmd!
   " autocmd BufWritePost */settings/plugins/*.toml call dein#update()
   autocmd BufWritePost vimrc,*.vim,*/plugin/*.vim,*/rc/*.vim
         \ source $MYVIMRC
-  autocmd BufWritePost */settings/**/*.toml
+  autocmd BufWritePost */cantrip/**/*.toml
        \ call s:reload_settings()
   autocmd FileType,Syntax,BufNewFile,BufNew,BufRead *?
         \ call rc#on_filetype()
@@ -33,34 +35,10 @@ augroup END
 augroup filetypedetect
 augroup END
 
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-augroup coc
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-if exists('&inccommand')
-  set inccommand=nosplit
-endif
-
-let $CACHE = expand('~/.cache')
-
-" Set augroup.
-
-call rc#source_rc("plugins.vim")
-call rc#source_rc("settings.vim")
-call rc#source_rc("theme_overrides.vim")
-" call rc#source_rc("eldritch.vim")
-
 if has('vim_starting') && !empty(argv())
   call rc#on_filetype()
 endif
 
-let s:backups_dir = fnamemodify(expand('$MYVIMRC'),':p:h').'/backups/'
-if !isdirectory(s:backups_dir)
-  silent execute '! mkdir' s:backups_dir
+if !isdirectory(g:cantrip#backups_dir)
+  silent execute '! mkdir' g:catnrip#backups_dir
 endif

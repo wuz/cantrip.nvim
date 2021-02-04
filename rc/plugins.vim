@@ -1,7 +1,7 @@
 let s:dein_dir = finddir('dein.vim', '.;') 
 if s:dein_dir != '' || &runtimepath !~ '/dein.vim'
   if s:dein_dir == '' && &runtimepath !~ '/dein.vim'
-    let s:dein_dir = expand('$CACHE/dein').'/repos/github.com/Shougo/dein.vim/'
+    let s:dein_dir = expand(expand('$CACHE/dein').'/repos/github.com/Shougo/dein.vim/')
     if !isdirectory(s:dein_dir)
       execute '!git clone https://github.com/Shougo/dein.vim' s:dein_dir
     endif
@@ -17,11 +17,9 @@ let g:dein#install_log_filename = '~/dein.log'
 
 let s:path = expand('$CACHE/dein')
 if dein#load_state(s:path)
-  let s:settings_base = '~/.config/nvim/settings/plugins/'
-
-  let s:default_toml = s:settings_base . 'default.toml'
-  let s:lazy_toml = s:settings_base . 'lazy.toml'
-  let s:ft_toml = s:settings_base . 'filetype.toml'
+  let s:default_toml = g:cantrip#settings_dir . '/plugins/default.toml'
+  let s:lazy_toml = g:cantrip#settings_dir . '/plugins/lazy.toml'
+  let s:ft_toml = g:cantrip#settings_dir . '/plugins/filetype.toml'
 
   call dein#begin(s:path, [
         \ '~/.config/nvim/vimrc', expand('<sfile>'), s:default_toml, s:lazy_toml, s:ft_toml
@@ -41,17 +39,3 @@ call dein#call_hook('post_source')
 if !has('vim_starting') && dein#check_install()
   call dein#install()
 endif
-
-" 	call dein#add('severin-lemaignan/vim-minimap', { 'if': g:minimap })
-
-" 	" display
-" 	call dein#add('nathanaelkane/vim-indent-guides')
-
-" 	" call dein#add('ryanoasis/vim-devicons')
-
-" 	" behavior
-" 	call dein#add('Shougo/neoinclude.vim')
-" 	call dein#add('wuz/ProjectLevel')
-" 	call dein#add('tpope/vim-sleuth')
-" 	call dein#add('Shougo/neoyank.vim')
-
