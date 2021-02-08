@@ -1,7 +1,7 @@
 " This file is needed so Vim sets $MYVIMRC correctly
 " ------------------------------------------------------------ SETUP
 
-execute 'source' fnamemodify(expand('<sfile>'), ':h').'/cantrip.vim'
+execute 'source ' . fnamemodify(expand('<sfile>'), ':h').'/cantrip.vim'
 
 call rc#source_rc("plugins.vim")
 call rc#source_rc("settings.vim")

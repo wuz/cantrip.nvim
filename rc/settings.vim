@@ -10,7 +10,7 @@ function! s:let_value(name, value)
   if a:value == ''
     execute('let ' . a:name)
   else
-    execute('let ' . a:name . '="' . a:value . '"')
+    execute('let g:' . a:name . '="' . a:value . '"')
   endif
 endfunction
 
