@@ -1,0 +1,508 @@
+[[plugins]]
+repo='hrsh7th/nvim-compe'
+hook_add='''
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+lua <<EOF
+require'compe'.setup {
+  enabled = true;
+  autocomplete = true;
+  debug = false;
+  min_length = 1;
+  preselect = 'enable';
+  throttle_time = 80;
+  source_timeout = 200;
+  incomplete_delay = 400;
+  max_abbr_width = 100;
+  max_kind_width = 100;
+  max_menu_width = 100;
+  documentation = true;
+
+  source = {
+    path = true;
+    buffer = true;
+    calc = true;
+    vsnip = true;
+    nvim_lsp = true;
+    nvim_lua = true;
+    spell = true;
+    tags = true;
+    snippets_nvim = true;
+    treesitter = true;
+  };
+}
+EOF
+'''
+
+[[plugins]]
+repo='onsails/lspkind-nvim'
+hook_add='''
+lua <<EOF
+require('lspkind').init({
+  -- with_text = true,
+  -- symbol_map = {
+  --   Text = '',
+  --   Method = 'ƒ',
+  --   Function = '',
+  --   Constructor = '',
+  --   Variable = '',
+  --   Class = '',
+  --   Interface = 'ﰮ',
+  --   Module = '',
+  --   Property = '',
+  --   Unit = '',
+  --   Value = '',
+  --   Enum = '了',
+  --   Keyword = '',
+  --   Snippet = '﬌',
+  --   Color = '',
+  --   File = '',
+  --   Folder = '',
+  --   EnumMember = '',
+  --   Constant = '',
+  --   Struct = ''
+    -- },
+})
+EOF
+'''
+
+[[plugins]]
+repo='https://git.sr.ht/~wuz/scuttle.vim'
+hook_add='''
+command! -nargs=+ Scuttle call scuttle#add(<q-args>, expand('<sfile>'), expand('<slnum>'))
+command! ScuttleList call scuttle#list()
+
+Scuttle <Tab><Tab> Show Scuttle List
+nnoremap <Tab><Tab> :ScuttleList<CR>
+
+Scuttle <Leader>Enter (basics) insert new line in visual mode
+nnoremap <Leader><CR> o<esc>
+Scuttle <Leader>x (basics) unhighlight everything
+nnoremap <Leader>x :noh<CR>
+
+Scuttle <Leader>b (denite) show buffer list
+nmap <Leader>b :Denite buffer<CR>
+Scuttle <Leader>t (denite) show project dir
+nmap <Leader>t :DeniteProjectDir file/rec<CR>
+Scuttle <Leader>g (denite) grep with denit
+nnoremap <Leader>g :<C-u>Denite grep:. -no-empty<CR>
+
+Scuttle <C-h> (buffers) previous buffer
+nnoremap <C-h> :bprev<CR>
+Scuttle <C-l> (buffers) next buffer
+nnoremap <C-l> :bnext<CR>
+
+Scuttle n (movement) keep search term centered while navigating forward
+nnoremap n nzzzv
+
+Scuttle N (movement) keep search term centered while navigating backward
+nnoremap N Nzzzv 
+
+Scuttle <Leader>a (searching/replace) Open ripgrep search
+nnoremap <Leader>a :Rg<CR>
+Scuttle <Leader>G (searching/replace) Ripgrep search for word under cursor
+nmap <expr> <leader>G ':Rg \b'.expand('<cword>').'\b<cr>'
+
+" Scuttle <Leader>f (searching/replace) Edit quickfix buffer
+" map <Leader>f :EnMasse<CR>
+
+Scuttle <Leader>y (copy/paste) Yank to system clipboard
+vmap <Leader>y "+y 
+Scuttle <Leader>d (copy/paste) Delete to system clipboard
+vmap <Leader>d "+d 
+Scuttle <Leader>p (copy/paste) Paste from system clipboard (below)
+nmap <Leader>p "+p 
+vmap <Leader>p "+p
+
+Scuttle <Leader>P (copy/paste) Paste from system clipboard (above)
+nmap <Leader>P "+P
+vmap <Leader>P "+P
+
+Scuttle <Leader>r (searching/replace) Replace globally
+vmap <Leader>r "hy:%s/<C-r>h//gc<left><left><left>
+
+Scuttle <Leader>ls (sessions) Load last vim session
+nmap <Leader>ls <Plug>(load-session)
+
+Scuttle <Leader>ms (sessions) Make and save new vim session
+nmap <Leader>ms <Plug>(make-session)
+
+Scuttle <Leader><Tab> (wiki) Open VimwikiIndex
+nnoremap <Leader><Tab> :VimwikiIndex<CR>
+'''
+
+[[plugins]]
+repo='chaoren/vim-wordmotion'
+
+
+[[plugins]]
+repo = 'mhinz/vim-startify' 
+depends=['vim-devicons']
+hook_source='''
+autocmd User Startified setlocal cursorline
+
+function! s:boxed_header(line, center)
+let boxed_header = ""
+let width = 43
+let padding = width - strwidth(a:line)
+if (a:center)
+if (strwidth(a:line) <= width)
+let boxed_header = repeat(' ', padding/2) . a:line . repeat(' ', padding/2)
+else
+let boxed_header = strpart(a:line, 0, width)
+endif
+else
+if (strwidth(a:line) <= width)
+let boxed_header = a:line . repeat(' ', padding)
+else
+let boxed_header = strpart(a:line, 0, width)
+endif
+endif
+let boxed_header = "░ " . boxed_header . "░"
+return boxed_header
+endfunction
+
+hi link StartifyHeader Function
+let g:startify_custom_header = startify#center([
+  \'                      __         .__       ', 
+  \'  ____ _____    _____/  |________|__|_____ ', 
+  \'_/ ___\\__  \  /    \   __\_  __ \  \____ \', 
+  \'\  \___ / __ \|   |  \  |  |  | \/  |  |_> >',
+  \' \___  >____  /___|  /__|  |__|  |__|   __/', 
+  \'     \/     \/     \/               |__|   ', 
+  \'░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░',
+  \'' . s:boxed_header('', 0),
+  \'' . s:boxed_header('⁂ neovim + dark magic ⁂', 1),
+  \'' . s:boxed_header('', 0),
+  \'░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░'])
+
+let g:startify_files_number = 5
+let g:startify_list_order = [
+\ ['   [MRU] Most Recently Used files:'],
+\ 'files',
+\ ['   [MRU] in current directory:'],
+\ 'dir',
+\ ['   [CMD] Common Commands:'],
+\ 'commands',
+\ ['   Sessions:'],
+\ 'sessions',
+\ ['   Bookmarks:'],
+\ 'bookmarks',
+\ ]
+let g:startify_commands = [
+  \ {'u': ['Update Plugins', 'call dein#update()']},
+  \ ]
+  let g:startify_update_oldfiles = 1
+  " let g:startify_disable_at_vimenter = 1
+  let g:startify_session_autoload = 1
+  let g:startify_session_persistence = 1
+  let g:startify_change_to_dir = 0
+
+function! StartifyEntryFormat()
+return 'WebDevIconsGetFileTypeSymbol(absolute_path) ." ". entry_path'
+endfunction
+'''
+
+# [[plugins]]
+# repo = 'unblevable/quick-scope'
+# hook_add='''
+# " let g:qs_lazy_highlight = 1
+# let g:qs_max_chars=80
+# let g:qs_buftype_blacklist = ['terminal', 'nofile', 'startify']
+# '''
+
+[[plugins]]
+repo = 'Shougo/denite.nvim'
+depends=['vim-shortcut']
+hook_post_source='''
+" Use ripgrep for searching current directory for files
+" By default, ripgrep will respect rules in .gitignore
+"   --files: Print each file that would be searched (but don't search)
+"   --glob:  Include or exclues files for searching that match the given glob
+"            (aka ignore .git files)
+
+call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
+
+" Use ripgrep in place of "grep"
+
+call denite#custom#var('grep', 'command', ['rg'])
+
+" Custom options for ripgrep
+"   --vimgrep:  Show results with every match on it's own line
+"   --hidden:   Search hidden directories and files
+"   --heading:  Show the file name above clusters of matches from each file
+"   --S:        Search case insensitively if the pattern is all lowercase
+
+call denite#custom#var('grep', 'default_opts', ['--hidden', '--vimgrep', '--heading', '-S'])
+
+" Recommended defaults for ripgrep via Denite docs
+call denite#custom#var('grep', 'recursive_opts', [])
+call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
+call denite#custom#var('grep', 'separator', ['--'])
+call denite#custom#var('grep', 'final_opts', [])
+
+" Remove date from buffer list
+call denite#custom#var('buffer', 'date_format', '')
+
+" Custom options for Denite
+"   auto_resize             - Auto resize the Denite window height automatically.
+"   prompt                  - Customize denite prompt
+"   direction               - Specify Denite window direction as directly below current pane
+"   winminheight            - Specify min height for Denite window
+"   highlight_mode_insert   - Specify h1-CursorLine in insert mode
+"   prompt_highlight        - Specify color of prompt
+"   highlight_matched_char  - Matched characters highlight
+"   highlight_matched_range - matched range highlight
+let s:denite_options = {'default' : {
+\ 'split': 'floating',
+  \ 'start_filter': 1,
+  \ 'auto_resize': 1,
+  \ 'source_names': 'short',
+  \ 'prompt': '•',
+  \ 'statusline': 0,
+  \ 'winrow': 1,
+  \ 'vertical_preview': 1
+    \ }}
+
+    " Loop through denite options and enable them
+    function! s:profile(opts) abort
+    for l:fname in keys(a:opts)
+for l:dopt in keys(a:opts[l:fname])
+call denite#custom#option(l:fname, l:dopt, a:opts[l:fname][l:dopt])
+endfor
+endfor
+endfunction
+
+call s:profile(s:denite_options)
+
+'''
+[plugins.ftplugin]
+denite-filter='''
+" Define mappings while in 'filter' mode
+"   <C-o>         - Switch to normal mode inside of search results
+"   <Esc>         - Exit denite window in any mode
+"   <CR>          - Open currently selected file in any mode
+"   <C-t>         - Open currently selected file in a new tab
+"   <C-v>         - Open currently selected file a vertical split
+"   <C-h>         - Open currently selected file in a horizontal split
+imap <silent><buffer> <C-o>
+\ <Plug>(denite_filter_quit)
+inoremap <silent><buffer><expr> <Esc>
+\ denite#do_map('quit')
+nnoremap <silent><buffer><expr> <Esc>
+\ denite#do_map('quit')
+inoremap <silent><buffer><expr> <CR>
+\ denite#do_map('do_action')
+inoremap <silent><buffer><expr> <C-t>
+\ denite#do_map('do_action', 'tabopen')
+inoremap <silent><buffer><expr> <C-v>
+\ denite#do_map('do_action', 'vsplit')
+inoremap <silent><buffer><expr> <C-h>
+\ denite#do_map('do_action', 'split')
+'''
+denite='''
+" Define mappings while in denite window
+"   <CR>        - Opens currently selected file
+"   q or <Esc>  - Quit Denite window
+"   d           - Delete currenly selected file
+"   p           - Preview currently selected file
+"   <C-o> or i  - Switch to insert mode inside of filter prompt
+"   <C-t>       - Open currently selected file in a new tab
+"   <C-v>       - Open currently selected file a vertical split
+"   <C-h>       - Open currently selected file in a horizontal split
+nnoremap <silent><buffer><expr> <CR>
+\ denite#do_map('do_action')
+nnoremap <silent><buffer><expr> q
+\ denite#do_map('quit')
+nnoremap <silent><buffer><expr> <Esc>
+\ denite#do_map('quit')
+nnoremap <silent><buffer><expr> d
+\ denite#do_map('do_action', 'delete')
+nnoremap <silent><buffer><expr> p
+\ denite#do_map('do_action', 'preview')
+nnoremap <silent><buffer><expr> i
+\ denite#do_map('open_filter_buffer')
+nnoremap <silent><buffer><expr> <C-o>
+\ denite#do_map('open_filter_buffer')
+nnoremap <silent><buffer><expr> <C-t>
+\ denite#do_map('do_action', 'tabopen')
+nnoremap <silent><buffer><expr> <C-v>
+\ denite#do_map('do_action', 'vsplit')
+nnoremap <silent><buffer><expr> <C-h>
+\ denite#do_map('do_action', 'split')
+'''
+
+
+[[plugins]]
+repo = 'chemzqm/denite-git'
+
+# [[plugins]]
+# repo = 'ap/vim-buftabline'
+# hook_add='''
+# highlight link BufTabLineHidden Comment
+# highlight link BufTabLineActive Title
+# highlight link BufTabLineFill CursorColumn
+# '''
+# hook_source = '''
+# let g:buftabline_show = 2
+# '''
+
+# [[plugins]]
+# repo = 'https://git.sr.ht/~wuz/warlock'
+
+[[plugins]]
+repo = 'jeffkreeftmeijer/vim-dim'
+
+# [[plugins]]
+# repo = 'owickstrom/vim-colors-paramount'
+
+[[plugins]]
+repo = 'Shougo/deoplete.nvim'
+
+[[plugins]]
+repo = 'jesseleite/vim-agriculture'
+hook_post_source='''
+nmap <Leader>a <Plug>RgRawSearch
+vmap <Leader>a <Plug>RgRawVisualSelection
+nmap <Leader>* <Plug>RgRawWordUnderCursor
+let g:agriculture#rg_options="--column --line-number --no-heading --color=always --smart-case"
+'''
+
+[[plugins]]
+repo = 'junegunn/fzf'
+build = './install --all'
+merged = 0
+
+[[plugins]]
+repo = 'nvim-treesitter/nvim-treesitter'
+hook_post_update='''
+normal! TSUpdate
+'''
+hook_source='''
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+ensure_installed = "all",
+                 highlight = {
+                   enable = true,
+                 },
+                 indent = {
+                   enable = true
+                 },
+                 incremental_selection = {
+                   enable = true,
+                   keymaps = {
+                     init_selection = "gnn",
+                     node_incremental = "grn",
+                     scope_incremental = "grc",
+                     node_decremental = "grm",
+                   },
+                 },
+}
+EOF
+'''
+
+[[plugins]]
+repo = 'junegunn/fzf.vim'
+depends=['scuttle.vim']
+hook_post_source='''
+function! BuildQuickfixList(lines)
+call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+copen
+cc
+endfunction
+" Shortcut (fzf) <C-P> Open files menu
+noremap <C-P> :Files<CR>
+" Shortcut (fzf) <C-T> Open tags menu 
+noremap <C-T> :Tags<CR>
+" Shortcut (fzf) Open editing history menu
+noremap <C-M> :History<CR>
+" Shortcut (fzf) Open a sibling files 
+noremap <C-D> :Siblings<CR>
+" Shortcut (fzf) <C-B> Open buffers selection menu
+nmap <C-B> :Buffers<CR>
+
+let g:fzf_layout = { 'window': { 'width': 0.7, 'height': 0.6 } }
+
+let g:lens#disabled_filetypes = ['nerdtree', 'fzf', 'defx']
+
+let g:fzf_tags_command = 'ctags --extra=+f -R'
+
+let g:fzf_action = {
+\ 'ctrl-q': function('BuildQuickfixList'),
+\ 'ctrl-t': 'tab split',
+\ 'ctrl-x': 'split',
+\ 'ctrl-v': 'vsplit' }
+
+let $FZF_DEFAULT_COMMAND='fd --type f -H -E .git'
+let $FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all --ansi --reverse --multi
+\ --color=dark
+\ --color=bg+:#4f5987,bg:#1d1f30,spinner:#39ffba,hl:#858db7
+\ --color=fg:#eff0f6,header:#eff0f6,info:#858db7,pointer:#ff476e
+\ --color=marker:#ff476e,fg+:#a5abca,prompt:#ff476e,hl+:#39ffba
+\ --color=gutter:#2a2d46'
+
+
+command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>,
+    \ fzf#vim#with_preview({'options': ['--color', 'hl:9,hl+:14']}), <bang>0
+    \ )
+
+command! -bang -nargs=? -complete=dir Siblings call fzf#vim#files(<q-args>,
+    \ fzf#vim#with_preview({'dir': expand('%:p:h'), 'options': ['--color', 'hl:9,hl+:14']}), <bang>0
+    \ )
+'''
+
+[[plugins]]
+repo = 'Shougo/context_filetype.vim'
+
+
+[[plugins]]
+repo="lambdalisue/gina.vim"
+hook_source='''
+command! -bang -nargs=? -complete=dir Owners ! git blame --line-porcelain % | sed -n 's/^author //p' | sort | uniq -c | sort -rn
+let g:gina#command#blame#formatter#format = "%au|%su%=%ti|%ma%in"
+'''
+
+[[plugins]]
+repo='moll/vim-bbye'
+hook_source='''
+Scuttle (buffers) Delete buffer
+nnoremap <Leader>q :Bdelete<CR>
+'''
+
+[[plugins]]
+repo = 'tpope/vim-surround'
+
+[[plugins]]
+repo='mhinz/vim-signify'
+
+[[plugins]]
+repo='tpope/vim-abolish'
+
+[[plugins]]
+repo = 'easymotion/vim-easymotion'
+
+[[plugins]]
+repo = 'wellle/targets.vim'
+
+[[plugins]]
+repo = 'xolox/vim-reload'
+
+[[plugins]]
+repo = 'xolox/vim-misc'
+
+[[plugins]]
+repo = 'tpope/vim-fugitive'
+
+[[plugins]]
+repo = 'tpope/vim-repeat'
+
+[[plugins]]
+repo = 'christoomey/vim-conflicted'
+
+[[plugins]]
+repo = 'matze/vim-move'

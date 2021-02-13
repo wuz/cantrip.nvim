@@ -1,4 +1,5 @@
 let mapleader="\<Space>"
+let maplocalleader="\\"
 
 let $CACHE = expand('~/.cache')
 
