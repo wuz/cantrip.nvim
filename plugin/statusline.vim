@@ -52,7 +52,6 @@ set statusline+=%{StatusSpace()}
 set statusline+=%f
 set statusline+=%{StatusSpace()}
 set statusline+=%#Constant#
-set statusline+=%{dein#get_progress()}
 
 " right
 set statusline+=%=        " Switch to the right side

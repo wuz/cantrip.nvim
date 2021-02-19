@@ -1,43 +1,4 @@
 [[plugins]]
-repo='hrsh7th/nvim-compe'
-hook_add='''
-inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
-lua <<EOF
-require'compe'.setup {
-  enabled = true;
-  autocomplete = true;
-  debug = false;
-  min_length = 1;
-  preselect = 'enable';
-  throttle_time = 80;
-  source_timeout = 200;
-  incomplete_delay = 400;
-  max_abbr_width = 100;
-  max_kind_width = 100;
-  max_menu_width = 100;
-  documentation = true;
-
-  source = {
-    path = true;
-    buffer = true;
-    calc = true;
-    vsnip = true;
-    nvim_lsp = true;
-    nvim_lua = true;
-    spell = true;
-    tags = true;
-    snippets_nvim = true;
-    treesitter = true;
-  };
-}
-EOF
-'''
-
-[[plugins]]
 repo='onsails/lspkind-nvim'
 hook_add='''
 lua <<EOF
@@ -90,10 +51,6 @@ nmap <Leader>t :DeniteProjectDir file/rec<CR>
 Scuttle <Leader>g (denite) grep with denit
 nnoremap <Leader>g :<C-u>Denite grep:. -no-empty<CR>
 
-Scuttle <C-h> (buffers) previous buffer
-nnoremap <C-h> :bprev<CR>
-Scuttle <C-l> (buffers) next buffer
-nnoremap <C-l> :bnext<CR>
 
 Scuttle n (movement) keep search term centered while navigating forward
 nnoremap n nzzzv
@@ -134,85 +91,6 @@ Scuttle <Leader><Tab> (wiki) Open VimwikiIndex
 nnoremap <Leader><Tab> :VimwikiIndex<CR>
 '''
 
-[[plugins]]
-repo='chaoren/vim-wordmotion'
-
-
-[[plugins]]
-repo = 'mhinz/vim-startify' 
-depends=['vim-devicons']
-hook_source='''
-autocmd User Startified setlocal cursorline
-
-function! s:boxed_header(line, center)
-let boxed_header = ""
-let width = 43
-let padding = width - strwidth(a:line)
-if (a:center)
-if (strwidth(a:line) <= width)
-let boxed_header = repeat(' ', padding/2) . a:line . repeat(' ', padding/2)
-else
-let boxed_header = strpart(a:line, 0, width)
-endif
-else
-if (strwidth(a:line) <= width)
-let boxed_header = a:line . repeat(' ', padding)
-else
-let boxed_header = strpart(a:line, 0, width)
-endif
-endif
-let boxed_header = "░ " . boxed_header . "░"
-return boxed_header
-endfunction
-
-hi link StartifyHeader Function
-let g:startify_custom_header = startify#center([
-  \'                      __         .__       ', 
-  \'  ____ _____    _____/  |________|__|_____ ', 
-  \'_/ ___\\__  \  /    \   __\_  __ \  \____ \', 
-  \'\  \___ / __ \|   |  \  |  |  | \/  |  |_> >',
-  \' \___  >____  /___|  /__|  |__|  |__|   __/', 
-  \'     \/     \/     \/               |__|   ', 
-  \'░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░',
-  \'' . s:boxed_header('', 0),
-  \'' . s:boxed_header('⁂ neovim + dark magic ⁂', 1),
-  \'' . s:boxed_header('', 0),
-  \'░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░'])
-
-let g:startify_files_number = 5
-let g:startify_list_order = [
-\ ['   [MRU] Most Recently Used files:'],
-\ 'files',
-\ ['   [MRU] in current directory:'],
-\ 'dir',
-\ ['   [CMD] Common Commands:'],
-\ 'commands',
-\ ['   Sessions:'],
-\ 'sessions',
-\ ['   Bookmarks:'],
-\ 'bookmarks',
-\ ]
-let g:startify_commands = [
-  \ {'u': ['Update Plugins', 'call dein#update()']},
-  \ ]
-  let g:startify_update_oldfiles = 1
-  " let g:startify_disable_at_vimenter = 1
-  let g:startify_session_autoload = 1
-  let g:startify_session_persistence = 1
-  let g:startify_change_to_dir = 0
-
-function! StartifyEntryFormat()
-return 'WebDevIconsGetFileTypeSymbol(absolute_path) ." ". entry_path'
-endfunction
-'''
-
-# [[plugins]]
-# repo = 'unblevable/quick-scope'
-# hook_add='''
-# " let g:qs_lazy_highlight = 1
-# let g:qs_max_chars=80
-# let g:qs_buftype_blacklist = ['terminal', 'nofile', 'startify']
-# '''
 
 [[plugins]]
 repo = 'Shougo/denite.nvim'
@@ -350,115 +228,16 @@ repo = 'chemzqm/denite-git'
 # let g:buftabline_show = 2
 # '''
 
-# [[plugins]]
-# repo = 'https://git.sr.ht/~wuz/warlock'
-
-[[plugins]]
-repo = 'jeffkreeftmeijer/vim-dim'
-
-# [[plugins]]
-# repo = 'owickstrom/vim-colors-paramount'
-
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
 
-[[plugins]]
-repo = 'jesseleite/vim-agriculture'
-hook_post_source='''
-nmap <Leader>a <Plug>RgRawSearch
-vmap <Leader>a <Plug>RgRawVisualSelection
-nmap <Leader>* <Plug>RgRawWordUnderCursor
-let g:agriculture#rg_options="--column --line-number --no-heading --color=always --smart-case"
-'''
-
-[[plugins]]
-repo = 'junegunn/fzf'
-build = './install --all'
-merged = 0
-
-[[plugins]]
-repo = 'nvim-treesitter/nvim-treesitter'
-hook_post_update='''
-normal! TSUpdate
-'''
-hook_source='''
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-ensure_installed = "all",
-                 highlight = {
-                   enable = true,
-                 },
-                 indent = {
-                   enable = true
-                 },
-                 incremental_selection = {
-                   enable = true,
-                   keymaps = {
-                     init_selection = "gnn",
-                     node_incremental = "grn",
-                     scope_incremental = "grc",
-                     node_decremental = "grm",
-                   },
-                 },
-}
-EOF
 '''
 
 [[plugins]]
 repo = 'junegunn/fzf.vim'
 depends=['scuttle.vim']
 hook_post_source='''
-function! BuildQuickfixList(lines)
-call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
-copen
-cc
-endfunction
-" Shortcut (fzf) <C-P> Open files menu
-noremap <C-P> :Files<CR>
-" Shortcut (fzf) <C-T> Open tags menu 
-noremap <C-T> :Tags<CR>
-" Shortcut (fzf) Open editing history menu
-noremap <C-M> :History<CR>
-" Shortcut (fzf) Open a sibling files 
-noremap <C-D> :Siblings<CR>
-" Shortcut (fzf) <C-B> Open buffers selection menu
-nmap <C-B> :Buffers<CR>
-
-let g:fzf_layout = { 'window': { 'width': 0.7, 'height': 0.6 } }
-
-let g:lens#disabled_filetypes = ['nerdtree', 'fzf', 'defx']
-
-let g:fzf_tags_command = 'ctags --extra=+f -R'
-
-let g:fzf_action = {
-\ 'ctrl-q': function('BuildQuickfixList'),
-\ 'ctrl-t': 'tab split',
-\ 'ctrl-x': 'split',
-\ 'ctrl-v': 'vsplit' }
-
-let $FZF_DEFAULT_COMMAND='fd --type f -H -E .git'
-let $FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-
-let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all --ansi --reverse --multi
-\ --color=dark
-\ --color=bg+:#4f5987,bg:#1d1f30,spinner:#39ffba,hl:#858db7
-\ --color=fg:#eff0f6,header:#eff0f6,info:#858db7,pointer:#ff476e
-\ --color=marker:#ff476e,fg+:#a5abca,prompt:#ff476e,hl+:#39ffba
-\ --color=gutter:#2a2d46'
-
-
-command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>,
-    \ fzf#vim#with_preview({'options': ['--color', 'hl:9,hl+:14']}), <bang>0
-    \ )
-
-command! -bang -nargs=? -complete=dir Siblings call fzf#vim#files(<q-args>,
-    \ fzf#vim#with_preview({'dir': expand('%:p:h'), 'options': ['--color', 'hl:9,hl+:14']}), <bang>0
-    \ )
 '''
-
-[[plugins]]
-repo = 'Shougo/context_filetype.vim'
-
 
 [[plugins]]
 repo="lambdalisue/gina.vim"
@@ -468,10 +247,6 @@ let g:gina#command#blame#formatter#format = "%au|%su%=%ti|%ma%in"
 '''
 
 [[plugins]]
-repo='moll/vim-bbye'
-hook_source='''
-Scuttle (buffers) Delete buffer
-nnoremap <Leader>q :Bdelete<CR>
 '''
 
 [[plugins]]

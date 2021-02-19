@@ -1,5 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =3
+let g:netrw_dirhistcnt =4
+let g:netrw_dirhist_4='/Users/conlindurbin/.config/nvim/lua/config'
 let g:netrw_dirhist_3='/Users/conlindurbin/.config/nvim/plugin'
 let g:netrw_dirhist_2='/Users/conlindurbin/.cache/dein'
 let g:netrw_dirhist_1='/Users/conlindurbin/.cache'
