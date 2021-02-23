@@ -13,8 +13,16 @@ _/ ___\\__  \  /    \   __\_  __ \  \____ \
 
 # What is Cantrip?
 
+cantrip is a (WIP) nvim configuration designed to use cutting edge settings and packages. All configuration is handled by Lua, which is much easier to work with over Vimscript.
+
 # Installation
+
+_coming soon_
 
 # Settings
 
+_coming soon_
+
 # About the plugins
+
+_coming soon_
