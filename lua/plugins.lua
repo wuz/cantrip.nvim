@@ -60,7 +60,11 @@ return require "packer".startup(
     use {
       {"kosayoda/nvim-lightbulb", config = [[require'config.lightbulb']]},
       "onsails/lspkind-nvim",
-      "neovim/nvim-lspconfig",
+      "anott03/nvim-lspinstall",
+      {
+        "neovim/nvim-lspconfig",
+        config = [[require'config.lsp']]
+      },
       "nvim-lua/lsp-status.nvim",
       {
         "nvim-treesitter/nvim-treesitter",
@@ -94,12 +98,7 @@ return require "packer".startup(
     -- ─────────────────────────────────────────────────────────────────────
 
     use "chaoren/vim-wordmotion"
-    use {
-      "moll/vim-bbye",
-      config=[[
-		nnoremap <Leader>q :Bdelete<CR>
-	]]
-    }
+    use "moll/vim-bbye"
     use "Shougo/context_filetype.vim"
     use "tpope/vim-endwise"
     use "9mm/vim-closer"
@@ -125,6 +124,9 @@ return require "packer".startup(
       ft = {"css", "javascript", "vim", "html"},
       config = [[require('colorizer').setup {'css', 'javascript', 'vim', 'html'}]]
     }
+
+    use {"ojroques/nvim-bufdel"}
+    use {"thinca/vim-ref"}
 
     -- ┌───────────────────────────────────────────────────────────────────┐
     -- │ █ Git                                                             │
@@ -165,6 +167,7 @@ return require "packer".startup(
     use "tpope/vim-repeat"
     use "christoomey/vim-conflicted"
     use "matze/vim-move"
+    use { 'glacambre/firenvim', run = function() vim.fn['firenvim#install'](0) end }
 
     -- ┌────────────────────────────────────────────────────────────────-──┐
     -- │ █ Lazy                                                            │
