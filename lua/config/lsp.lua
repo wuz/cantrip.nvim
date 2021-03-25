@@ -176,6 +176,7 @@ local servers = {
 local snippet_capabilities = {
   textDocument = {completion = {completionItem = {snippetSupport = true}}}
 }
+
 for server, config in pairs(servers) do
   config.on_attach = on_attach
   config.capabilities = vim.tbl_deep_extend('keep', config.capabilities or {},

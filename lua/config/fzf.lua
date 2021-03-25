@@ -2,6 +2,7 @@ local map = require'utils'.map
 local termcode = require'utils'.termcode
 local command = require'utils'.command
 local cmd = vim.cmd
+local fn = vim.fn
 
 local opts = {noremap = true, silent = true}
 
@@ -22,7 +23,22 @@ command('Files', "fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--c
 command('Siblings', "fzf#vim#files(<q-args>, fzf#vim#with_preview({'dir': expand('%:p:h'), 'options': ['--color', 'hl:9,hl+:14']}), <bang>0)")
 
 
+-- TODO: Rewrite in Lua
+
+vim.api.nvim_exec([[
+function! BuildQuickFixList(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+  copen
+  cc
+endfunction
+
+]], false)
+
+vim.api.nvim_exec([[
+let g:fzf_action = { 'ctrl-q': function('BuildQuickFixList'), 'ctrl-t': 'tab split', 'ctrl-x': 'split', 'ctrl-v': 'vsplit' }
+]], false)
+
 cmd("let $FZF_DEFAULT_COMMAND='fd --type f -H -E .git'")
 cmd('let $FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"')
--- cmd("let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all --ansi --reverse --multi --color=dark --color=bg+:#4f5987,bg:#1d1f30,spinner:#39ffba,hl:#858db7 --color=fg:#eff0f6,header:#eff0f6,info:#858db7,pointer:#ff476e --color=marker:#ff476e,fg+:#a5abca,prompt:#ff476e,hl+:#39ffba --color=gutter:#2a2d46'")
+cmd("let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all --ansi --reverse --multi --color=dark --color=bg+:#4f5987,bg:#1d1f30,spinner:#39ffba,hl:#858db7 --color=fg:#eff0f6,header:#eff0f6,info:#858db7,pointer:#ff476e --color=marker:#ff476e,fg+:#a5abca,prompt:#ff476e,hl+:#39ffba --color=gutter:#2a2d46'")
 

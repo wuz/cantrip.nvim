@@ -151,6 +151,7 @@ return require "packer".startup(
     use {"junegunn/fzf.vim", config = [[require('config.fzf')]]} -- fzf vim bindings
     use {"pbogut/fzf-mru.vim"} -- fzf mru source
     use {"yuki-ycino/fzf-preview.vim"} -- integration fzf preview with coc
+    use { "Olical/vim-enmasse" }
     use {"eugen0329/vim-esearch"} -- the best of the best way to search
     use {"romgrk/searchReplace.vim"} -- better search and replace
     use {"svermeulen/vim-subversive"} -- fast substitute
@@ -167,7 +168,6 @@ return require "packer".startup(
     use "tpope/vim-repeat"
     use "christoomey/vim-conflicted"
     use "matze/vim-move"
-    use { 'glacambre/firenvim', run = function() vim.fn['firenvim#install'](0) end }
 
     -- ┌────────────────────────────────────────────────────────────────-──┐
     -- │ █ Lazy                                                            │
