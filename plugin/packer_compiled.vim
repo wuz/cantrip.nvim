@@ -61,10 +61,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/conlindurbin/.local/share/nvim/site/pack/packer/start/fern.vim"
   },
-  firenvim = {
-    loaded = true,
-    path = "/Users/conlindurbin/.local/share/nvim/site/pack/packer/start/firenvim"
-  },
   ["formatter.nvim"] = {
     config = { "require('config.format')" },
     loaded = true,
@@ -346,40 +342,40 @@ _G.packer_plugins = {
 -- Setup for: indentLine
 require('config.indentline')
 vim.cmd [[packadd indentLine]]
--- Config for: galaxyline.nvim
-require'config.statusline'
--- Config for: nvim-web-devicons
-try_loadstring("\27LJ\2\nO\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\fdefault\2\nsetup\22nvim-web-devicons\frequire\0", "config", "nvim-web-devicons")
--- Config for: gina.vim
-require('config.gina')
--- Config for: nvim-compe
-require('config.compe')
--- Config for: fzf.vim
-require('config.fzf')
--- Config for: vim-easy-align
-require('config.easy_align')
--- Config for: vim-startify
-require'config.startify'
 -- Config for: nvim-lspconfig
 require'config.lsp'
--- Config for: vim-polyglot
-require'config.polyglot'
--- Config for: nvim-lightbulb
-require'config.lightbulb'
--- Config for: gitsigns.nvim
-try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
+-- Config for: vim-easy-align
+require('config.easy_align')
 -- Config for: fern.vim
 require'config.fern'
--- Config for: formatter.nvim
-require('config.format')
--- Config for: vim-agriculture
-require('config.agriculture')
--- Config for: nvim-treesitter
-require('config.treesitter')
--- Config for: scuttle
-require('config.scuttle')
 -- Config for: glyph-palette.vim
 require('config.glyph')
+-- Config for: vim-polyglot
+require'config.polyglot'
+-- Config for: fzf.vim
+require('config.fzf')
+-- Config for: scuttle
+require('config.scuttle')
+-- Config for: nvim-treesitter
+require('config.treesitter')
+-- Config for: nvim-web-devicons
+try_loadstring("\27LJ\2\nO\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\fdefault\2\nsetup\22nvim-web-devicons\frequire\0", "config", "nvim-web-devicons")
+-- Config for: gitsigns.nvim
+try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
+-- Config for: gina.vim
+require('config.gina')
+-- Config for: vim-agriculture
+require('config.agriculture')
+-- Config for: nvim-lightbulb
+require'config.lightbulb'
+-- Config for: formatter.nvim
+require('config.format')
+-- Config for: vim-startify
+require'config.startify'
+-- Config for: galaxyline.nvim
+require'config.statusline'
+-- Config for: nvim-compe
+require('config.compe')
 
 -- Command lazy-loads
 vim.cmd [[command! -nargs=* -range -bang -complete=file Rename lua require("packer.load")({'rename.vim'}, { cmd = "Rename", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
@@ -391,15 +387,15 @@ vim.cmd [[noremap <silent> <Plug>(git-messenger) <cmd>lua require("packer.load")
 vim.cmd [[augroup packer_load_aucmds]]
 vim.cmd [[au!]]
   -- Filetype lazy-loads
-vim.cmd [[au FileType diff ++once lua require("packer.load")({'vim-ft-diff_fold'}, { ft = "diff" }, _G.packer_plugins)]]
 vim.cmd [[au FileType scss ++once lua require("packer.load")({'vim-css-color'}, { ft = "scss" }, _G.packer_plugins)]]
 vim.cmd [[au FileType sass ++once lua require("packer.load")({'vim-css-color'}, { ft = "sass" }, _G.packer_plugins)]]
 vim.cmd [[au FileType less ++once lua require("packer.load")({'vim-css-color'}, { ft = "less" }, _G.packer_plugins)]]
+vim.cmd [[au FileType help ++once lua require("packer.load")({'vim-ft-help_fold'}, { ft = "help" }, _G.packer_plugins)]]
 vim.cmd [[au FileType css ++once lua require("packer.load")({'vim-css-color', 'nvim-colorizer.lua'}, { ft = "css" }, _G.packer_plugins)]]
 vim.cmd [[au FileType javascript ++once lua require("packer.load")({'nvim-colorizer.lua'}, { ft = "javascript" }, _G.packer_plugins)]]
-vim.cmd [[au FileType vim ++once lua require("packer.load")({'nvim-colorizer.lua'}, { ft = "vim" }, _G.packer_plugins)]]
 vim.cmd [[au FileType html ++once lua require("packer.load")({'nvim-colorizer.lua'}, { ft = "html" }, _G.packer_plugins)]]
-vim.cmd [[au FileType help ++once lua require("packer.load")({'vim-ft-help_fold'}, { ft = "help" }, _G.packer_plugins)]]
+vim.cmd [[au FileType vim ++once lua require("packer.load")({'nvim-colorizer.lua'}, { ft = "vim" }, _G.packer_plugins)]]
+vim.cmd [[au FileType diff ++once lua require("packer.load")({'vim-ft-diff_fold'}, { ft = "diff" }, _G.packer_plugins)]]
 vim.cmd("augroup END")
 END
 
