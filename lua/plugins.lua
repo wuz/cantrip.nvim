@@ -27,8 +27,10 @@ return require "packer".startup(
     --        Style
     -- ─────────────────────────────────────────────────────────────────────
     use {"ntk148v/vim-horizon"}
-    use {"https://git.sr.ht/~wuz/warlock"}
+    use {"DankNeon/vim"}
+    -- use {"https://git.sr.ht/~wuz/warlock"}
     use {"wbthomason/vim-nazgul"}
+    use {"folke/lsp-colors.nvim"}
     use {
       "kyazdani42/nvim-web-devicons",
       config = function()
@@ -61,6 +63,7 @@ return require "packer".startup(
       {"kosayoda/nvim-lightbulb", config = [[require'config.lightbulb']]},
       "onsails/lspkind-nvim",
       "anott03/nvim-lspinstall",
+      "simrat39/symbols-outline.nvim",
       {
         "neovim/nvim-lspconfig",
         config = [[require'config.lsp']]
@@ -88,8 +91,7 @@ return require "packer".startup(
     use {
       "hrsh7th/nvim-compe",
       requires = {
-        {"hrsh7th/vim-vsnip", opt = true},
-        {"hrsh7th/vim-vsnip-integ", opt = true}
+        {"L3MON4D3/LuaSnip"}
       },
       config = [[require('config.compe')]]
     }
@@ -98,8 +100,14 @@ return require "packer".startup(
     -- ─────────────────────────────────────────────────────────────────────
 
     use "chaoren/vim-wordmotion"
+    use "kana/vim-arpeggio"
     use "moll/vim-bbye"
-    use "Shougo/context_filetype.vim"
+    use {
+      "Shougo/context_filetype.vim",
+      requires = {
+        "joker1007/vim-ruby-heredoc-syntax"
+      }
+    }
     use "tpope/vim-endwise"
     use "9mm/vim-closer"
     use "tyru/caw.vim"
@@ -114,8 +122,10 @@ return require "packer".startup(
           "lambdalisue/glyph-palette.vim",
           config = [[require('config.glyph')]]
         },
+        "yuki-yano/fern-preview.vim",
         "lambdalisue/fern-git-status.vim",
-        "lambdalisue/fern-mapping-git.vim"
+        "lambdalisue/fern-mapping-git.vim",
+        "lambdalisue/fern-hijack.vim"
       },
       config = [[require'config.fern']]
     }
@@ -146,12 +156,12 @@ return require "packer".startup(
     -- ┌────────────────────────────────────────────────────────────────-──┐
     -- │ █ Search                                                          │
     -- └───────────────────────────────────────────────────────────────────┘
-    use {"jesseleite/vim-agriculture", config = [[require('config.agriculture')]]}
-    use {"junegunn/fzf"} -- fzf binary
-    use {"junegunn/fzf.vim", config = [[require('config.fzf')]]} -- fzf vim bindings
-    use {"pbogut/fzf-mru.vim"} -- fzf mru source
-    use {"yuki-ycino/fzf-preview.vim"} -- integration fzf preview with coc
-    use { "Olical/vim-enmasse" }
+    use {
+      "nvim-telescope/telescope.nvim",
+      requires = {{"nvim-lua/popup.nvim"}, {"nvim-lua/plenary.nvim"}},
+      config = [[require('config.telescope')]]
+    }
+    use {"Olical/vim-enmasse"}
     use {"eugen0329/vim-esearch"} -- the best of the best way to search
     use {"romgrk/searchReplace.vim"} -- better search and replace
     use {"svermeulen/vim-subversive"} -- fast substitute

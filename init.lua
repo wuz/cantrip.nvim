@@ -21,17 +21,11 @@ o.updatetime = 100
 wo.cursorcolumn = false
 wo.cursorline = false
 o.synmaxcol = 300
+o.splitbelow = true
+o.splitright = true
 
 -- Completion
-o.completeopt = "menuone,noselect"
-
--- Appearance
-o.termguicolors = true
-c("colorscheme warlock")
-o.background = "dark"
-o.syntax = "on"
-o.guicursor = "n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor"
-o.fillchars = "vert:┃"
+o.completeopt = "menuone,noinsert"
 
 -- Folding
 o.foldlevel = 2
@@ -68,10 +62,17 @@ vim.cmd([[highlight Comment cterm=italic gui=italic]])
 vim.cmd([[highlight VertSplit ctermbg=NONE]])
 
 -- WildMenu
-o.wildmenu=true
-o.wildignore=o.wildignore.."*.jpg,*.jpeg,*.gif,*.png,*.gif,*.psd,*.o,*.obj,*.min.js,*/smarty/*,*/vendor/*,*/node_modules/*,*/.git/*,*/.hg/*,*/.svn/*,*/.sass-cache/*,*/log/*,*/tmp/*,*/build/*,*/ckeditor/*"
-o.wildmode="list:longest"
-o.winminheight=0
+o.wildmenu = true
+o.wildignore =
+  o.wildignore ..
+  "*.jpg,*.jpeg,*.gif,*.png,*.gif,*.psd,*.o,*.obj,*.min.js,*/smarty/*,*/vendor/*,*/node_modules/*,*/.git/*,*/.hg/*,*/.svn/*,*/.sass-cache/*,*/log/*,*/tmp/*,*/build/*,*/ckeditor/*"
+o.wildmode = "list:longest"
+o.winminheight = 0
 
-
-
+-- Appearance
+o.termguicolors = true
+c("colorscheme warlock")
+o.background = "dark"
+o.syntax = "on"
+o.guicursor = "n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor"
+o.fillchars = "vert:┃"
