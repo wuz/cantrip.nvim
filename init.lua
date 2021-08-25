@@ -1,6 +1,7 @@
 local autocmd = require "utils".autocmd
 local termcode = require "utils".termcode
 local o = vim.o
+local g = vim.g
 local wo = vim.wo
 local bo = vim.bo
 local c = vim.cmd
@@ -25,7 +26,7 @@ o.splitbelow = true
 o.splitright = true
 
 -- Completion
-o.completeopt = "menuone,noinsert"
+o.completeopt = "menuone,noselect"
 
 -- Folding
 o.foldlevel = 2
@@ -71,8 +72,20 @@ o.winminheight = 0
 
 -- Appearance
 o.termguicolors = true
-c("colorscheme warlock")
+
+g.calvera_italic_keywords = false
+g.calvera_borders = true
+g.calvera_contrast = true
+g.calvera_hide_eob = true
+g.calvera_custom_colors = {contrast = "#0f111a"}
+
+require "calvera".set()
+
+-- c("colorscheme warlock")
 o.background = "dark"
 o.syntax = "on"
 o.guicursor = "n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor"
 o.fillchars = "vert:┃"
+
+require "disable"
+require "cantriprc"

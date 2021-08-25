@@ -1,10 +1,8 @@
 local map = require "utils".map
 local autocmd = require "utils".autocmd
 
--- Scuttle <C-h> (buffers) previous buffer
-map("n", "<C-h>", ":bprev<CR>", noremap)
--- Scuttle <C-l> (buffers) next buffer
-map("n", "<C-l>", ":bnext<CR>", noremap)
+map("n", "<C-h>", ":BufferPrevious<CR>", noremap)
+map("n", "<C-l>", ":BufferNext<CR>", noremap)
 
 function CenterToggle()
   local name = "_centered_"
@@ -38,6 +36,13 @@ map("t", "<C-v><Esc>", "<Esc>", noremap)
 
 map("n", "<C-S-M-h>", "<Esc><C-w>h", noremap)
 
--- vim.cmd([[
---   call arpeggio#map('i', '', 0, '<C-h><S-h><M-h>', '<Esc><C-w>h')
---] ])
+vim.g.git_messenger_no_default_mappings = true
+map("n", "<Leader>,", ":GitMessenger<CR>", noremap)
+
+map("n", "<Leader>ss", ":<C-u>SessionSave<CR>")
+map("n", "<Leader>sl", ":<C-u>SessionLoad<CR>")
+
+vim.cmd([[
+nmap S <plug>(SubversiveSubstitute)
+nmap SS <plug>(SubversiveSubstituteLine)
+]])

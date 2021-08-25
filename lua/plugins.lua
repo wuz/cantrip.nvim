@@ -2,6 +2,8 @@ local fn = vim.fn
 local install_path = fn.stdpath("data") .. "/site/pack/packer/opt/packer.nvim"
 local execute = vim.api.nvim_command
 
+vim.fn.setenv("MACOSX_DEPLOYMENT_TARGET", "10.15")
+
 if fn.empty(fn.glob(install_path)) > 0 then
   execute("!git clone https://github.com/wbthomason/packer.nvim " .. install_path)
   execute("packadd packer.nvim")
@@ -18,7 +20,8 @@ return require "packer".startup(
     -- Packer can manage itself as an optional plugin
     use {"wbthomason/packer.nvim", opt = true}
     -- use {'svermeulen/nvim-moonmaker'}
-    use {"https://git.sr.ht/~wuz/scuttle.vim", as = "scuttle", config = [[require('config.scuttle')]]}
+    -- use {"https://git.sr.ht/~wuz/scuttle.vim", as = "scuttle", config = [[require('config.scuttle')]]}
+    use {"folke/which-key.nvim", config = [[require'config.which_key']]}
 
     -- ┌───────────────────────────────────────────────────────────────────┐
     -- │ █ Main                                                            │
@@ -30,6 +33,7 @@ return require "packer".startup(
     use {"DankNeon/vim"}
     -- use {"https://git.sr.ht/~wuz/warlock"}
     use {"wbthomason/vim-nazgul"}
+    use {"yashguptaz/calvera-dark.nvim"}
     use {"folke/lsp-colors.nvim"}
     use {
       "kyazdani42/nvim-web-devicons",
@@ -40,13 +44,20 @@ return require "packer".startup(
       end
     }
     use {
-      "mhinz/vim-startify",
-      requires = {"kyazdani42/nvim-web-devicons"},
-      config = [[require'config.startify']]
+      "romgrk/barbar.nvim",
+      requires = {"kyazdani42/nvim-web-devicons"}
     }
     use {
-      "glepnir/galaxyline.nvim",
-      branch = "main",
+      "glepnir/dashboard-nvim",
+      config = [[require'config.dashboard']]
+    }
+    -- use {
+    --   "mhinz/vim-startify",
+    --   requires = {"kyazdani42/nvim-web-devicons"},
+    --   config = [[require'config.startify']]
+    -- }
+    use {
+      "hoob3rt/lualine.nvim",
       config = [[require'config.statusline']],
       requires = {"kyazdani42/nvim-web-devicons"}
     }
@@ -61,6 +72,7 @@ return require "packer".startup(
     -- ─────────────────────────────────────────────────────────────────────
     use {
       {"kosayoda/nvim-lightbulb", config = [[require'config.lightbulb']]},
+      "glepnir/lspsaga.nvim",
       "onsails/lspkind-nvim",
       "anott03/nvim-lspinstall",
       "simrat39/symbols-outline.nvim",
@@ -100,7 +112,10 @@ return require "packer".startup(
     -- ─────────────────────────────────────────────────────────────────────
 
     use "chaoren/vim-wordmotion"
-    use "kana/vim-arpeggio"
+    use {
+      "folke/trouble.nvim",
+      requires = "kyazdani42/nvim-web-devicons"
+    }
     use "moll/vim-bbye"
     use {
       "Shougo/context_filetype.vim",
@@ -152,6 +167,7 @@ return require "packer".startup(
         require("gitsigns").setup()
       end
     }
+    use {"rhysd/git-messenger.vim"}
 
     -- ┌────────────────────────────────────────────────────────────────-──┐
     -- │ █ Search                                                          │
@@ -161,37 +177,25 @@ return require "packer".startup(
       requires = {{"nvim-lua/popup.nvim"}, {"nvim-lua/plenary.nvim"}},
       config = [[require('config.telescope')]]
     }
-    use {"Olical/vim-enmasse"}
     use {"eugen0329/vim-esearch"} -- the best of the best way to search
-    use {"romgrk/searchReplace.vim"} -- better search and replace
     use {"svermeulen/vim-subversive"} -- fast substitute
     use {"haya14busa/vim-asterisk"} -- smartcase star
 
     use "tpope/vim-surround"
     use "mhinz/vim-signify"
     use "tpope/vim-abolish"
-    use "easymotion/vim-easymotion"
+    -- use "easymotion/vim-easymotion"
     use "wellle/targets.vim"
     use "xolox/vim-reload"
     use "xolox/vim-misc"
     use "tpope/vim-fugitive"
-    use "tpope/vim-repeat"
+    use "kana/vim-repeat"
     use "christoomey/vim-conflicted"
     use "matze/vim-move"
 
     -- ┌────────────────────────────────────────────────────────────────-──┐
     -- │ █ Lazy                                                            │
     -- └───────────────────────────────────────────────────────────────────┘
-
-    use {
-      "rhysd/git-messenger.vim",
-      cmd = "GitMessenger",
-      keys = "<Plug>(git-messenger)",
-      requires = {"scuttle"},
-      run = [[
-		nmap <Leader>, :GitMessenger<CR>
-		]]
-    }
 
     use {
       "danro/rename.vim",
