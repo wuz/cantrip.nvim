@@ -18,8 +18,10 @@
 
 Cantrip
 ---
+<div align="center">
 
-![GitHub issues](https://img.shields.io/github/issues-raw/wuz/cantrip)
+![GitHub issues](https://img.shields.io/github/issues-raw/wuz/cantrip) ⧊ ![GitHub top language](https://img.shields.io/github/languages/top/wuz/cantrip)
+</div>
 
 # What is Cantrip?
 
