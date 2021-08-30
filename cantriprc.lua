@@ -1,3 +1,1 @@
-require "cantrip".setup {
-  translucent = true
-}
+require "cantrip".setup {}
