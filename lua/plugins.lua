@@ -34,6 +34,7 @@ return require "packer".startup(
     -- use {"https://git.sr.ht/~wuz/warlock"}
     use {"wbthomason/vim-nazgul"}
     use {"yashguptaz/calvera-dark.nvim"}
+    use {"wadackel/vim-dogrun"}
     use {"folke/lsp-colors.nvim"}
     use {
       "kyazdani42/nvim-web-devicons",
@@ -43,9 +44,16 @@ return require "packer".startup(
         }
       end
     }
+    use {"folke/twilight.nvim", config = [[require'config.twilight']]}
+    use {
+      "kyazdani42/nvim-tree.lua",
+      requires = "kyazdani42/nvim-web-devicons",
+      config = [[require'config.tree']]
+    }
     use {
       "romgrk/barbar.nvim",
-      requires = {"kyazdani42/nvim-web-devicons"}
+      requires = {"kyazdani42/nvim-web-devicons"},
+      config = [[require'config.barbar']]
     }
     use {
       "glepnir/dashboard-nvim",
@@ -111,11 +119,13 @@ return require "packer".startup(
     --        General Functionality
     -- ─────────────────────────────────────────────────────────────────────
 
-    use "chaoren/vim-wordmotion"
     use {
       "folke/trouble.nvim",
-      requires = "kyazdani42/nvim-web-devicons"
+      requires = "kyazdani42/nvim-web-devicons",
+      config = [[require'config.trouble']]
     }
+    use {"gelguy/wilder.nvim", requires = "romgrk/fzy-lua-native", config = [[require'config.wilder']]}
+    use "chaoren/vim-wordmotion"
     use "moll/vim-bbye"
     use {
       "Shougo/context_filetype.vim",
@@ -126,24 +136,24 @@ return require "packer".startup(
     use "tpope/vim-endwise"
     use "9mm/vim-closer"
     use "tyru/caw.vim"
-    use {
-      "lambdalisue/fern.vim",
-      requires = {
-        "antoinemadec/FixCursorHold.nvim",
-        "kyazdani42/nvim-web-devicons",
-        "lambdalisue/nerdfont.vim",
-        "lambdalisue/fern-renderer-nerdfont.vim",
-        {
-          "lambdalisue/glyph-palette.vim",
-          config = [[require('config.glyph')]]
-        },
-        "yuki-yano/fern-preview.vim",
-        "lambdalisue/fern-git-status.vim",
-        "lambdalisue/fern-mapping-git.vim",
-        "lambdalisue/fern-hijack.vim"
-      },
-      config = [[require'config.fern']]
-    }
+    -- use {
+    --   "lambdalisue/fern.vim",
+    --   requires = {
+    --     "antoinemadec/FixCursorHold.nvim",
+    --     "kyazdani42/nvim-web-devicons",
+    --     "lambdalisue/nerdfont.vim",
+    --     "lambdalisue/fern-renderer-nerdfont.vim",
+    --     {
+    --       "lambdalisue/glyph-palette.vim",
+    --       config = [[require('config.glyph')]]
+    --     },
+    --     "yuki-yano/fern-preview.vim",
+    --     "lambdalisue/fern-git-status.vim",
+    --     "lambdalisue/fern-mapping-git.vim",
+    --     "lambdalisue/fern-hijack.vim"
+    --   },
+    --   config = [[require'config.fern']]
+    -- }
     use {
       "norcalli/nvim-colorizer.lua",
       ft = {"css", "javascript", "vim", "html"},
@@ -167,6 +177,7 @@ return require "packer".startup(
         require("gitsigns").setup()
       end
     }
+    use {"f-person/git-blame.nvim"}
     use {"rhysd/git-messenger.vim"}
 
     -- ┌────────────────────────────────────────────────────────────────-──┐

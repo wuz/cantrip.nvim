@@ -5,12 +5,10 @@ local cmd = vim.cmd
 local fn = vim.fn
 
 local opts = {noremap = true, silent = true}
+local actions = require("telescope.actions")
+local trouble = require("trouble.providers.telescope")
 
--- map("n", "<C-P>", ":Files<CR>", opts)
--- map("n", "<C-T>", ":Tags<CR>", opts)
--- map("n", "<C-M>", ":History<CR>", opts)
-map("n", "<C-D>", ":Siblings<CR>", opts)
--- map("n", "<C-B>", ":Buffers<CR>", opts)
+-- map("n", "<C-D>", ":Siblings<CR>", opts)
 
 map(
   "n",
@@ -61,7 +59,11 @@ require("telescope").setup(
         "--column",
         "--smart-case"
       },
-      prompt_prefix = " ",
+      mappings = {
+        i = {["<c-t>"] = trouble.open_with_trouble},
+        n = {["<c-t>"] = trouble.open_with_trouble}
+      },
+      prompt_prefix = " ",
       selection_caret = "● ",
       entry_prefix = "  ",
       initial_mode = "insert",

@@ -1,6 +1,6 @@
 require "string"
 require "math"
-local autocmd = require "utils".autocmd
+local autocmd = require "utils.autocmd"
 
 autocmd("Startified", "User setlocal cursorline", true)
 

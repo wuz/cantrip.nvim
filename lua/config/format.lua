@@ -1,5 +1,5 @@
 local map = require "utils".map
-local autocmd = require "utils".autocmd
+local autocmd = require "utils.autocmd"
 
 local function prettier()
   return {

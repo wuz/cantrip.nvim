@@ -10,22 +10,8 @@ local function opt(o, v, scopes)
   end
 end
 
-local function autocmd(group, cmds, clear)
-  clear = clear == nil and false or clear
-  if type(cmds) == "string" then
-    cmds = {cmds}
-  end
-  cmd("augroup " .. group)
-  if clear then
-    cmd [[au!]]
-  end
-  for _, c in ipairs(cmds) do
-    cmd("autocmd " .. c)
-  end
-  cmd [[augroup END]]
-end
-
-local function map(modes, lhs, rhs, opts)
+local function map(modes, lhs, rhs, opts, desc)
+  desc = desc or rhs
   opts = opts or {}
   opts.noremap = opts.noremap == nil and true or opts.noremap
   if type(modes) == "string" then
@@ -48,7 +34,6 @@ local function unmap(modes, key, opts)
 end
 
 local function termcode(str)
-  -- Adjust boolean arguments as needed
   return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 
@@ -56,4 +41,4 @@ local function command(name, exec)
   cmd("command! -bang -nargs=? -complete=dir " .. name .. " call " .. exec)
 end
 
-return {opt = opt, autocmd = autocmd, map = map, termcode = termcode, command = command}
+return {opt = opt, map = map, termcode = termcode, command = command}

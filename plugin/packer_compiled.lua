@@ -69,15 +69,12 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
-  ["FixCursorHold.nvim"] = {
-    loaded = true,
-    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/FixCursorHold.nvim"
-  },
   LuaSnip = {
     loaded = true,
     path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/LuaSnip"
   },
   ["barbar.nvim"] = {
+    config = { "require'config.barbar'" },
     loaded = true,
     path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/barbar.nvim"
   },
@@ -98,40 +95,23 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/dashboard-nvim"
   },
-  ["fern-git-status.vim"] = {
-    loaded = true,
-    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/fern-git-status.vim"
-  },
-  ["fern-hijack.vim"] = {
-    loaded = true,
-    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/fern-hijack.vim"
-  },
-  ["fern-mapping-git.vim"] = {
-    loaded = true,
-    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/fern-mapping-git.vim"
-  },
-  ["fern-preview.vim"] = {
-    loaded = true,
-    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/fern-preview.vim"
-  },
-  ["fern-renderer-nerdfont.vim"] = {
-    loaded = true,
-    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/fern-renderer-nerdfont.vim"
-  },
-  ["fern.vim"] = {
-    config = { "require'config.fern'" },
-    loaded = true,
-    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/fern.vim"
-  },
   ["formatter.nvim"] = {
     config = { "require('config.format')" },
     loaded = true,
     path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/formatter.nvim"
   },
+  ["fzy-lua-native"] = {
+    loaded = true,
+    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/fzy-lua-native"
+  },
   ["gina.vim"] = {
     config = { "require('config.gina')" },
     loaded = true,
     path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/gina.vim"
+  },
+  ["git-blame.nvim"] = {
+    loaded = true,
+    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/git-blame.nvim"
   },
   ["git-messenger.vim"] = {
     loaded = true,
@@ -141,11 +121,6 @@ _G.packer_plugins = {
     config = { "\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0" },
     loaded = true,
     path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/gitsigns.nvim"
-  },
-  ["glyph-palette.vim"] = {
-    config = { "require('config.glyph')" },
-    loaded = true,
-    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/glyph-palette.vim"
   },
   indentLine = {
     after_files = { "/Users/wuz/.local/share/nvim/site/pack/packer/opt/indentLine/after/plugin/indentLine.vim" },
@@ -173,10 +148,6 @@ _G.packer_plugins = {
     config = { "require'config.statusline'" },
     loaded = true,
     path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/lualine.nvim"
-  },
-  ["nerdfont.vim"] = {
-    loaded = true,
-    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/nerdfont.vim"
   },
   ["nvim-bufdel"] = {
     loaded = true,
@@ -206,6 +177,11 @@ _G.packer_plugins = {
   ["nvim-lspinstall"] = {
     loaded = true,
     path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/nvim-lspinstall"
+  },
+  ["nvim-tree.lua"] = {
+    config = { "require'config.tree'" },
+    loaded = true,
+    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/nvim-tree.lua"
   },
   ["nvim-treesitter"] = {
     config = { "require('config.treesitter')" },
@@ -258,8 +234,14 @@ _G.packer_plugins = {
     path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/telescope.nvim"
   },
   ["trouble.nvim"] = {
+    config = { "require'config.trouble'" },
     loaded = true,
     path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/trouble.nvim"
+  },
+  ["twilight.nvim"] = {
+    config = { "require'config.twilight'" },
+    loaded = true,
+    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/twilight.nvim"
   },
   vim = {
     loaded = true,
@@ -289,6 +271,10 @@ _G.packer_plugins = {
     loaded = false,
     needs_bufread = false,
     path = "/Users/wuz/.local/share/nvim/site/pack/packer/opt/vim-css-color"
+  },
+  ["vim-dogrun"] = {
+    loaded = true,
+    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/vim-dogrun"
   },
   ["vim-easy-align"] = {
     config = { "require('config.easy_align')" },
@@ -374,6 +360,11 @@ _G.packer_plugins = {
     config = { "require'config.which_key'" },
     loaded = true,
     path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/which-key.nvim"
+  },
+  ["wilder.nvim"] = {
+    config = { "require'config.wilder'" },
+    loaded = true,
+    path = "/Users/wuz/.local/share/nvim/site/pack/packer/start/wilder.nvim"
   }
 }
 
@@ -385,70 +376,82 @@ time([[Setup for indentLine]], false)
 time([[packadd for indentLine]], true)
 vim.cmd [[packadd indentLine]]
 time([[packadd for indentLine]], false)
--- Config for: formatter.nvim
-time([[Config for formatter.nvim]], true)
-require('config.format')
-time([[Config for formatter.nvim]], false)
--- Config for: nvim-web-devicons
-time([[Config for nvim-web-devicons]], true)
-try_loadstring("\27LJ\2\nO\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\fdefault\2\nsetup\22nvim-web-devicons\frequire\0", "config", "nvim-web-devicons")
-time([[Config for nvim-web-devicons]], false)
--- Config for: vim-polyglot
-time([[Config for vim-polyglot]], true)
-require'config.polyglot'
-time([[Config for vim-polyglot]], false)
 -- Config for: nvim-lspconfig
 time([[Config for nvim-lspconfig]], true)
 require'config.lsp'
 time([[Config for nvim-lspconfig]], false)
--- Config for: nvim-compe
-time([[Config for nvim-compe]], true)
-require('config.compe')
-time([[Config for nvim-compe]], false)
--- Config for: dashboard-nvim
-time([[Config for dashboard-nvim]], true)
-require'config.dashboard'
-time([[Config for dashboard-nvim]], false)
--- Config for: nvim-lightbulb
-time([[Config for nvim-lightbulb]], true)
-require'config.lightbulb'
-time([[Config for nvim-lightbulb]], false)
--- Config for: nvim-treesitter
-time([[Config for nvim-treesitter]], true)
-require('config.treesitter')
-time([[Config for nvim-treesitter]], false)
--- Config for: gitsigns.nvim
-time([[Config for gitsigns.nvim]], true)
-try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
-time([[Config for gitsigns.nvim]], false)
--- Config for: telescope.nvim
-time([[Config for telescope.nvim]], true)
-require('config.telescope')
-time([[Config for telescope.nvim]], false)
--- Config for: vim-easy-align
-time([[Config for vim-easy-align]], true)
-require('config.easy_align')
-time([[Config for vim-easy-align]], false)
--- Config for: lualine.nvim
-time([[Config for lualine.nvim]], true)
-require'config.statusline'
-time([[Config for lualine.nvim]], false)
--- Config for: glyph-palette.vim
-time([[Config for glyph-palette.vim]], true)
-require('config.glyph')
-time([[Config for glyph-palette.vim]], false)
 -- Config for: gina.vim
 time([[Config for gina.vim]], true)
 require('config.gina')
 time([[Config for gina.vim]], false)
+-- Config for: nvim-tree.lua
+time([[Config for nvim-tree.lua]], true)
+require'config.tree'
+time([[Config for nvim-tree.lua]], false)
+-- Config for: nvim-treesitter
+time([[Config for nvim-treesitter]], true)
+require('config.treesitter')
+time([[Config for nvim-treesitter]], false)
+-- Config for: vim-easy-align
+time([[Config for vim-easy-align]], true)
+require('config.easy_align')
+time([[Config for vim-easy-align]], false)
+-- Config for: nvim-web-devicons
+time([[Config for nvim-web-devicons]], true)
+try_loadstring("\27LJ\2\nO\0\0\3\0\4\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0B\0\2\1K\0\1\0\1\0\1\fdefault\2\nsetup\22nvim-web-devicons\frequire\0", "config", "nvim-web-devicons")
+time([[Config for nvim-web-devicons]], false)
 -- Config for: which-key.nvim
 time([[Config for which-key.nvim]], true)
 require'config.which_key'
 time([[Config for which-key.nvim]], false)
--- Config for: fern.vim
-time([[Config for fern.vim]], true)
-require'config.fern'
-time([[Config for fern.vim]], false)
+-- Config for: wilder.nvim
+time([[Config for wilder.nvim]], true)
+require'config.wilder'
+time([[Config for wilder.nvim]], false)
+-- Config for: barbar.nvim
+time([[Config for barbar.nvim]], true)
+require'config.barbar'
+time([[Config for barbar.nvim]], false)
+-- Config for: telescope.nvim
+time([[Config for telescope.nvim]], true)
+require('config.telescope')
+time([[Config for telescope.nvim]], false)
+-- Config for: lualine.nvim
+time([[Config for lualine.nvim]], true)
+require'config.statusline'
+time([[Config for lualine.nvim]], false)
+-- Config for: trouble.nvim
+time([[Config for trouble.nvim]], true)
+require'config.trouble'
+time([[Config for trouble.nvim]], false)
+-- Config for: twilight.nvim
+time([[Config for twilight.nvim]], true)
+require'config.twilight'
+time([[Config for twilight.nvim]], false)
+-- Config for: vim-polyglot
+time([[Config for vim-polyglot]], true)
+require'config.polyglot'
+time([[Config for vim-polyglot]], false)
+-- Config for: gitsigns.nvim
+time([[Config for gitsigns.nvim]], true)
+try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
+time([[Config for gitsigns.nvim]], false)
+-- Config for: nvim-compe
+time([[Config for nvim-compe]], true)
+require('config.compe')
+time([[Config for nvim-compe]], false)
+-- Config for: formatter.nvim
+time([[Config for formatter.nvim]], true)
+require('config.format')
+time([[Config for formatter.nvim]], false)
+-- Config for: nvim-lightbulb
+time([[Config for nvim-lightbulb]], true)
+require'config.lightbulb'
+time([[Config for nvim-lightbulb]], false)
+-- Config for: dashboard-nvim
+time([[Config for dashboard-nvim]], true)
+require'config.dashboard'
+time([[Config for dashboard-nvim]], false)
 
 -- Command lazy-loads
 time([[Defining lazy-load commands]], true)
@@ -460,14 +463,14 @@ vim.cmd [[au!]]
   -- Filetype lazy-loads
 time([[Defining lazy-load filetype autocommands]], true)
 vim.cmd [[au FileType diff ++once lua require("packer.load")({'vim-ft-diff_fold'}, { ft = "diff" }, _G.packer_plugins)]]
+vim.cmd [[au FileType javascript ++once lua require("packer.load")({'nvim-colorizer.lua'}, { ft = "javascript" }, _G.packer_plugins)]]
+vim.cmd [[au FileType vim ++once lua require("packer.load")({'nvim-colorizer.lua'}, { ft = "vim" }, _G.packer_plugins)]]
 vim.cmd [[au FileType scss ++once lua require("packer.load")({'vim-css-color'}, { ft = "scss" }, _G.packer_plugins)]]
-vim.cmd [[au FileType css ++once lua require("packer.load")({'vim-css-color', 'nvim-colorizer.lua'}, { ft = "css" }, _G.packer_plugins)]]
+vim.cmd [[au FileType css ++once lua require("packer.load")({'nvim-colorizer.lua', 'vim-css-color'}, { ft = "css" }, _G.packer_plugins)]]
 vim.cmd [[au FileType less ++once lua require("packer.load")({'vim-css-color'}, { ft = "less" }, _G.packer_plugins)]]
 vim.cmd [[au FileType html ++once lua require("packer.load")({'nvim-colorizer.lua'}, { ft = "html" }, _G.packer_plugins)]]
-vim.cmd [[au FileType help ++once lua require("packer.load")({'vim-ft-help_fold'}, { ft = "help" }, _G.packer_plugins)]]
-vim.cmd [[au FileType vim ++once lua require("packer.load")({'nvim-colorizer.lua'}, { ft = "vim" }, _G.packer_plugins)]]
 vim.cmd [[au FileType sass ++once lua require("packer.load")({'vim-css-color'}, { ft = "sass" }, _G.packer_plugins)]]
-vim.cmd [[au FileType javascript ++once lua require("packer.load")({'nvim-colorizer.lua'}, { ft = "javascript" }, _G.packer_plugins)]]
+vim.cmd [[au FileType help ++once lua require("packer.load")({'vim-ft-help_fold'}, { ft = "help" }, _G.packer_plugins)]]
 time([[Defining lazy-load filetype autocommands]], false)
 vim.cmd("augroup END")
 if should_profile then save_profiles() end
