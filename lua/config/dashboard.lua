@@ -43,17 +43,17 @@ g.dashboard_custom_section = {
     command = "Telescope oldfiles"
   },
   c = {
-    description = {"  Update Plugins"},
-    command = "PackerUpdate"
-  },
-  e = {
     description = {" New Buffer"},
     command = "enew"
   },
   f = {
     description = {" Edit Config"},
     command = "e ~/.config/nvim/lua/cantriprc.lua"
-  }
+  },
+  g = {
+    description = {"  Update Plugins"},
+    command = "PackerUpdate"
+  },
 }
 
 g.dashboard_custom_footer = {

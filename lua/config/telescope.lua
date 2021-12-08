@@ -9,11 +9,21 @@ local actions = require("telescope.actions")
 local trouble = require("trouble.providers.telescope")
 
 -- map("n", "<C-D>", ":Siblings<CR>", opts)
+--
+
+local noremap = { noremap = true };
 
 map(
   "n",
   "<C-P>",
   "<cmd>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown({}))<cr>",
+  noremap
+)
+
+map(
+  "n",
+  "<C-N>",
+  "<cmd>lua require('telescope').extensions.notify.notify(require('telescope.themes').get_dropdown({}))<cr>",
   noremap
 )
 map(
@@ -28,12 +38,14 @@ map(
   "<cmd>lua require('telescope.builtin').tags(require('telescope.themes').get_dropdown({}))<cr>",
   noremap
 )
+
 map(
   "n",
-  "<Leader>a",
+  "<C-A>",
   "<cmd>lua require('telescope.builtin').live_grep(require('telescope.themes').get_dropdown({}))<cr>",
   noremap
 )
+
 map(
   "n",
   "<C-B>",

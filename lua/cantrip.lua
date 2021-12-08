@@ -23,17 +23,17 @@ Cantrip._setTheme = function(theme)
 end
 
 Cantrip._setLeader = function(leaderKey)
-  cmd('let mapleader="' .. leaderKey .. '"')
+  vim.g.mapleader=leaderKey;
 end
 
 Cantrip._setLocalLeader = function(localLeaderKey)
-  cmd('let maplocalleader="' .. localLeaderKey .. '"')
+  vim.g.maplocalleader=localLeaderKey;
 end
 
 Cantrip._normalize = function(config)
   config.theme = config.theme or "dogrun"
-  config.leaderKey = config.leaderKey or "\\<Space>"
-  config.localLeaderKey = config.localLeaderKey or "\\\\"
+  config.leaderKey = config.leaderKey or " "
+  config.localLeaderKey = config.localLeaderKey or "\\"
   config.translucent = Boolean.get(config.translucent, false)
   return config
 end

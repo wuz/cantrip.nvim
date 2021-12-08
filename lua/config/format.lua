@@ -1,128 +1,194 @@
-local map = require "utils".map
-local autocmd = require "utils.autocmd"
+local null_ls = require("null-ls")
 
-local function prettier()
-  return {
-    exe = "prettier",
-    args = {"--stdin-filepath", vim.api.nvim_buf_get_name(0)},
-    stdin = true
-  }
-end
-
--- local function rufo()
---   return {
---     exe = "bundle exec rufo",
---     args = {},
---     stdin = true
---   }
+-- local format = {
+--   filetypes = {},
+--   languages = {}
+-- }
+-- 
+-- local function createCommand(command, args_table)
+--   return command .. " " .. table.concat(args_table, " ")
 -- end
+-- 
+-- local programs = {
+--   prettier = {
+--     formatCommand = createCommand("prettier", {"--stdin-filepath", "${INPUT}"}),
+--     formatStdin = true
+--   },
+--   eslint = {
+--     lintStdin = true,
+--     lintFormats = {
+--       "%f(%l,%c): %tarning %m",
+--       "%f(%l,%c): %rror %m"
+--     },
+--     lintIgnoreExitCode = true,
+--     lintCommand = createCommand("eslint_d", {"-f unix", "--stdin","--stdin-filename", "${INPUT}", "-f visualstudio"}),
+--     formatCommand = createCommand("eslint_d", {"--fix-to-stdout", "--stdin","--stdin-filename", "${INPUT}"}),
+--     formatStdin = true,
+--   },
+--   -- rufo =
+--   --   return {
+--   --     formatCommand = "bundle formatCommandc rufo",
+--   --     args = {},
+--   --     formatStdin = true
+--   --   },
+-- 
+--   rubocop = {
+--     formatCommand = createCommand(
+--       "bundle exec rubocop",
+--       {
+--         "-a",
+--         "--stdin",
+--         "${INPUT}",
+--         "--stderr",
+--         "-f quiet",
+--         "-C true",
+--         "--no-color"
+--       }
+--     ),
+--     formatStdin = true
+--   },
+--   nixfmt = {
+--     formatCommand = createCommand("nixfmt", {"${INPUT}"}),
+--     formatStdin = false
+--   },
+--   clangformat = {
+--     formatCommand = createCommand("clang-format", {"-assume-filename=" .. vim.fn.expand("%:t")})
+--   },
+--   rustfmt = {
+--     formatCommand = createCommand("rustfmt", {"--emit=stdout"}), 
+--     formatStdin = true
+--   },
+--   lua_format = {
+--     formatCommand = createCommand("luafmt", {"--indent-count", 2, "--stdin"}),
+--     formatStdin = true
+--   },
+--   mdx_format = {
+--     formatCommand = createCommand(
+--       "prettier",
+--       {"--stdin-filepath", vim.api.nvim_buf_get_name(0), "--single-quote", "--parser", "mdx"}
+--     ),
+--     formatStdin = true
+--   },
+--   yapf = {
+--     formatCommand = "yapf", 
+--     formatStdin = true
+--   },
+--   isort = {
+--     formatCommand = createCommand("isort", {"-", "--quiet"}), 
+--     formatStdin = true
+--   },
+--   latexindent = {
+--     formatCommand = createCommand("latexindent", {"-sl", "-g /dev/stderr", "2>/dev/null"}),
+--     formatStdin = true
+--   }
+-- }
+-- 
+-- 
+-- -- vim.lsp.handlers["textDocument/formatting"] = format_async
+-- 
+-- -- require("formatter").setup(
+-- --   {
+-- --     logging = false,
+-- --     filetype = filetypes
+-- --   }
+-- -- )
+-- --
+-- 
+-- local languages = {
+--       javascript = {
+--         programs.prettier,
+--         programs.eslint
+--       },
+--       javascriptreact = {
+--         programs.prettier,
+--         programs.eslint
+--       },
+--       typescript = {
+--         programs.prettier,
+--         programs.eslint
+--       },
+--       typescriptreact = {
+--         programs.prettier,
+--         programs.eslint
+--       },
+--       json = {
+--         programs.prettier
+--       },
+--       html = {
+--         programs.prettier
+--       },
+--       scss = {
+--         programs.prettier
+--       },
+--       css = {
+--         programs.prettier
+--       },
+--       ["markdown.mdx"] = {
+--         programs.mdx_format
+--       },
+--       markdown = {
+--         programs.mdx_format
+--       },
+--       rust = {
+--         programs.rustfmt
+--       },
+--       python = {
+--         programs.isort, 
+--         programs.yapf
+--       },
+--       tex = {
+--         programs.latexindent
+--       },
+--       c = {
+--         programs.clangformat
+--       },
+--       cpp = {
+--         programs.clangformat
+--       },
+--       lua = {
+--         programs.lua_format
+--       },
+--       nix = {
+--         programs.nixfmt
+--       },
+--       ruby = {
+--         programs.rubocop
+--       }
+--   }
+-- 
+-- local filetypes = {}
+-- 
+-- for language, _ in pairs(languages) do
+--   table.insert(filetypes , language)
+-- end
+-- 
+-- format.languages = languages
+-- format.filetypes = filetypes
 
-local function rubocop()
-  return {
-    exe = "bundle exec rubocop",
-    args = {
-      "-a",
-      "--stdin",
-      vim.api.nvim_buf_get_name(0),
-      "--stderr",
-      "--disable-uncorrectable",
-      "-f quiet",
-      "-C true",
-      "--no-color"
-    },
-    stdin = true,
-    cwd = vim.fn.expand("%:p:h")
-  }
-end
-
-local function nixfmt()
-  return {
-    exe = "nixfmt",
-    args = {vim.api.nvim_buf_get_name(0)},
-    stdin = false
-  }
-end
-
-local function clangformat()
-  return {exe = "clang-format", args = {"-assume-filename=" .. vim.fn.expand("%:t")}, stdin = true}
-end
-
-local function rustfmt()
-  return {exe = "rustfmt", args = {"--emit=stdout"}, stdin = true}
-end
-
-local function lua_format()
-  return {
-    exe = "luafmt",
-    args = {"--indent-count", 2, "--stdin"},
-    stdin = true
-  }
-end
-
-local function mdx_format()
-  return {
-    exe = "prettier",
-    args = {"--stdin-filepath", vim.api.nvim_buf_get_name(0), "--single-quote", "--parser", "mdx"},
-    stdin = true
-  }
-end
-
-local function yapf()
-  return {exe = "yapf", stdin = true}
-end
-
-local function isort()
-  return {exe = "isort", args = {"-", "--quiet"}, stdin = true}
-end
-
-local function latexindent()
-  return {exe = "latexindent", args = {"-sl", "-g /dev/stderr", "2>/dev/null"}, stdin = true}
-end
-
-local format_async = function(err, _, result, _, bufnr)
-  if err ~= nil or result == nil then
-    return
-  end
-  if not vim.api.nvim_buf_get_option(bufnr, "modified") then
-    local view = vim.fn.winsaveview()
-    vim.lsp.util.apply_text_edits(result, bufnr)
-    vim.fn.winrestview(view)
-    if bufnr == vim.api.nvim_get_current_buf() then
-      vim.api.nvim_command("noautocmd :update")
-    end
-  end
-end
-
-vim.lsp.handlers["textDocument/formatting"] = format_async
-
-local filetypes = {
-  javascript = {prettier},
-  javascriptreact = {prettier},
-  typescript = {prettier},
-  typescriptreact = {prettier},
-  json = {prettier},
-  html = {prettier},
-  scss = {prettier},
-  css = {prettier},
-  ["markdown.mdx"] = {mdx_format},
-  rust = {rustfmt},
-  python = {isort, yapf},
-  tex = {latexindent},
-  c = {clangformat},
-  cpp = {clangformat},
-  lua = {lua_format},
-  nix = {nixfmt},
-  ruby = {rubocop}
+local sources = {
+    null_ls.builtins.formatting.json_tool,
+    null_ls.builtins.formatting.fixjson,
+    null_ls.builtins.formatting.eslint_d,
+    null_ls.builtins.formatting.prettierd,
+    null_ls.builtins.formatting.rubocop,
+    null_ls.builtins.diagnostics.stylelint,
+    null_ls.builtins.code_actions.statix,
+    null_ls.builtins.formatting.nixfmt,
+    null_ls.builtins.diagnostics.selene,
+    null_ls.builtins.diagnostics.luacheck,
+    null_ls.builtins.formatting.stylua,
+    null_ls.builtins.formatting.lua_format,
+    null_ls.builtins.diagnostics.markdownlint,
+    null_ls.builtins.diagnostics.write_good,
+    null_ls.builtins.formatting.shellharden,
+    null_ls.builtins.formatting.shfmt,
+    null_ls.builtins.diagnostics.shellcheck,
+    null_ls.builtins.code_actions.gitsigns,
 }
 
-require("formatter").setup(
-  {
-    logging = false,
-    filetype = filetypes
-  }
-)
+null_ls.config({
+    sources = sources
+})
 
--- Keymap
-map("n", "<leader>F", "<cmd>Format<cr>", silent)
 
-autocmd("FormatAutogroup", "BufWritePost *.js,*.rs,*.lua,*.nix,*.json,*.ts,*.tsx,*.mdx,*.html,*.rb FormatWrite")
+

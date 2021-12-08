@@ -14,6 +14,7 @@ local function map(modes, lhs, rhs, opts, desc)
   desc = desc or rhs
   opts = opts or {}
   opts.noremap = opts.noremap == nil and true or opts.noremap
+  opts.silent = opts.silent == nil or opts.silent
   if type(modes) == "string" then
     modes = {modes}
   end
