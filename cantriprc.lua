@@ -1,3 +1,4 @@
 require "cantrip".setup {
-  translucent = true
+  translucent = true,
+  theme = 'tokyonight'
 }

@@ -6,8 +6,8 @@ local opts = {noremap = true}
 -- map("n", "<C-h>", "<Plug>(cokeline-focus-prev)", silent, "Previous Buffer")
 -- map("n", "<C-l>", "<Plug>(cokeline-focus-next)", silent, "Next Buffer")
 vim.cmd([[
-  nmap <silent> <C-h> <Plug>(cokeline-focus-prev)
-  nmap <silent> <C-l> <Plug>(cokeline-focus-next)
+  nmap <silent> <C-h> :BufferLineCyclePrev<CR>
+  nmap <silent> <C-l> :BufferLineCycleNext<CR>
 ]])
 map("n", "<Leader>q", ":Bdelete<CR>", opts, "Close Buffer")
 
