@@ -117,8 +117,14 @@ return require("packer").startup({
 
     -- == Testing
     -- ----------------
-    use({ "vim-test/vim-test" })
-    use({ "rcarriga/vim-ultest", after = "vim-test", run = ":UpdateRemotePlugins" })
+    use({
+      "rcarriga/vim-ultest",
+      requires = { "vim-test/vim-test" },
+      run = ":UpdateRemotePlugins",
+      config = function()
+        require("config.other").test()
+      end,
+    })
 
     -- == TODOs
     -- ----------------
@@ -233,7 +239,7 @@ return require("packer").startup({
     -- == LSP
     -- ----------------
     use({ "neovim/nvim-lspconfig", event = "BufEnter" })
-    use({ "glepnir/lspsaga.nvim", after = "nvim-lspconfig" })
+    use({ "tami5/lspsaga.nvim", after = "nvim-lspconfig" })
     use({ "nvim-lua/lsp-status.nvim", after = "nvim-lspconfig" })
     use({ "ray-x/lsp_signature.nvim", after = "nvim-lspconfig" })
     use({ "onsails/lspkind-nvim", after = "nvim-lspconfig" })

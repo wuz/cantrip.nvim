@@ -1,5 +1,7 @@
 local M = {}
 
+-- TODO: Refactor most of these to use lua configuration over viml
+
 M.comment = function()
   require("Comment").setup({
     pre_hook = function(ctx)
@@ -110,6 +112,17 @@ M.lastplace = function()
     lastplace_ignore_filetype = { "gitcommit", "gitrebase", "svn", "hgcommit", "NvimTree", "packer" },
     lastplace_open_folds = true,
   })
+end
+
+M.test = function()
+  vim.cmd([[
+    augroup UltestRunner
+        au!
+        au BufWritePost * UltestNearest
+    augroup END
+    nmap ]t <Plug>(ultest-next-fail)
+    nmap [t <Plug>(ultest-prev-fail)
+  ]])
 end
 
 M.quickscope = function()
