@@ -1,5 +1,5 @@
 local vim = vim
-local lsp_status = require('lsp-status')
+local lsp_status = require("lsp-status")
 
 local function clock()
   return " " .. os.date("%H:%M")
@@ -11,24 +11,24 @@ local function lsp_progress()
   end
 end
 
-vim.cmd "autocmd User LspProgressUpdate let &ro = &ro"
+vim.cmd("autocmd User LspProgressUpdate let &ro = &ro")
 
-require("lualine").setup {
+require("lualine").setup({
   options = {
-    theme = "nightfly",
+    theme = "tokyonight",
     icons_enabled = true,
     -- section_separators = {"", ""},
     -- component_separators = {"", ""}
-    section_separators = {"", ""},
-    component_separators = {"", ""}
+    section_separators = { "", "" },
+    component_separators = { "", "" },
   },
   sections = {
-    lualine_a = {"mode"},
-    lualine_b = {"branch"},
-    lualine_c = {{"diagnostics", sources = {"nvim_diagnostic"}}, { "filename", path = 1  }} ,
-    lualine_x = {"filetype", lsp_progress},
+    lualine_a = { "mode" },
+    lualine_b = { "branch" },
+    lualine_c = { { "diagnostics", sources = { "nvim_diagnostic" } }, { "filename", path = 1 } },
+    lualine_x = { "filetype", lsp_progress },
     lualine_y = { "diff" },
-    lualine_z = {clock}
+    lualine_z = { clock },
   },
   inactive_sections = {
     lualine_a = {},
@@ -36,8 +36,8 @@ require("lualine").setup {
     lualine_c = {},
     lualine_x = {},
     lualine_y = {},
-  }
-}
+  },
+})
 
 --
 -- local gl = require('galaxyline')

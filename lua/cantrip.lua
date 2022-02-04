@@ -31,7 +31,7 @@ Cantrip._setLocalLeader = function(localLeaderKey)
 end
 
 Cantrip._normalize = function(config)
-  config.theme = config.theme or "dogrun"
+  config.theme = config.theme or "eldritch"
   config.leaderKey = config.leaderKey or " "
   config.localLeaderKey = config.localLeaderKey or "\\"
   config.translucent = Boolean.get(config.translucent, false)

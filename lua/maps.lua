@@ -1,7 +1,6 @@
-local map = require "utils".map
-local autocmd = require "utils.autocmd"
+local map = require("utils").map
 
-local opts = {noremap = true}
+local opts = { noremap = true }
 
 -- map("n", "<C-h>", "<Plug>(cokeline-focus-prev)", silent, "Previous Buffer")
 -- map("n", "<C-l>", "<Plug>(cokeline-focus-next)", silent, "Next Buffer")
@@ -38,11 +37,13 @@ map("n", "<leader>sl", ":<C-u>SessionLoad<CR>")
 -- ]])
 
 -- paste from system clipboard
-map({n, v}, "<leader>p", '"+p', opts)
-map({n, v}, "<leader>P", '"+P', opts)
+local n = "n"
+local v = "v"
+map({ n, v }, "<leader>p", '"+p', opts)
+map({ n, v }, "<leader>P", '"+P', opts)
 
-map({n, v}, "<leader>y", '"+y', opts)
-map({n, v}, "<leader>Y", '"+Y', opts)
+map({ n, v }, "<leader>y", '"+y', opts)
+map({ n, v }, "<leader>Y", '"+Y', opts)
 
 map("n", "<leader>d", '"+dd', opts)
 map("v", "<leader>d", '"+d', opts)

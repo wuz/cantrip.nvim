@@ -1,8 +1,8 @@
-local map = require "utils".map
-local termcode = require "utils".termcode
+local map = require("utils").map
+local termcode = require("utils").termcode
 local function prequire(...)
   local status, lib = pcall(require, ...)
-  if (status) then
+  if status then
     return lib
   end
   return nil
@@ -13,15 +13,15 @@ local luasnip = prequire("luasnip")
 -- Set completeopt to have a better completion experience
 
 local check_back_space = function()
-  local col = vim.fn.col "." - 1
-  if col == 0 or vim.fn.getline("."):sub(col, col):match "%s" then
+  local col = vim.fn.col(".") - 1
+  if col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
     return true
   else
     return false
   end
 end
 
-require "compe".setup {
+require("compe").setup({
   enabled = true,
   autocomplete = true,
   min_length = 1,
@@ -40,9 +40,9 @@ require "compe".setup {
     tags = true,
     vsnip = true,
     snippets_nvim = true,
-    treesitter = true
-  }
-}
+    treesitter = true,
+  },
+})
 
 -- Use (s-)tab to:
 --- move to prev/next item in completion menu
@@ -62,11 +62,11 @@ end
 
 _G.s_tab_complete = function()
   if vim.fn.pumvisible() == 1 then
-    return t("<C-p>")
+    return termcode("<C-p>")
   elseif luasnip.jumpable(-1) then
-    return t("<Plug>luasnip-jump-prev")
+    return termcode("<Plug>luasnip-jump-prev")
   else
-    return t("<S-Tab>")
+    return termcode("<S-Tab>")
   end
 end
 
@@ -74,9 +74,9 @@ end
 map("i", "<silent><expr> <C-e>", "compe#close('<C-e>')", noremap)
 map("i", "<silent><expr> <C-f>", "compe#scroll({ 'delta': +4 })", noremap)
 map("i", "<silent><expr> <C-d>", "compe#scroll({ 'delta': -4 })", noremap)
-map("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
-map("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
-map("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-map("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+map("i", "<Tab>", "v:lua.tab_complete()", { expr = true })
+map("s", "<Tab>", "v:lua.tab_complete()", { expr = true })
+map("i", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true })
+map("s", "<S-Tab>", "v:lua.s_tab_complete()", { expr = true })
 map("i", "<silent><expr> <C-Space>", "compe#complete()", noremap)
 map("i", "<silent><expr> <CR>", "compe#confirm('<CR>')", noremap)

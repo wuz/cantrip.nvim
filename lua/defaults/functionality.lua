@@ -15,10 +15,10 @@ o.undodir = expand("$HOME/.config/nvim/undo") -- use global undo directory
 o.ttyfast = true
 
 --make line numbers relative
-o.relativenumber = true
+o.relativenumber = false
 
 -- show line numbers
-o.nu = true
+o.nu = false
 
 -- fix backspace behavior
 o.backspace = "indent,eol,start"
@@ -39,8 +39,7 @@ o.visualbell = false
 o.ofu = "syntaxcomplete#Complete"
 
 o.cmdheight = 2
-o.updatetime = 300
-opt.shortmess:append({c = true})
+opt.shortmess:append({ c = true })
 
 o.signcolumn = "yes"
 

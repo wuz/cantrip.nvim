@@ -1,5 +1,3 @@
-local map = require'utils'.map
+local map = require("cartographer")
 
--- Keybindings
-local options = {silent = true, noremap = false}
-map({'x', 'n'}, 'ga', '<Plug>(EasyAlign)', options)
+map.x.n.silent["ga"] = "<Plug>(EasyAlign)"

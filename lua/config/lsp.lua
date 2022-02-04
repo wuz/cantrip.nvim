@@ -86,7 +86,13 @@ local server_settings = {
   jsonls = { cmd = { "json-languageserver", "--stdio" } },
   julials = { settings = { julia = { format = { indent = 2 } } } },
   pyright = { settings = { python = { formatting = { provider = "yapf" } } } },
-  solargraph = { cmd = { "bundle exec solargraph", "stdio" } },
+  solargraph = {
+    cmd = { "solargraph", "stdio" },
+    on_attach = function(client)
+      client.resolved_capabilities.document_formatting = false
+      on_attach(client)
+    end,
+  },
   sumneko_lua = {
     settings = {
       Lua = {
@@ -153,6 +159,9 @@ lsp_installer.on_server_ready(function(server)
   server:setup(opts)
   vim.cmd([[ do User LspAttachBuffers ]])
 end)
+
+local luadev = require("lua-dev").setup()
+nvim_lsp.sumneko_lua.setup(luadev)
 
 lsp.lspkind()
 saga.init_lsp_saga()

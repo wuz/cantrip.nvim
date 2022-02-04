@@ -1,10 +1,10 @@
-require "string"
-require "math"
-local autocmd = require "utils.autocmd"
+require("string")
+require("math")
+local autocmd = require("utils.autocmd")
 
 autocmd("Startified", "User setlocal cursorline", true)
 
-function repeatString(string, times)
+local function repeat_string(string, times)
   times = math.floor(times)
   local base = ""
   repeat
@@ -14,28 +14,28 @@ function repeatString(string, times)
   return base
 end
 
-function boxed_header(line, center)
-  local boxed_header = ""
+local function boxed_header(line, center)
+  local boxed_header_str = ""
   local width = 43
   local padding = width - string.len(line)
   if center then
     if string.len(line) <= width then
-      boxed_header = repeatString(" ", padding / 2) .. line .. repeatString(" ", padding / 2)
+      boxed_header = repeat_string(" ", padding / 2) .. line .. repeat_string(" ", padding / 2)
     else
       boxed_header = line.sub(0, width)
     end
   else
     if string.len(line) <= width then
-      boxed_header = line .. repeatString(" ", padding)
+      boxed_header = line .. repeat_string(" ", padding)
     else
       boxed_header = line.sub(0, width)
     end
   end
-  local boxed_header = "░ " .. boxed_header .. "░"
-  return boxed_header
+  boxed_header_str = "░ " .. boxed_header_str .. "░"
+  return boxed_header_str
 end
 
-function map(args)
+local function map(args)
   local rv = vim.api.nvim_call_function("map", args)
   local err = vim.api.nvim_get_vvar("shell_error")
   if 0 ~= err then
@@ -44,7 +44,7 @@ function map(args)
   return rv
 end
 
-function systemlist(args)
+local function systemlist(args)
   local rv = vim.api.nvim_call_function("systemlist", args)
   local err = vim.api.nvim_get_vvar("shell_error")
   if 0 ~= err then
@@ -53,62 +53,56 @@ function systemlist(args)
   return rv
 end
 
-local function concatArray(a, b)
-  ab = {}
-  table.foreach(
-    a,
-    function(k, v)
-      table.insert(ab, v)
-    end
-  )
-  table.foreach(
-    b,
-    function(k, v)
-      table.insert(ab, v)
-    end
-  )
+local function concat_array(a, b)
+  local ab = {}
+  table.foreach(a, function(k, v)
+    table.insert(ab, v)
+  end)
+  table.foreach(b, function(k, v)
+    table.insert(ab, v)
+  end)
   return ab
 end
 
-function gitDiff()
-  local files = systemlist({"git diff --name-only --diff-filter d HEAD~2 . 2>/dev/null| head -n 10 "})
-  return map({files, "{'line': '.v:val, 'path': v:val}"})
+local function git_diff()
+  local files = systemlist({ "git diff --name-only --diff-filter d HEAD~2 . 2>/dev/null| head -n 10 " })
+  return map({ files, "{'line': '.v:val, 'path': v:val}" })
 end
 
 -- returns all modified files of the current git repo
 -- `2>/dev/null` makes the command fail quietly, so that when we are not
 -- in a git repo, the list will be empty
-function gitModified()
-  local files = systemlist({"git ls-files -m 2>/dev/null"})
-  return map({files, "{'line': '[M] '.v:val, 'path': v:val}"})
+local function git_modified()
+  local files = systemlist({ "git ls-files -m 2>/dev/null" })
+  return map({ files, "{'line': '[M] '.v:val, 'path': v:val}" })
 end
 
 -- 	-- same as above, but show untracked files, honouring .gitignore
-function gitUntracked()
-  local files = systemlist({"git ls-files -o --exclude-standard 2>/dev/null"})
-  return map({files, "{'line': '[?] '.v:val, 'path': v:val}"})
+local function git_untracked()
+  local files = systemlist({ "git ls-files -o --exclude-standard 2>/dev/null" })
+  return map({ files, "{'line': '[?] '.v:val, 'path': v:val}" })
 end
 
-function gitFiles()
-  local untracked = gitUntracked()
-  local modified = gitModified()
-  return concatArray(untracked, modified)
+local function git_files()
+  local untracked = git_untracked()
+  local modified = git_modified()
+  return concat_array(untracked, modified)
 end
 
-function cwd()
+local function cwd()
   local dir = vim.api.nvim_call_function("getcwd", {})
   return dir
   -- return dir:gsub(system("echo $HOME"), "~")
 end
 
 vim.g.startify_lists = {
-  {type = "dir", header = {"   " .. cwd()}},
-  {type = gitFiles, header = {"   Git Files"}},
-  -- {type = gitDiff, header = {"   Git Diff (master)"}},
-  {type = "files", header = {"   MRU"}},
-  {type = "sessions", header = {"   Sessions"}},
-  {type = "bookmarks", header = {"   Bookmarks"}},
-  {type = "commands", header = {"   Commands"}}
+  { type = "dir", header = { "   " .. cwd() } },
+  { type = git_files, header = { "   Git Files" } },
+  -- {type = git_diff, header = {"   Git Diff (master)"}},
+  { type = "files", header = { "   MRU" } },
+  { type = "sessions", header = { "   Sessions" } },
+  { type = "bookmarks", header = { "   Bookmarks" } },
+  { type = "commands", header = { "   Commands" } },
 }
 
 vim.g.startify_files_number = 5
@@ -119,11 +113,11 @@ vim.g.startify_session_persistence = 1
 vim.g.startify_change_to_dir = 0
 
 vim.g.startify_commands = {
-  {u = {"Update plugins", "PackerUpdate"}},
-  {c = {"Clean plugins", "PackerClean"}},
-  {t = {"Time startup", "StartupTime"}},
+  { u = { "Update plugins", "PackerUpdate" } },
+  { c = { "Clean plugins", "PackerClean" } },
+  { t = { "Time startup", "StartupTime" } },
   -- {s={'Start Prosession', 'Prosession .'}},
-  {q = {"Quit", "q!"}}
+  { q = { "Quit", "q!" } },
 }
 
 local header = {
@@ -137,15 +131,14 @@ local header = {
   boxed_header("", false),
   boxed_header("⁂ neovim + dark magic ⁂", true),
   boxed_header("", false),
-  "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+  "░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░",
 }
-
-function center(text)
-  vim.cmd("startify#center([" .. text .. "])")
-end
 
 vim.g.startify_custom_header = header
 
-vim.api.nvim_exec([[
+vim.api.nvim_exec(
+  [[
 hi link StartifyHeader Function
-]], false)
+]],
+  false
+)

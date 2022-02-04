@@ -119,26 +119,6 @@ g.nvim_tree_icons = {
   }
 }
 
-function preview_window()
-  require("popup").create(
-    {"Hello", "World"},
-    {border = true, title = "test", line = "cursor+1", col = "cursor+0", minwidth = 25, minheight = 15}
-  )
-end
-
-local tree_open = false
-
-function tree_toggle()
-  if not tree_open then
-    -- require "bufferline.state".set_offset(31, "")
-    require "nvim-tree".find_file(true)
-    tree_open = true
-  else
-    -- require "bufferline.state".set_offset(0)
-    require "nvim-tree".close()
-    tree_open = false
-  end
-end
 
 local opts = {noremap = true}
-map("n", "<Leader>/", ":lua tree_toggle()<CR>", opts)
+map("n", "<Leader>/", ":NvimTreeToggle <CR>", opts)

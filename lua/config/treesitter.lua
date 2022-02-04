@@ -1,23 +1,23 @@
-require'nvim-treesitter.configs'.setup {
-	ensure_installed = "all",
-  ignore_install = { "haskell" },
-	matchup = {
-    enable = true,              -- mandatory, false will disable the whole extension
+require("nvim-treesitter.configs").setup({
+  ensure_installed = "all",
+  ignore_install = { "haskell", "phpdoc" },
+  matchup = {
+    enable = true, -- mandatory, false will disable the whole extension
   },
-	autotag = {
+  autotag = {
     enable = true,
   },
-  autopairs = {enable = true},
-	refactor = {
+  autopairs = { enable = true },
+  refactor = {
     highlight_definitions = { enable = true },
     highlight_current_scope = { enable = true },
-		smart_rename = {
+    smart_rename = {
       enable = true,
       keymaps = {
         smart_rename = "grr",
       },
     },
-		navigation = {
+    navigation = {
       enable = true,
       keymaps = {
         goto_definition = "gnd",
@@ -28,20 +28,20 @@ require'nvim-treesitter.configs'.setup {
       },
     },
   },
-	highlight = {
-		enable = true,
-		use_languagetree = true,
-	},
-	indent = {
-		enable = true
-	},
-	incremental_selection = {
-		enable = true,
-		keymaps = {
-			init_selection = "gnn",
-			node_incremental = "grn",
-			scope_incremental = "grc",
-			node_decremental = "grm",
-		},
-	},
-}
+  highlight = {
+    enable = true,
+    use_languagetree = true,
+  },
+  indent = {
+    enable = true,
+  },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
+})
