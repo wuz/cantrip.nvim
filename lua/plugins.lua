@@ -174,19 +174,17 @@ return require("packer").startup({
     use({
       "nvim-treesitter/nvim-treesitter",
       run = ":TSUpdate",
-      -- Treesitter plugins / tools
-      requires = {
-        "nvim-treesitter/nvim-treesitter-refactor",
-        "JoosepAlviste/nvim-ts-context-commentstring",
-        { "RRethy/nvim-treesitter-textsubjects" },
-        "nvim-treesitter/nvim-treesitter-textobjects",
-        "windwp/nvim-ts-autotag",
-        "andymass/vim-matchup",
-      },
       config = function()
         require("config.treesitter")
       end,
     })
+    use({"nvim-treesitter/nvim-treesitter-refactor", after="nvim-treesitter" })
+    use({"JoosepAlviste/nvim-ts-context-commentstring", after="nvim-treesitter" })
+    use({"RRethy/nvim-treesitter-textsubjects", after="nvim-treesitter" })
+    use({"nvim-treesitter/nvim-treesitter-textobjects", after="nvim-treesitter" })
+    use({"windwp/nvim-ts-autotag", after="nvim-treesitter" })
+    use({"andymass/vim-matchup", after="nvim-treesitter" })
+
     -- for all syntax not supported by treesitter
     use({
       "sheerun/vim-polyglot",
@@ -224,8 +222,11 @@ return require("packer").startup({
     use({ "hrsh7th/cmp-buffer", after = "nvim-cmp" })
     use({ "hrsh7th/cmp-path", after = "nvim-cmp" })
     use({ "hrsh7th/cmp-cmdline", after = "nvim-cmp" })
-    use({ "L3MON4D3/LuaSnip", after = "nvim-cmp" })
+    use({ "ray-x/cmp-treesitter", after = "nvim-cmp" })
+    use({ "quangnguyen30192/cmp-nvim-tags", after = "nvim-cmp" })
+    use({ "lukas-reineke/cmp-rg", after = "nvim-cmp" })
     use({ "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" })
+    use({ "L3MON4D3/LuaSnip", after = "nvim-cmp" })
 
     -- == Surround
     -- ----------------
@@ -288,6 +289,11 @@ return require("packer").startup({
 
     -- == Colors
     -- ----------------
+    use({ "rktjmp/lush.nvim" })
+    use({
+      "catppuccin/nvim",
+      as = "catppuccin",
+    })
     use({ "wuelnerdotexe/vim-enfocado" })
     use({ "folke/tokyonight.nvim" })
     use({
@@ -445,7 +451,7 @@ return require("packer").startup({
     })
 
     -- ----------------
-    -- === GIT
+    -- === Git
     -- ----------------
     use({
       "lewis6991/gitsigns.nvim",
@@ -462,6 +468,13 @@ return require("packer").startup({
       after = "plenary.nvim",
       config = function()
         require("diffview").setup()
+      end,
+    })
+    use({
+      "pwntester/octo.nvim",
+      after = "telescope.nvim",
+      config = function()
+        require("octo").setup()
       end,
     })
 
