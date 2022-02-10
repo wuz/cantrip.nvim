@@ -4,6 +4,7 @@ local saga = require("lspsaga")
 local lsp_status = require("lsp-status")
 local lsp_signature = require("lsp_signature")
 local notify = require("notify")
+local map = require("cartographer")
 
 local lsp = require("core.lsp")
 local oConfig = require("config.other")
@@ -27,22 +28,22 @@ local on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
   -- Mappings.
-  buf_set_keymap("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", mapopts)
+  map.n.nore.silent.buffer["gD"] = "<Cmd>lua vim.lsp.buf.declaration()<CR>"
   buf_set_keymap("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", mapopts)
   buf_set_keymap("n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", mapopts)
   buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", mapopts)
   buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", mapopts)
-  buf_set_keymap("n", "<space>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", mapopts)
-  buf_set_keymap("n", "<space>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", mapopts)
-  buf_set_keymap("n", "<space>wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", mapopts)
-  buf_set_keymap("n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", mapopts)
-  buf_set_keymap("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", mapopts)
+  buf_set_keymap("n", "<Leader>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", mapopts)
+  buf_set_keymap("n", "<Leader>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", mapopts)
+  buf_set_keymap("n", "<Leader>wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", mapopts)
+  buf_set_keymap("n", "<Leader>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", mapopts)
+  buf_set_keymap("n", "<Leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", mapopts)
   buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", mapopts)
-  buf_set_keymap("n", "<space>e", "<cmd>lua vim.diagnostics.open_float()<CR>", mapopts)
+  buf_set_keymap("n", "<Leader>e", "<cmd>lua vim.diagnostics.open_float()<CR>", mapopts)
   buf_set_keymap("n", "[d", "<cmd>lua vim.diagnostics.goto_prev()<CR>", mapopts)
   buf_set_keymap("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<CR>", mapopts)
-  buf_set_keymap("n", "<space>l", "<cmd>lua vim.diagnostic.setloclist()<CR>", mapopts)
-  buf_set_keymap("n", "<space>G", "<cmd>lua vim.lsp.buf.formatting()<CR>", mapopts)
+  buf_set_keymap("n", "<Leader>l", "<cmd>lua vim.diagnostic.setloclist()<CR>", mapopts)
+  buf_set_keymap("n", "<Leader>G", "<cmd>lua vim.lsp.buf.formatting()<CR>", mapopts)
   if client.resolved_capabilities.document_range_formatting then
     buf_set_keymap("n", "<Leader>G", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", mapopts)
   end
@@ -109,7 +110,7 @@ local server_settings = {
       if client.config.flags then
         client.config.flags.allow_incremental_sync = true
       end
-      vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>I", "lua require('core.lsp').lsp_organize_imports()<CR>", opts)
+      map.n.nore.silent.buffer["<Leader>I"] = "<Cmd>lua require('core.lsp').lsp_organize_imports()<CR>"
       on_attach(client)
     end,
   },

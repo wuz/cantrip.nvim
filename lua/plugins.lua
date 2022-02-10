@@ -178,12 +178,19 @@ return require("packer").startup({
         require("config.treesitter")
       end,
     })
-    use({"nvim-treesitter/nvim-treesitter-refactor", after="nvim-treesitter" })
-    use({"JoosepAlviste/nvim-ts-context-commentstring", after="nvim-treesitter" })
-    use({"RRethy/nvim-treesitter-textsubjects", after="nvim-treesitter" })
-    use({"nvim-treesitter/nvim-treesitter-textobjects", after="nvim-treesitter" })
-    use({"windwp/nvim-ts-autotag", after="nvim-treesitter" })
-    use({"andymass/vim-matchup", after="nvim-treesitter" })
+    use({ "nvim-treesitter/nvim-treesitter-refactor", after = "nvim-treesitter" })
+    use({ "JoosepAlviste/nvim-ts-context-commentstring", after = "nvim-treesitter" })
+    use({ "RRethy/nvim-treesitter-textsubjects", after = "nvim-treesitter" })
+    use({ "nvim-treesitter/nvim-treesitter-textobjects", after = "nvim-treesitter" })
+    use({ "windwp/nvim-ts-autotag", after = "nvim-treesitter" })
+    use({ "andymass/vim-matchup", after = "nvim-treesitter" })
+    use({
+      "ThePrimeagen/refactoring.nvim",
+      after = "nvim-treesitter",
+      config = function()
+        require("refactoring").setup({})
+      end,
+    })
 
     -- for all syntax not supported by treesitter
     use({
@@ -461,7 +468,7 @@ return require("packer").startup({
         require("gitsigns").setup()
       end,
     })
-    use({ "f-person/git-blame.nvim" })
+    use({ "f-person/git-blame.nvim", cmd = { "GitBlameToggle", "GitBlameEnable" } })
     use({ "rhysd/git-messenger.vim" })
     use({
       "sindrets/diffview.nvim",

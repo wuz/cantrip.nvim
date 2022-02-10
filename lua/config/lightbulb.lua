@@ -1,12 +1,7 @@
 require("nvim-lightbulb").update_lightbulb({
-  ignore = { "null-ls", "solargraph" },
+  ignore = { "null-ls" },
   sign = {
-    enabled = false,
-  },
-  virtual_text = {
     enabled = true,
-    -- Text to show at virtual text
-    text = "💡",
   },
 })
 
