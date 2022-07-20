@@ -5,6 +5,7 @@ local lsp_status = require("lsp-status")
 local lsp_signature = require("lsp_signature")
 local notify = require("notify")
 local map = require("cartographer")
+local luadev = require("lua-dev").setup()
 
 local lsp = require("core.lsp")
 local oConfig = require("config.other")
@@ -89,12 +90,16 @@ local server_settings = {
   pyright = { settings = { python = { formatting = { provider = "yapf" } } } },
   solargraph = {
     cmd = { "solargraph", "stdio" },
-    on_attach = function(client)
+    on_attach = function(client, bufnr)
       client.resolved_capabilities.document_formatting = false
-      on_attach(client)
+      on_attach(client, bufnr)
     end,
   },
   sumneko_lua = {
+    on_attach = function(client, bufnr)
+      client.resolved_capabilities.document_formatting = false
+      on_attach(client, bufnr)
+    end,
     settings = {
       Lua = {
         diagnostics = { globals = { "vim", "use" } },
@@ -111,7 +116,7 @@ local server_settings = {
         client.config.flags.allow_incremental_sync = true
       end
       map.n.nore.silent.buffer["<Leader>I"] = "<Cmd>lua require('core.lsp').lsp_organize_imports()<CR>"
-      on_attach(client)
+      on_attach(client, bufnr)
     end,
   },
 }
@@ -157,12 +162,13 @@ lsp_installer.on_server_ready(function(server)
 
   opts = lsp.capabilities(opts)
 
+  if server.name == "sumneko_lua" then
+    opts = vim.tbl_deep_extend("force", opts, luadev)
+  end
+
   server:setup(opts)
   vim.cmd([[ do User LspAttachBuffers ]])
 end)
-
-local luadev = require("lua-dev").setup()
-nvim_lsp.sumneko_lua.setup(luadev)
 
 lsp.lspkind()
 saga.init_lsp_saga()

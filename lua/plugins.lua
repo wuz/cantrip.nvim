@@ -1,37 +1,24 @@
-local fn = vim.fn
-local install_path = fn.stdpath("data") .. "/site/pack/packer/opt/packer.nvim"
-local execute = vim.api.nvim_command
-
-vim.fn.setenv("MACOSX_DEPLOYMENT_TARGET", "10.15")
-
-if fn.empty(fn.glob(install_path)) > 0 then
-  execute("!git clone https://github.com/wbthomason/packer.nvim " .. install_path)
-  execute("packadd packer.nvim")
+local present, packer = pcall(require, "packerinit")
+if not present then
+  return false
 end
-
-vim.cmd([[packadd packer.nvim]])
 
 return require("packer").startup({
   function()
     -- --------------
     -- === BUILTINS
     -- --------------
-    use({ "wbthomason/packer.nvim", opt = true })
+    use({ "lewis6991/impatient.nvim" })
+    use({ "wbthomason/packer.nvim", event = "VimEnter" })
     use({ "nvim-lua/plenary.nvim" })
     use({ "Iron-E/nvim-cartographer" })
-    use({
-      "folke/which-key.nvim",
-      config = function()
-        require("config.which_key")
-      end,
-    })
     use({
       "nathom/filetype.nvim",
       config = function()
         vim.g.did_load_filetypes = 1
       end,
     })
-    use({ "antoinemadec/FixCursorHold.nvim" })
+    --use({ "antoinemadec/FixCursorHold.nvim" })
     use({ "nvim-lua/popup.nvim", requries = "nvim-lua/plenary.nvim" })
     use({
       "rcarriga/nvim-notify",
@@ -40,27 +27,9 @@ return require("packer").startup({
       end,
     })
     use({
-      "ethanholz/nvim-lastplace",
-      config = function()
-        require("config.other").lastplace()
-      end,
-    })
-    use({
-      "https://gitlab.com/yorickpeterse/nvim-pqf.git",
-      config = function()
-        require("pqf").setup()
-      end,
-    })
-    use({
       "chentau/marks.nvim",
       config = function()
         require("config.other").marks()
-      end,
-    })
-    use({
-      "jghauser/mkdir.nvim",
-      config = function()
-        require("mkdir")
       end,
     })
     use({ "famiu/bufdelete.nvim" })
@@ -72,37 +41,14 @@ return require("packer").startup({
       end,
     })
 
-    -- --------------------
-    -- === Functionality
-    -- --------------------
-
     -- == Motion
     -- ----------------
-    use({
-      "phaazon/hop.nvim",
-      config = function()
-        require("config.hop")
-      end,
-    })
     use({
       "unblevable/quick-scope",
       config = function()
         require("config.other").quickscope()
       end,
     })
-
-    -- == Mappings
-    -- ----------------
-    use({
-      "max397574/better-escape.nvim",
-      config = function()
-        require("better_escape").setup()
-      end,
-    })
-
-    -- --------------------
-    -- === Languages/Code
-    -- --------------------
 
     -- == Debugging
     -- ----------------
@@ -130,28 +76,9 @@ return require("packer").startup({
     -- ----------------
     use({
       "folke/todo-comments.nvim",
+      cmd = { "TodoTrouble", "TodoLocList", "TodoTelescope", "TodoQuickFix" },
       config = function()
         require("config.other").todo()
-      end,
-    })
-
-    -- == Filetype
-    -- ----------------
-    use({ "joker1007/vim-ruby-heredoc-syntax", ft = { "ruby" } })
-    use({
-      "Shougo/context_filetype.vim",
-      event = "BufEnter",
-      after = { "vim-ruby-heredoc-syntax" },
-    })
-    use({ "thinca/vim-ft-diff_fold", ft = "diff" })
-    use({ "thinca/vim-ft-help_fold", ft = "help" })
-
-    -- == Comments
-    -- ----------------
-    use({
-      "numToStr/Comment.nvim",
-      config = function()
-        require("config.other").comment()
       end,
     })
 
@@ -173,7 +100,6 @@ return require("packer").startup({
     })
     use({
       "nvim-treesitter/nvim-treesitter",
-      run = ":TSUpdate",
       config = function()
         require("config.treesitter")
       end,
@@ -183,33 +109,32 @@ return require("packer").startup({
     use({ "RRethy/nvim-treesitter-textsubjects", after = "nvim-treesitter" })
     use({ "nvim-treesitter/nvim-treesitter-textobjects", after = "nvim-treesitter" })
     use({ "windwp/nvim-ts-autotag", after = "nvim-treesitter" })
-    use({ "andymass/vim-matchup", after = "nvim-treesitter" })
     use({
-      "ThePrimeagen/refactoring.nvim",
-      after = "nvim-treesitter",
+      "abecodes/tabout.nvim",
       config = function()
-        require("refactoring").setup({})
+        require("config.other").tabout()
       end,
+      wants = { "nvim-treesitter" },
+      after = { "nvim-cmp" },
     })
 
     -- for all syntax not supported by treesitter
     use({
       "sheerun/vim-polyglot",
-      config = function()
+      setup = function()
         require("config.polyglot")
       end,
     })
     use({ "ellisonleao/glow.nvim", ft = "markdown" })
 
+    -- == Comments
+    -- ----------------
     use({
-      "danymat/neogen",
-      cmd = "Neogen",
+      "numToStr/Comment.nvim",
+      after = "nvim-ts-context-commentstring",
       config = function()
-        require("neogen").setup({
-          enabled = true,
-        })
+        require("config.other").comment()
       end,
-      requires = "nvim-treesitter/nvim-treesitter",
     })
 
     -- == Completion
@@ -218,9 +143,10 @@ return require("packer").startup({
       "rafamadriz/friendly-snippets",
       event = "InsertEnter",
     })
+    use({ "L3MON4D3/LuaSnip", after = "friendly-snippets" })
     use({
       "hrsh7th/nvim-cmp",
-      after = "friendly-snippets",
+      after = "LuaSnip",
       config = function()
         require("config.completion")
       end,
@@ -233,12 +159,11 @@ return require("packer").startup({
     use({ "quangnguyen30192/cmp-nvim-tags", after = "nvim-cmp" })
     use({ "lukas-reineke/cmp-rg", after = "nvim-cmp" })
     use({ "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" })
-    use({ "L3MON4D3/LuaSnip", after = "nvim-cmp" })
 
     -- == Surround
     -- ----------------
     use({
-      "blackCauldron7/surround.nvim",
+      "ur4ltz/surround.nvim",
       config = function()
         require("surround").setup({ mappings_style = "sandwich" })
       end,
@@ -289,6 +214,12 @@ return require("packer").startup({
         require("config.easy_align")
       end,
     })
+    use({
+      "j-hui/fidget.nvim",
+      config = function()
+        require("config.other").fidget()
+      end,
+    })
 
     -- ----------------
     -- === APPEARANCE
@@ -297,18 +228,7 @@ return require("packer").startup({
     -- == Colors
     -- ----------------
     use({ "rktjmp/lush.nvim" })
-    use({
-      "catppuccin/nvim",
-      as = "catppuccin",
-    })
-    use({ "wuelnerdotexe/vim-enfocado" })
     use({ "folke/tokyonight.nvim" })
-    use({
-      "stevearc/dressing.nvim",
-      config = function()
-        require("dressing").setup()
-      end,
-    })
     use({ "folke/lsp-colors.nvim" })
 
     -- == Icons
@@ -331,6 +251,7 @@ return require("packer").startup({
     })
     use({
       "folke/twilight.nvim",
+      cmd = { "Twilight", "TwilightEnable", "TwilightDisable" },
       config = function()
         require("config.twilight")
       end,
@@ -382,10 +303,10 @@ return require("packer").startup({
     -- == Dashboard / Startup
     -- ------------------------
     use({
-      "glepnir/dashboard-nvim",
-      after = "telescope.nvim",
+      "goolord/alpha-nvim",
+      after = "nvim-web-devicons",
       config = function()
-        require("config.dashboard")
+        require("config.alpha")
       end,
     })
 
@@ -458,7 +379,7 @@ return require("packer").startup({
     })
 
     -- ----------------
-    -- === Git
+    --  === Git
     -- ----------------
     use({
       "lewis6991/gitsigns.nvim",
@@ -477,25 +398,14 @@ return require("packer").startup({
         require("diffview").setup()
       end,
     })
-    use({
-      "pwntester/octo.nvim",
-      after = "telescope.nvim",
-      config = function()
-        require("octo").setup()
-      end,
-    })
 
     -- -------------------
     -- === Misc / Random
     -- -------------------
     use({ "andweeb/presence.nvim", event = "BufEnter" })
   end,
-  config = {
-    compile_path = vim.fn.stdpath("config") .. "/lua/packer_compiled.lua",
-  },
 })
 
--- use({ "lewis6991/impatient.nvim" })
 -- use "chaoren/vim-wordmotion"
 -- use "moll/vim-bbye"
 -- use "9mm/vim-closer"
