@@ -27,7 +27,7 @@ return require("packer").startup({
       end,
     })
     use({
-      "chentau/marks.nvim",
+      "chentoast/marks.nvim",
       config = function()
         require("config.other").marks()
       end,
@@ -63,10 +63,12 @@ return require("packer").startup({
 
     -- == Testing
     -- ----------------
-    use({
-      "rcarriga/vim-ultest",
-      requires = { "vim-test/vim-test" },
-      run = ":UpdateRemotePlugins",
+    use({ "nvim-neotest/neotest", 
+      requires = {
+        "olimorris/neotest-rspec",
+        "haydenmeade/neotest-jest",
+        "nvim-neotest/neotest-vim-test",
+      },
       config = function()
         require("config.other").test()
       end,
@@ -179,10 +181,12 @@ return require("packer").startup({
     use({ "simrat39/symbols-outline.nvim", after = "nvim-lspconfig" })
     -- Even better lua dev
     use({ "folke/lua-dev.nvim", ft = "lua", after = "nvim-lspconfig" })
+    use({ "williamboman/mason-lspconfig.nvim", after = "nvim-lspconfig" })
     use({
-      "williamboman/nvim-lsp-installer",
+      "williamboman/mason.nvim",
       after = {
         "nvim-lspconfig",
+        "mason-lspconfig.nvim",
         "lspsaga.nvim",
         "lsp-status.nvim",
         "lsp_signature.nvim",
@@ -220,6 +224,7 @@ return require("packer").startup({
         require("config.other").fidget()
       end,
     })
+    use({ "Maan2003/lsp_lines.nvim", after = "nvim-lspconfig" })
 
     -- ----------------
     -- === APPEARANCE

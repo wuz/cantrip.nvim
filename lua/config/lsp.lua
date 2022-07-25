@@ -1,5 +1,5 @@
 local nvim_lsp = require("lspconfig")
-local lsp_installer = require("nvim-lsp-installer")
+local mason = require("mason")
 local saga = require("lspsaga")
 local lsp_status = require("lsp-status")
 local lsp_signature = require("lsp_signature")
@@ -143,33 +143,31 @@ lsp_status.config({
 
 lsp_status.register_progress()
 
-lsp_installer.settings({
-  ui = {
-    icons = {
-      server_installed = "✓",
-      server_pending = "➜",
-      server_uninstalled = "✗",
-    },
-  },
-})
-
-lsp_installer.on_server_ready(function(server)
-  local opts = { on_attach = on_attach }
-
-  if server_settings[server.name] then
-    opts = vim.tbl_deep_extend("force", opts, server_settings[server.name])
-  end
-
-  opts = lsp.capabilities(opts)
-
-  if server.name == "sumneko_lua" then
-    opts = vim.tbl_deep_extend("force", opts, luadev)
-  end
-
-  server:setup(opts)
-  vim.cmd([[ do User LspAttachBuffers ]])
-end)
+mason.setup()
+require("mason-lspconfig").setup()
 
 lsp.lspkind()
 saga.init_lsp_saga()
 lsp_signature.setup()
+
+require("lsp_lines").setup()
+vim.diagnostic.config({
+  virtual_text = false,
+})
+
+-- lsp_installer.on_server_ready(function(server)
+--   local opts = { on_attach = on_attach }
+--
+--   if server_settings[server.name] then
+--     opts = vim.tbl_deep_extend("force", opts, server_settings[server.name])
+--   end
+--
+--   opts = lsp.capabilities(opts)
+--
+--   if server.name == "sumneko_lua" then
+--     opts = vim.tbl_deep_extend("force", opts, luadev)
+--   end
+--
+--   server:setup(opts)
+--   vim.cmd([[ do User LspAttachBuffers ]])
+-- end)
