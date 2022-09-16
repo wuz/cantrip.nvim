@@ -63,7 +63,8 @@ return require("packer").startup({
 
     -- == Testing
     -- ----------------
-    use({ "nvim-neotest/neotest", 
+    use({
+      "nvim-neotest/neotest",
       requires = {
         "olimorris/neotest-rspec",
         "haydenmeade/neotest-jest",
@@ -126,6 +127,10 @@ return require("packer").startup({
       setup = function()
         require("config.polyglot")
       end,
+    })
+    use({
+      "styled-components/vim-styled-components",
+      ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
     })
     use({ "ellisonleao/glow.nvim", ft = "markdown" })
 
@@ -224,7 +229,7 @@ return require("packer").startup({
         require("config.other").fidget()
       end,
     })
-    use({ "Maan2003/lsp_lines.nvim", after = "nvim-lspconfig" })
+    -- use({ "Maan2003/lsp_lines.nvim", after = "nvim-lspconfig" })
 
     -- ----------------
     -- === APPEARANCE
@@ -303,6 +308,11 @@ return require("packer").startup({
       config = function()
         require("config.telescope")
       end,
+      requires = {
+        "nvim-telescope/telescope-packer.nvim",
+        "nvim-telescope/telescope-dap.nvim",
+        "nvim-telescope/telescope-github.nvim",
+      },
     })
 
     -- == Dashboard / Startup
@@ -369,7 +379,14 @@ return require("packer").startup({
       "norcalli/nvim-colorizer.lua",
       event = "BufEnter",
       config = function()
-        require("colorizer").setup()
+        require("colorizer").setup({
+          css = { css = true },
+          typescript = { css = true },
+          javascript = { css = true },
+          typescriptreact = { css = true },
+          javascriptreact = { css = true },
+          html = { css = true },
+        })
       end,
     })
 

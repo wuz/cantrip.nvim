@@ -84,3 +84,19 @@ require("telescope").setup({
     qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
   },
 })
+
+require("telescope").load_extension("packer")
+require("telescope").load_extension("dap")
+require("telescope").load_extension("gh")
+
+vim.cmd([[
+" Telescope support
+hi link TelescopeBorder LineNr
+hi link TelescopeMatching Constant
+hi link TelescopePromptNormal Normal
+hi link TelescopePromptPrefix Type
+hi link TelescopeResultsDiffAdd GitGutterAdd
+hi link TelescopeResultsDiffChange GitGutterChange
+hi link TelescopeResultsDiffDelete GitGutterDelete
+hi link TelescopeResultsDiffUntracked Title
+]])

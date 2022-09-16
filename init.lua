@@ -10,5 +10,5 @@ package.path = package.path .. ";" .. os.getenv("HOME") .. "/.config/nvim/?.lua"
 -- end
 
 require("startup")
-require("cantriprc")
 require("plugins")
+require("cantriprc")

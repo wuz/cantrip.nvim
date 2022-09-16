@@ -121,6 +121,16 @@ local server_settings = {
   },
 }
 
+for name, config in pairs(server_settings) do
+  local opts = { on_attach = on_attach }
+  opts = vim.tbl_deep_extend("force", opts, config)
+  opts = lsp.capabilities(opts)
+  if name == "sumneko_lua" then
+    opts = vim.tbl_deep_extend("force", opts, luadev)
+  end
+  nvim_lsp[name].setup(opts)
+end
+
 lsp_status.config({
   kind_labels = oConfig.kind_symbols(),
   select_symbol = function(cursor_pos, symbol)
@@ -150,24 +160,4 @@ lsp.lspkind()
 saga.init_lsp_saga()
 lsp_signature.setup()
 
-require("lsp_lines").setup()
-vim.diagnostic.config({
-  virtual_text = false,
-})
-
--- lsp_installer.on_server_ready(function(server)
---   local opts = { on_attach = on_attach }
---
---   if server_settings[server.name] then
---     opts = vim.tbl_deep_extend("force", opts, server_settings[server.name])
---   end
---
---   opts = lsp.capabilities(opts)
---
---   if server.name == "sumneko_lua" then
---     opts = vim.tbl_deep_extend("force", opts, luadev)
---   end
---
---   server:setup(opts)
---   vim.cmd([[ do User LspAttachBuffers ]])
--- end)
+-- require("lsp_lines").setup()
