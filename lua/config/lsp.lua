@@ -5,7 +5,7 @@ local lsp_status = require("lsp-status")
 local lsp_signature = require("lsp_signature")
 local notify = require("notify")
 local map = require("cartographer")
-local luadev = require("lua-dev").setup()
+require("neodev").setup()
 
 local lsp = require("core.lsp")
 local oConfig = require("config.other")
@@ -45,10 +45,10 @@ local on_attach = function(client, bufnr)
   buf_set_keymap("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<CR>", mapopts)
   buf_set_keymap("n", "<Leader>l", "<cmd>lua vim.diagnostic.setloclist()<CR>", mapopts)
   buf_set_keymap("n", "<Leader>G", "<cmd>lua vim.lsp.buf.formatting()<CR>", mapopts)
-  if client.resolved_capabilities.document_range_formatting then
+  if client.server_capabilities.document_range_formatting then
     buf_set_keymap("n", "<Leader>G", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", mapopts)
   end
-  vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
+  vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.format()")
   buf_set_keymap("v", "<space>ca", "<cmd>lua vim.lsp.buf.range_code_action()<CR>", mapopts)
 
   lsp_status.on_attach(client)
@@ -91,13 +91,13 @@ local server_settings = {
   solargraph = {
     cmd = { "solargraph", "stdio" },
     on_attach = function(client, bufnr)
-      client.resolved_capabilities.document_formatting = false
+      client.server_capabilities.document_formatting = false
       on_attach(client, bufnr)
     end,
   },
   sumneko_lua = {
     on_attach = function(client, bufnr)
-      client.resolved_capabilities.document_formatting = false
+      client.server_capabilities.document_formatting = false
       on_attach(client, bufnr)
     end,
     settings = {
@@ -111,7 +111,7 @@ local server_settings = {
   },
   tsserver = {
     on_attach = function(client, bufnr)
-      client.resolved_capabilities.document_formatting = false
+      client.server_capabilities.document_formatting = false
       if client.config.flags then
         client.config.flags.allow_incremental_sync = true
       end

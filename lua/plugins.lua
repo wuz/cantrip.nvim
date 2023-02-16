@@ -185,7 +185,7 @@ return require("packer").startup({
     use({ "onsails/lspkind-nvim", after = "nvim-lspconfig" })
     use({ "simrat39/symbols-outline.nvim", after = "nvim-lspconfig" })
     -- Even better lua dev
-    use({ "folke/lua-dev.nvim", ft = "lua", after = "nvim-lspconfig" })
+    use({ "folke/neodev.nvim", after = "nvim-lspconfig" })
     use({ "williamboman/mason-lspconfig.nvim", after = "nvim-lspconfig" })
     use({
       "williamboman/mason.nvim",
@@ -198,7 +198,6 @@ return require("packer").startup({
         "lspkind-nvim",
         "cmp-nvim-lsp",
         "symbols-outline.nvim",
-        "lua-dev.nvim",
       },
       config = function()
         require("config.lsp")

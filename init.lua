@@ -3,12 +3,6 @@
 
 package.path = package.path .. ";" .. os.getenv("HOME") .. "/.config/nvim/?.lua"
 
--- local present, impatient = pcall(require, "impatient")
---
--- if present then
---   impatient.enable_profile()
--- end
-
 require("startup")
 require("plugins")
 require("cantriprc")

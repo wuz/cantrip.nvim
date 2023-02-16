@@ -1,4 +1,5 @@
 require("hlslens").setup()
+
 vim.cmd([[
 noremap <silent> n <Cmd>execute('normal! ' . v:count1 . 'n')<CR>
             \<Cmd>lua require('hlslens').start()<CR>
