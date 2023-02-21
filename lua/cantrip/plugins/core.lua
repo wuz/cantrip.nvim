@@ -1,4 +1,5 @@
 return {
+  { "folke/lazy.nvim", version = "*" },
   {
     "wuz/cantrip.nvim",
     dependencies = {
@@ -9,14 +10,7 @@ return {
     lazy = false, -- make sure we load this during startup
     priority = 10000, -- load before anything else
     version = "*",
-    opts = {
-      theme = "tokyonight",
-    },
-    config = function(_, opts)
-      require("cantrip").setup(opts)
-      vim.g.tokyonight_dark_sidebar = true
-      vim.g.tokyonight_dark_float = true
-    end,
+    config = true,
   },
   {
     "nathom/filetype.nvim",

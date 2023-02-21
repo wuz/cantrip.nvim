@@ -1,6 +1,6 @@
 ```
-          .―――――.                   ╔╦╦╦╗   
-      .―――│_   _│           .―.     ║~~~║   
+          .―――――.                   ╔╦╦╦╗
+      .―――│_   _│           .―.     ║~~~║
    .――│===│― C ―│_          │_│     ║~~~║――.
    │  │===│  A  │'⧹     ┌―――┤~│  ┌――╢   ║∰ │
    │%%│ ⟐ │  N  │.'⧹    │===│ │――│%%║   ║  │
@@ -16,16 +16,17 @@
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 ```
 
-Cantrip
----
+## Cantrip
+
 <div align="center">
 
 ![GitHub issues](https://img.shields.io/github/issues-raw/wuz/cantrip) ⧊ ![GitHub top language](https://img.shields.io/github/languages/top/wuz/cantrip)
+
 </div>
 
 # What is Cantrip?
 
-cantrip is a Neovim config pack designed to use cutting-edge settings and packages. 
+cantrip is a Neovim config pack designed to use cutting-edge settings and packages.
 All configuration is handled by Lua and the options for
 
 # Installation

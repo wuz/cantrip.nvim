@@ -1,25 +1,25 @@
-*icons.txt*                      A list of Nerd Font icons
+*cantrip-icons.txt*                      A list of Nerd Font icons
 
 Author: Conlin Durbin <c@wuz.sh>
 
 ==============================================================================
-CONTENTS                                        *icons-contents*
-IEC Power Symbols                               |icons-iec-power-symbols|
-Font Awesome Extension                          |icons-font-awesome-ext|
-Powerline Extra Symbols                         |icons-powerline-ext|
-Devicons                                        |icons-devicons|
-Font Awesome                                    |icons-font-awesome|
-Pomicons                                        |icons-pomicons|
-Font Linux                                      |icons-font-linux|
-Seti-UI/Custom                                  |icons-seti-custom|
+CONTENTS                                        *cantrip-icons-contents*
+IEC Power Symbols                               |cantrip-icons-iec-power-symbols|
+Font Awesome Extension                          |cantrip-icons-font-awesome-ext|
+Powerline Extra Symbols                         |cantrip-icons-powerline-ext|
+Devicons                                        |cantrip-icons-devicons|
+Font Awesome                                    |cantrip-icons-font-awesome|
+Pomicons                                        |cantrip-icons-pomicons|
+Font Linux                                      |cantrip-icons-font-linux|
+Seti-UI/Custom                                  |cantrip-icons-seti-custom|
 
 ==============================================================================
-IEC Power Symbols                               *icons-iec-power-symbols*
+IEC Power Symbols                               *cantrip-icons-iec-power-symbols*
 
 ⏻ ⏼ ⏽ ⏾ ⭘ 
 
 ==============================================================================
-Font Awesome Extension                               *icons-font-awesome-ext*
+Font Awesome Extension                               *cantrip-icons-font-awesome-ext*
 
                                         
                                         
@@ -28,12 +28,12 @@ Font Awesome Extension                               *icons-font-awesome-ext*
           
 
 ==============================================================================
-Powerline Extra Symbols                              *icons-powerline-ext*
+Powerline Extra Symbols                              *cantrip-icons-powerline-ext*
 
                                      
 
 ==============================================================================
-Devicons                                             *icons-devicons*
+Devicons                                             *cantrip-icons-devicons*
 
                                         
                                         
@@ -42,7 +42,7 @@ Devicons                                             *icons-devicons*
                                       
 
 ==============================================================================
-Font Awesome                                         *icons-font-awesome*
+Font Awesome                                         *cantrip-icons-font-awesome*
 
                                         
                                         
@@ -63,7 +63,7 @@ Font Awesome                                         *icons-font-awesome*
                                    
 
 ==============================================================================
-Octicons                                             *icons-octicons*
+Octicons                                             *cantrip-icons-octicons*
 
 ♥ ⚡ 
                                         
@@ -73,17 +73,17 @@ Octicons                                             *icons-octicons*
           
 
 ==============================================================================
-Pomicons                                             *icons-pomicons*
+Pomicons                                             *cantrip-icons-pomicons*
 
           
 
 ==============================================================================
-Font Linux                                           *icons-font-linux*
+Font Linux                                           *cantrip-icons-font-linux*
 
                     
 
 ==============================================================================
-Seti-UI/Custom                                       *icons-seti-custom*
+Seti-UI/Custom                                       *cantrip-icons-seti-custom*
 
                                         
          

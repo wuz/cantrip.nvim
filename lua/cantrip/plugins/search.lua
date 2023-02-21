@@ -10,6 +10,9 @@ return {
       { "<Leader>xq", "<cmd>Trouble quickfix<cr>" },
       { "gR", "<cmd>Trouble lsp_references<cr>" },
     },
+    init = function()
+      vim.cmd("autocmd BufLeave <buffer> lua print(vim.fn.winnr('$'))")
+    end,
     opts = {
       auto_open = true, -- automatically open the list when you have diagnostics
       auto_close = true, -- automatically close the list when you have no diagnostics

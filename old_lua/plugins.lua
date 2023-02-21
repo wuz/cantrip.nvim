@@ -17,7 +17,6 @@ return require("packer").startup({
         require("config.other").marks()
       end,
     })
-    use({ "famiu/bufdelete.nvim" })
     use({ "akinsho/toggleterm.nvim", event = "BufEnter" })
 
     -- == Motion

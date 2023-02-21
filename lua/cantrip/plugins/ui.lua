@@ -16,6 +16,7 @@ return {
       require("modicator").setup()
     end,
   },
+  { "famiu/bufdelete.nvim" },
   {
     "echasnovski/mini.cursorword",
     version = false,
