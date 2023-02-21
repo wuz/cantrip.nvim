@@ -24,4 +24,5 @@ return {
     "folke/todo-comments.nvim",
     cmd = { "TodoTrouble", "TodoLocList", "TodoTelescope", "TodoQuickFix" },
   },
+  { "folke/neoconf.nvim", cmd = "Neoconf" },
 }

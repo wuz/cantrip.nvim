@@ -213,14 +213,13 @@ nnoremap <silent> <leader>l :noh<CR>
   },
   {
     "winston0410/range-highlight.nvim",
-    requires = { "winston0410/cmd-parser.nvim" },
+    dependencies = { "winston0410/cmd-parser.nvim" },
   },
   {
     "karb94/neoscroll.nvim",
   },
   {
     "petertriho/nvim-scrollbar",
-    after = "nvim-hlslens",
     opts = function()
       local colors = require("tokyonight.colors").setup()
       return {
