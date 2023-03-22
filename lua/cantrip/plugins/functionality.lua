@@ -1,4 +1,5 @@
 return {
+  { "antoinemadec/FixCursorHold.nvim" },
   {
     "echasnovski/mini.comment",
     version = false,
@@ -19,6 +20,10 @@ return {
     config = function()
       require("mini.sessions").setup()
     end,
+  },
+  {
+    "nguyenvukhang/nvim-toggler",
+    config = true,
   },
   {
     "folke/todo-comments.nvim",

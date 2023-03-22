@@ -8,9 +8,6 @@ return require("packer").startup({
     -- --------------
     -- === BUILTINS
     -- --------------
-    use({ "nvim-lua/plenary.nvim" })
-    --use({ "antoinemadec/FixCursorHold.nvim" })
-    use({ "nvim-lua/popup.nvim", requries = "nvim-lua/plenary.nvim" })
     use({
       "chentoast/marks.nvim",
       config = function()
@@ -35,91 +32,14 @@ return require("packer").startup({
         require("config.polyglot")
       end,
     })
-    use({
-      "styled-components/vim-styled-components",
-      ft = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-    })
 
     -- == LSP
     -- ----------------
-    use({ "tami5/lspsaga.nvim", after = "nvim-lspconfig" })
-    use({ "nvim-lua/lsp-status.nvim", after = "nvim-lspconfig" })
-    use({ "ray-x/lsp_signature.nvim", after = "nvim-lspconfig" })
-    use({ "simrat39/symbols-outline.nvim", after = "nvim-lspconfig" })
-    -- Even better lua dev
-    use({ "folke/neodev.nvim", after = "nvim-lspconfig" })
-    use({ "williamboman/mason-lspconfig.nvim", after = "nvim-lspconfig" })
-    use({
-      "williamboman/mason.nvim",
-      after = {
-        "nvim-lspconfig",
-        "mason-lspconfig.nvim",
-        "lspsaga.nvim",
-        "lsp-status.nvim",
-        "lsp_signature.nvim",
-        "cmp-nvim-lsp",
-        "symbols-outline.nvim",
-      },
-      config = function()
-        require("config.lsp")
-      end,
-    })
-    use({
-      "kosayoda/nvim-lightbulb",
-      config = function()
-        require("config.lightbulb")
-      end,
-    })
-    use({
-      "junegunn/vim-easy-align",
-      config = function()
-        require("config.easy_align")
-      end,
-    })
-    use({
-      "j-hui/fidget.nvim",
-      config = function()
-        require("config.other").fidget()
-      end,
-    })
     -- use({ "Maan2003/lsp_lines.nvim", after = "nvim-lspconfig" })
-
-    -- == Highlight/Focus
-    -- --------------------
-    use({
-      "sunjon/Shade.nvim",
-      config = function()
-        require("shade").setup()
-      end,
-    })
-    use({
-      "folke/twilight.nvim",
-      cmd = { "Twilight", "TwilightEnable", "TwilightDisable" },
-      config = function()
-        require("config.twilight")
-      end,
-    })
 
     -- ----------------
     --  === Git
     -- ----------------
-    use({
-      "lewis6991/gitsigns.nvim",
-      event = "BufRead",
-      after = "plenary.nvim",
-      config = function()
-        require("gitsigns").setup()
-      end,
-    })
-    use({ "f-person/git-blame.nvim", cmd = { "GitBlameToggle", "GitBlameEnable" } })
-    use({ "rhysd/git-messenger.vim" })
-    use({
-      "sindrets/diffview.nvim",
-      after = "plenary.nvim",
-      config = function()
-        require("diffview").setup()
-      end,
-    })
   end,
 })
 

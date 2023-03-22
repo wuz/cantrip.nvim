@@ -2,11 +2,6 @@ return {
   { "folke/lazy.nvim", version = "*" },
   {
     "wuz/cantrip.nvim",
-    dependencies = {
-      {
-        "folke/tokyonight.nvim",
-      },
-    },
     lazy = false, -- make sure we load this during startup
     priority = 10000, -- load before anything else
     version = "*",
@@ -25,7 +20,7 @@ return {
     "rcarriga/nvim-notify",
     opts = {
       timeout = 2000,
-      background_colour = "ColorColumn",
+      background_colour = "FloatBorder",
       -- Icons for the different levels
       icons = {
         ERROR = "",
@@ -35,8 +30,5 @@ return {
         TRACE = "✎",
       },
     },
-    config = function(_, opts)
-      require("notify").setup(opts)
-    end,
   },
 }

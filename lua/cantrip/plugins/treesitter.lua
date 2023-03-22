@@ -60,16 +60,21 @@ return {
       incremental_selection = {
         enable = true,
         keymaps = {
-          init_selection = "<C-space>",
-          node_incremental = "<C-space>",
-          scope_incremental = "<nop>",
-          node_decremental = "<bs>",
+          init_selection = "gnn",
+          node_incremental = "grn",
+          scope_incremental = "grc",
+          node_decremental = "grm",
         },
       },
     },
     ---@param opts TSConfig
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
+      require("nvim-treesitter.install").prefer_git = true
+      local parsers = require("nvim-treesitter.parsers").get_parser_configs()
+      for _, p in pairs(parsers) do
+        p.install_info.url = p.install_info.url:gsub("https://github.com/", "git@github.com:")
+      end
     end,
   },
   { "nvim-treesitter/nvim-treesitter-refactor", dependencies = { "nvim-treesitter" } },
@@ -77,6 +82,8 @@ return {
   { "RRethy/nvim-treesitter-textsubjects", dependencies = { "nvim-treesitter" } },
   { "nvim-treesitter/nvim-treesitter-textobjects", dependencies = { "nvim-treesitter" } },
   { "windwp/nvim-ts-autotag", dependencies = { "nvim-treesitter" } },
+  { "mrjones2014/nvim-ts-rainbow", dependencies = { "nvim-treesitter" } },
+  { "Wansmer/treesj", dependencies = { "nvim-treesitter" } },
   {
     "abecodes/tabout.nvim",
     opts = {
@@ -101,7 +108,21 @@ return {
       require("tabout").setup(opts)
     end,
     dependencies = {
-      "nvim-treesitter", -- "nvim-cmp"
+      "nvim-treesitter",
+      "nvim-cmp",
+    },
+  },
+  {
+    "code-biscuits/nvim-biscuits",
+    opts = {
+      show_on_start = true,
+    },
+    config = function(_, opts)
+      vim.cmd([[highlight! link BiscuitColor Comment]])
+      require("nvim-biscuits").setup(opts)
+    end,
+    dependencies = {
+      "nvim-treesitter",
     },
   },
 }

@@ -3,10 +3,6 @@ local M = {}
 
 -- TODO: Refactor most of these to use lua configuration over viml
 
-M.fidget = function()
-  require("fidget").setup()
-end
-
 M.comment = function()
   require("Comment").setup({
     pre_hook = function(ctx)

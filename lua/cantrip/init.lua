@@ -24,8 +24,8 @@ Cantrip._normalize = function(config)
   config.theme = config.theme or "eldritch"
   config.translucent = Boolean.get(config.translucent, false)
   config.lsp = config.lsp or {
-        format = {},
-      }
+    format = {},
+  }
   config.lsp = config.notes or {}
   return config
 end
@@ -47,6 +47,7 @@ Cantrip.setup = function(config)
   if config.translucent then
     autocmd("CantripTranslucent", "ColorScheme * lua require'cantrip'._translucentBackground()")
   end
+  Cantrip.init()
 end
 
 return Cantrip

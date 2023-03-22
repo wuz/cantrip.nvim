@@ -18,7 +18,7 @@ opt.ttyfast = true
 opt.relativenumber = false --make line numbers relative
 
 -- show line numbers
-opt.nu = false
+opt.nu = true
 
 -- fix backspace behavior
 opt.backspace = "indent,eol,start"
@@ -68,7 +68,7 @@ opt.cursorline = true
 opt.lazyredraw = true
 opt.updatetime = 100
 wo.cursorcolumn = false
-wo.cursorline = false
+wo.cursorline = true
 opt.synmaxcol = 300
 opt.splitbelow = true
 opt.splitright = true

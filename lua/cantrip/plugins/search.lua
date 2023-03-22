@@ -11,7 +11,14 @@ return {
       { "gR", "<cmd>Trouble lsp_references<cr>" },
     },
     init = function()
-      vim.cmd("autocmd BufLeave <buffer> lua print(vim.fn.winnr('$'))")
+      vim.api.nvim_create_autocmd({ "BufLeave" }, {
+        callback = function()
+          local num_windows = vim.fn.winnr("$")
+          if num_windows == 1 and vim.bo.filetype == "Trouble" then
+            require("trouble").close()
+          end
+        end,
+      })
     end,
     opts = {
       auto_open = true, -- automatically open the list when you have diagnostics
@@ -23,6 +30,7 @@ return {
     keys = {
       { "<C-P>", "<cmd>lua require('telescope.builtin').find_files()<cr>" },
       { "<C-N>", "<cmd>lua require('telescope').extensions.notify.notify()<cr>" },
+      { "<leader>/", "<cmd>lua require('telescope').extensions.file_browser.file_browser()<cr>" },
       { "<C-M>", "<cmd>lua require('telescope.builtin').oldfiles()<cr>" },
       { "<C-T>", "<cmd>lua require('telescope.builtin').tags()<cr>" },
       { "<C-A>", "<cmd>lua require('telescope.builtin').live_grep()<cr>" },
@@ -87,7 +95,12 @@ return {
         borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
         color_devicons = true,
         use_less = true,
-        set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
+        set_env = { ["COLORTERM"] = "truecolor" },
+      },
+      extensions = {
+        file_browser = {
+          theme = "dropdown",
+        },
       },
     },
     config = function(_, opts)
@@ -109,6 +122,7 @@ return {
         require("telescope").load_extension("dap")
       end
       require("telescope").load_extension("gh")
+      require("telescope").load_extension("file_browser")
       vim.cmd([[
 		" Telescope theme support
 		hi link TelescopeBorder LineNr
@@ -122,6 +136,7 @@ return {
 	]])
     end,
     dependencies = {
+      "nvim-telescope/telescope-file-browser.nvim",
       "nvim-telescope/telescope-dap.nvim",
       "nvim-telescope/telescope-github.nvim",
     },
