@@ -1,0 +1,5 @@
+return {
+  {
+    "tjvr/vim-nearley",
+  },
+}

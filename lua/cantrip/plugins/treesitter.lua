@@ -116,6 +116,10 @@ return {
     "code-biscuits/nvim-biscuits",
     opts = {
       show_on_start = true,
+      cursor_line_only = true,
+      default_config = {
+        prefix_string = "» ",
+      },
     },
     config = function(_, opts)
       vim.cmd([[highlight! link BiscuitColor Comment]])

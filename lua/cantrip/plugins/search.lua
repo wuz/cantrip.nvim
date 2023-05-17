@@ -28,14 +28,55 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     keys = {
-      { "<C-P>", "<cmd>lua require('telescope.builtin').find_files()<cr>" },
-      { "<C-N>", "<cmd>lua require('telescope').extensions.notify.notify()<cr>" },
-      { "<leader>/", "<cmd>lua require('telescope').extensions.file_browser.file_browser()<cr>" },
-      { "<C-M>", "<cmd>lua require('telescope.builtin').oldfiles()<cr>" },
-      { "<C-T>", "<cmd>lua require('telescope.builtin').tags()<cr>" },
-      { "<C-A>", "<cmd>lua require('telescope.builtin').live_grep()<cr>" },
-      { "<C-B>", "<cmd>lua require('telescope.builtin').buffers()<cr>" },
-      { "<leader>fh", "<cmd>lua require('telescope.builtin').help_tags()<cr>" },
+      {
+        "<C-P>",
+        function()
+          require("telescope.builtin").find_files()
+        end,
+      },
+      {
+        "<C-N>",
+        function()
+          require("telescope").extensions.notify.notify()
+        end,
+      },
+      -- {
+      --   "<leader>/",
+      --   function()
+      --     require("telescope").extensions.file_browser.file_browser()
+      --   end,
+      --   desc = "File Browser",
+      -- },
+      {
+        "<C-M>",
+        function()
+          require("telescope.builtin").oldfiles()
+        end,
+      },
+      {
+        "<C-T>",
+        function()
+          require("telescope.builtin").tags()
+        end,
+      },
+      {
+        "<C-A>",
+        function()
+          require("telescope.builtin").live_grep()
+        end,
+      },
+      {
+        "<C-B>",
+        function()
+          require("telescope.builtin").buffers()
+        end,
+      },
+      {
+        "<leader>fh",
+        function()
+          require("telescope.builtin").help_tags()
+        end,
+      },
     },
     opts = {
       pickers = {
@@ -89,17 +130,30 @@ return {
           preview_cutoff = 80,
         },
         file_ignore_patterns = { "node_modules", ".git" },
-        path_display = { "relative" },
-        winblend = 0,
-        border = {},
-        borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+        path_display = { "smart" },
+        winblend = 6,
         color_devicons = true,
-        use_less = true,
         set_env = { ["COLORTERM"] = "truecolor" },
       },
       extensions = {
         file_browser = {
-          theme = "dropdown",
+          hijack_netrw = true,
+          previewer = false,
+          cwd = "%:p:h",
+          initial_mode = "insert",
+          select_buffer = true,
+          layout_strategy = "vertical",
+          sorting_strategy = "ascending",
+          hidden = false,
+          git_status = true,
+          color_devicons = true,
+          use_less = true,
+          layout_config = {
+            anchor = "W",
+            prompt_position = "bottom",
+            width = 0.2,
+            height = 0.99,
+          },
         },
       },
     },
@@ -117,12 +171,12 @@ return {
         qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
       })
       require("telescope").setup(extend_opts)
+      require("telescope").load_extension("file_browser")
       local dap_present = pcall(require, "mfussenegger/nvim-dap")
       if dap_present then
         require("telescope").load_extension("dap")
       end
       require("telescope").load_extension("gh")
-      require("telescope").load_extension("file_browser")
       vim.cmd([[
 		" Telescope theme support
 		hi link TelescopeBorder LineNr
@@ -139,6 +193,7 @@ return {
       "nvim-telescope/telescope-file-browser.nvim",
       "nvim-telescope/telescope-dap.nvim",
       "nvim-telescope/telescope-github.nvim",
+      "nvim-lua/plenary.nvim",
     },
   },
 }
