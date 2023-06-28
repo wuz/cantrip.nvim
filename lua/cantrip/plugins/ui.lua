@@ -12,10 +12,21 @@ return {
       vim.o.termguicolors = true
     end,
     config = function()
-      require("modicator").setup()
+      require("modicator").setup({
+        show_warnings = false,
+        highlights = {
+          defaults = { bold = true },
+        },
+      })
     end,
   },
-  { "famiu/bufdelete.nvim" },
+  {
+    "echasnovski/mini.bufremove",
+    version = false,
+    config = function()
+      require("mini.cursorword").setup()
+    end,
+  },
   {
     "echasnovski/mini.cursorword",
     version = false,
@@ -50,7 +61,7 @@ return {
     },
     opts = {
       options = {
-        offsets = { { filetype = "NvimTree", text = "", padding = 1 } },
+        offsets = { { filetype = "neo-tree", text = "", padding = 1 } },
         modified_icon = "",
         show_close_icon = false,
         left_trunc_marker = "",
@@ -73,23 +84,23 @@ return {
       require("hlslens").setup()
 
       vim.cmd([[
-noremap <silent> n <Cmd>execute('normal! ' . v:count1 . 'n')<CR>
-            \<Cmd>lua require('hlslens').start()<CR>
-noremap <silent> N <Cmd>execute('normal! ' . v:count1 . 'N')<CR>
-            \<Cmd>lua require('hlslens').start()<CR>
-noremap * *<Cmd>lua require('hlslens').start()<CR>
-noremap # #<Cmd>lua require('hlslens').start()<CR>
-noremap g* g*<Cmd>lua require('hlslens').start()<CR>
-noremap g# g#<Cmd>lua require('hlslens').start()<CR>
+  noremap <silent> n <Cmd>execute('normal! ' . v:count1 . 'n')<CR>
+              \<Cmd>lua require('hlslens').start()<CR>
+  noremap <silent> N <Cmd>execute('normal! ' . v:count1 . 'N')<CR>
+              \<Cmd>lua require('hlslens').start()<CR>
+  noremap * *<Cmd>lua require('hlslens').start()<CR>
+  noremap # #<Cmd>lua require('hlslens').start()<CR>
+  noremap g* g*<Cmd>lua require('hlslens').start()<CR>
+  noremap g# g#<Cmd>lua require('hlslens').start()<CR>
 
-" use : instead of <Cmd>
-nnoremap <silent> <leader>l :noh<CR>
-]])
+  " use : instead of <Cmd>
+  nnoremap <silent> <leader>l :noh<CR>
+  ]])
     end,
   },
   {
     "norcalli/nvim-colorizer.lua",
-    event = "BufEnter",
+    event = "VeryLazy",
     opts = {
       css = { css = true },
       lua = { css = true },
@@ -155,51 +166,51 @@ nnoremap <silent> <leader>l :noh<CR>
       require("scrollbar.handlers.search").setup()
     end,
   },
-  {
-    "hoob3rt/lualine.nvim",
-    init = function()
-      vim.cmd("autocmd User LspProgressUpdate let &ro = &ro")
-    end,
-    opts = function()
-      local present, lsp_status = pcall(require, "lsp-status")
-      local function clock()
-        return " " .. os.date("%H:%M")
-      end
-
-      local function lsp_progress()
-        if present and vim.lsp.get_active_clients() > 0 then
-          lsp_status.status()
-        end
-      end
-      return {
-        options = {
-          theme = "tokyonight",
-          icons_enabled = true,
-          -- section_separators = {"", ""},
-          -- component_separators = {"", ""}
-          component_separators = { left = "", right = "" },
-          section_separators = { left = "", right = "" },
-        },
-        sections = {
-          lualine_a = { "mode" },
-          lualine_b = { "branch", "diff" },
-          lualine_c = { { "diagnostics", sources = { "nvim_diagnostic" } }, { "filename", path = 1 } },
-          lualine_x = { "filetype", lsp_progress },
-          lualine_y = { "diff" },
-          lualine_z = { clock },
-        },
-        inactive_sections = {
-          lualine_a = {},
-          lualine_b = {},
-          lualine_c = {},
-          lualine_x = {},
-          lualine_y = {},
-        },
-      }
-    end,
-  },
-  {
-    "lukas-reineke/virt-column.nvim",
-    config = true,
-  },
+  --   {
+  --     "hoob3rt/lualine.nvim",
+  --     init = function()
+  --       vim.cmd("autocmd User LspProgressUpdate let &ro = &ro")
+  --     end,
+  --     opts = function()
+  --       local present, lsp_status = pcall(require, "lsp-status")
+  --       local function clock()
+  --         return " " .. os.date("%H:%M")
+  --       end
+  --
+  --       local function lsp_progress()
+  --         if present and vim.lsp.get_active_clients() > 0 then
+  --           lsp_status.status()
+  --         end
+  --       end
+  --       return {
+  --         options = {
+  --           theme = "tokyonight",
+  --           icons_enabled = true,
+  --           -- section_separators = {"", ""},
+  --           -- component_separators = {"", ""}
+  --           component_separators = { left = "", right = "" },
+  --           section_separators = { left = "", right = "" },
+  --         },
+  --         sections = {
+  --           lualine_a = { "mode" },
+  --           lualine_b = { "branch", "diff" },
+  --           lualine_c = { { "diagnostics", sources = { "nvim_diagnostic" } }, { "filename", path = 1 } },
+  --           lualine_x = { "filetype", lsp_progress },
+  --           lualine_y = { "diff" },
+  --           lualine_z = { clock },
+  --         },
+  --         inactive_sections = {
+  --           lualine_a = {},
+  --           lualine_b = {},
+  --           lualine_c = {},
+  --           lualine_x = {},
+  --           lualine_y = {},
+  --         },
+  --       }
+  --     end,
+  --   },
+  -- {
+  --   "lukas-reineke/virt-column.nvim",
+  --   config = true,
+  -- },
 }

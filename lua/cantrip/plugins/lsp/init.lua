@@ -88,10 +88,9 @@ return {
     end,
   },
   {
-
     "williamboman/mason.nvim",
     cmd = "Mason",
-    dependencies = { "jay-babu/mason-null-ls.nvim", "jay-babu/mason-nvim-dap.nvim" },
+    dependencies = { "jay-babu/mason-null-ls.nvim", "mfussenegger/nvim-dap", "jay-babu/mason-nvim-dap.nvim" },
     keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
     opts = {
       ensure_installed = {
@@ -129,33 +128,29 @@ return {
           "shellharden",
           "shfmt",
           "shellcheck",
-          "gitsigns",
           "gitrebase",
+          -- "xo",
         },
-        automatic_installation = true,
-        automatic_setup = true,
-      })
-      require("mason-null-ls").setup_handlers({
-        function(source_name, methods)
-          -- all sources with no handler get passed here
-
-          -- To keep the original functionality of `automatic_setup = true`,
-          -- please add the below.
-          require("mason-null-ls.automatic_setup")(source_name, methods)
-        end,
-        reek = function(source_name, methods)
-          local reek = require("cantrip.plugins.lsp.formatters.reek")
-          null_ls.register(reek)
-        end,
-        statix = function()
-          null_ls.register({
-            null_ls.builtins.code_actions.statix,
-            null_ls.builtins.diagnostics.statix,
-          })
-        end,
+        handlers = {
+          function(source_name, methods)
+            require("mason-null-ls.automatic_setup")(source_name, methods)
+          end,
+          reek = function(source_name, methods)
+            local reek = require("cantrip.plugins.lsp.formatters.reek")
+            null_ls.register(reek)
+          end,
+          statix = function()
+            null_ls.register({
+              null_ls.builtins.code_actions.statix,
+              null_ls.builtins.diagnostics.statix,
+            })
+          end,
+        },
       })
       require("mason-nvim-dap").setup({
+        ensure_installed = { "stylua", "jq" },
         automatic_installation = true,
+        handlers = {},
         automatic_setup = true,
       })
     end,
@@ -167,20 +162,7 @@ return {
     opts = function()
       local null_ls = require("null-ls")
       return {
-        sources = {
-          -- null_ls.builtins.formatting.json_tool,
-          -- null_ls.builtins.formatting.fixjson,
-          null_ls.builtins.formatting.rubocop,
-          null_ls.builtins.diagnostics.rubocop,
-          null_ls.builtins.diagnostics.stylelint,
-          null_ls.builtins.diagnostics.markdownlint,
-          null_ls.builtins.diagnostics.write_good,
-          null_ls.builtins.formatting.shellharden,
-          null_ls.builtins.formatting.shfmt,
-          null_ls.builtins.diagnostics.shellcheck,
-          null_ls.builtins.code_actions.gitsigns,
-          null_ls.builtins.code_actions.gitrebase,
-        },
+        sources = {},
       }
     end,
   },
@@ -199,7 +181,6 @@ return {
       vim.cmd([[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]])
     end,
     opt = {
-
       ignore = { "null-ls" },
       sign = {
         enabled = true,

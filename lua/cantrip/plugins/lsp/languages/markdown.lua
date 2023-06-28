@@ -18,13 +18,13 @@ return {
       local ft_to_parser = require("nvim-treesitter.parsers").filetype_to_parsername
       ft_to_parser.mdx = "markdown"
 
-      require("vim.treesitter.query").set_query(
+      require("vim.treesitter").query.set(
         "markdown",
         "injections",
         '((inline) @_inline (#match? @_inline "^(import|export)")) @tsx'
       )
 
-      require("vim.treesitter.query").set_query(
+      require("vim.treesitter").query.set(
         "markdown",
         "highlights",
         '((inline) @_inline (#match? @_inline "^(import|export)")) @nospell'

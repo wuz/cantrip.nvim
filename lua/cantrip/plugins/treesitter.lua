@@ -42,7 +42,7 @@ return {
       },
       ensure_installed = {
         "bash",
-        "help",
+        "vimdoc",
         "html",
         "javascript",
         "json",
@@ -83,7 +83,14 @@ return {
   { "nvim-treesitter/nvim-treesitter-textobjects", dependencies = { "nvim-treesitter" } },
   { "windwp/nvim-ts-autotag", dependencies = { "nvim-treesitter" } },
   { "mrjones2014/nvim-ts-rainbow", dependencies = { "nvim-treesitter" } },
-  { "Wansmer/treesj", dependencies = { "nvim-treesitter" } },
+  {
+    "Wansmer/treesj",
+    dependencies = { "nvim-treesitter" },
+    config = function()
+      require("treesj").setup({--[[ your config ]]
+      })
+    end,
+  },
   {
     "abecodes/tabout.nvim",
     opts = {

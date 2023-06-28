@@ -2,14 +2,14 @@ return {
   { "folke/lazy.nvim", version = "*" },
   {
     "wuz/cantrip.nvim",
-    lazy = false, -- make sure we load this during startup
+    lazy = false,     -- make sure we load this during startup
     priority = 10000, -- load before anything else
     version = "*",
     config = true,
   },
-  {
-    "nathom/filetype.nvim",
-  },
+  -- {
+  --   "nathom/filetype.nvim",
+  -- },
   { "nvim-lua/plenary.nvim" },
   {
     "dstein64/vim-startuptime",
