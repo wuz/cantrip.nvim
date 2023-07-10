@@ -129,7 +129,6 @@ return {
           "shfmt",
           "shellcheck",
           "gitrebase",
-          -- "xo",
         },
         handlers = {
           function(source_name, methods)

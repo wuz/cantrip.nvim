@@ -35,11 +35,11 @@ Cantrip.getConfig = function()
 end
 
 Cantrip.init = function()
-  -- require("cantrip.config.options")
+  require("cantrip.config.options")
 end
 
 Cantrip.setup = function(config)
-  -- require("cantrip.config.keymaps")
+  require("cantrip.config.keymaps")
   config = Cantrip._normalize(config)
   Cantrip._config = config
 
