@@ -4,7 +4,7 @@ return {
     init = function()
       vim.filetype.add({
         extension = {
-          mdx = "mdx",
+          mdx = "markdown",
         },
       })
     end,
@@ -15,16 +15,17 @@ return {
           "markdown_inline",
         })
       end
-      local ft_to_parser = require("nvim-treesitter.parsers").filetype_to_parsername
-      ft_to_parser.mdx = "markdown"
 
-      require("vim.treesitter").query.set(
+      -- vim.treesitter.language.register("markdown", "markdown.mdx")
+      -- vim.treesitter.language.register("markdown_inline", "markdown.mdx")
+
+      vim.treesitter.query.set(
         "markdown",
         "injections",
         '((inline) @_inline (#match? @_inline "^(import|export)")) @tsx'
       )
 
-      require("vim.treesitter").query.set(
+      vim.treesitter.query.set(
         "markdown",
         "highlights",
         '((inline) @_inline (#match? @_inline "^(import|export)")) @nospell'
@@ -38,6 +39,9 @@ return {
       if type(opts.ensure_installed) == "table" then
         vim.list_extend(opts.ensure_installed, {
           "markdownlint",
+          "cbfmt",
+          "marksman",
+          "prettier",
         })
       end
     end,

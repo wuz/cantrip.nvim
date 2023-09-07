@@ -87,6 +87,8 @@ opt.hlsearch = true -- highlight matches
 opt.ignorecase = true -- ignore case of searches
 opt.gdefault = true -- default to global search
 opt.smartcase = true -- ignore ignorecase if uppercase letters
+
+opt.textwidth = 80
 opt.wrapscan = true -- search wraps around end of file
 opt.wrap = false -- Disable line wrap
 

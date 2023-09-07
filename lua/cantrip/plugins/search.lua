@@ -1,183 +1,222 @@
 return {
-    {
-      "folke/trouble.nvim",
-      dependencies = { "nvim-web-devicons" },
-      keys = {
-        { "<Leader>xx", "<cmd>Trouble<cr>" },
-        { "<Leader>xw", "<cmd>Trouble lsp_workspace_diagnostics<cr>" },
-        { "<Leader>xd", "<cmd>Trouble lsp_document_diagnostics<cr>" },
-        { "<Leader>xl", "<cmd>Trouble loclist<cr>" },
-        { "<Leader>xq", "<cmd>Trouble quickfix<cr>" },
-        { "gR",         "<cmd>Trouble lsp_references<cr>" },
-      },
-      init = function()
-        vim.api.nvim_create_autocmd({ "BufLeave" }, {
-          callback = function()
-            local num_windows = vim.fn.winnr("$")
-            if num_windows == 1 and vim.bo.filetype == "Trouble" then
-              require("trouble").close()
-            end
-          end,
-        })
-      end,
-      opts = {
-        auto_open = true,  -- automatically open the list when you have diagnostics
-        auto_close = true, -- automatically close the list when you have no diagnostics
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-web-devicons" },
+    keys = {
+      { "<Leader>xx", "<cmd>Trouble<cr>" },
+      { "<Leader>xw", "<cmd>Trouble lsp_workspace_diagnostics<cr>" },
+      { "<Leader>xd", "<cmd>Trouble lsp_document_diagnostics<cr>" },
+      { "<Leader>xl", "<cmd>Trouble loclist<cr>" },
+      { "<Leader>xq", "<cmd>Trouble quickfix<cr>" },
+      { "gR", "<cmd>Trouble lsp_references<cr>" },
+    },
+    init = function()
+      vim.api.nvim_create_autocmd({ "BufLeave" }, {
+        callback = function()
+          local num_windows = vim.fn.winnr("$")
+          if num_windows == 1 and vim.bo.filetype == "Trouble" then
+            require("trouble").close()
+          end
+        end,
+      })
+    end,
+    opts = {
+      auto_open = true, -- automatically open the list when you have diagnostics
+      auto_close = true, -- automatically close the list when you have no diagnostics
+    },
+  },
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    vscode = true,
+    ---@type Flash.Config
+    opts = {},
+    -- stylua: ignore
+    keys = {
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+      { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+    },
+  },
+  {
+    "nvim-pack/nvim-spectre",
+    cmd = "Spectre",
+    opts = {
+      open_cmd = "noswapfile vnew",
+      replace_engine = {
+        ["sed"] = {
+          cmd = "sed",
+          args = nil,
+          options = {
+            ["ignore-case"] = {
+              value = "--ignore-case",
+              icon = "[I]",
+              desc = "ignore case",
+            },
+          },
+        },
       },
     },
-    {
-      "nvim-telescope/telescope.nvim",
-      keys = {
-        {
-          "<C-P>",
-          function()
-            require("telescope.builtin").find_files()
-          end,
+    -- stylua: ignore
+    keys = {
+      { "<leader>sr", function() require("spectre").open() end, desc = "Replace in files (Spectre)" },
+    },
+  },
+  {
+    "nvim-telescope/telescope.nvim",
+    keys = {
+      {
+        "<C-P>",
+        function()
+          require("telescope.builtin").find_files()
+        end,
+      },
+      {
+        "<C-N>",
+        function()
+          require("telescope").extensions.notify.notify()
+        end,
+      },
+      -- {
+      --   "<leader>/",
+      --   function()
+      --     require("telescope").extensions.file_browser.file_browser()
+      --   end,
+      --   desc = "File Browser",
+      -- },
+      {
+        "<C-M>",
+        function()
+          require("telescope.builtin").oldfiles()
+        end,
+      },
+      {
+        "<C-T>",
+        function()
+          require("telescope.builtin").tags()
+        end,
+      },
+      {
+        "<C-A>",
+        function()
+          require("telescope.builtin").live_grep()
+        end,
+      },
+      {
+        "<C-B>",
+        function()
+          require("telescope.builtin").buffers()
+        end,
+      },
+      {
+        "<leader>fh",
+        function()
+          require("telescope.builtin").help_tags()
+        end,
+      },
+    },
+    opts = {
+      pickers = {
+        find_files = {
+          theme = "dropdown",
         },
-        {
-          "<C-N>",
-          function()
-            require("telescope").extensions.notify.notify()
-          end,
+        oldfiles = {
+          theme = "dropdown",
         },
-        -- {
-        --   "<leader>/",
-        --   function()
-        --     require("telescope").extensions.file_browser.file_browser()
-        --   end,
-        --   desc = "File Browser",
-        -- },
-        {
-          "<C-M>",
-          function()
-            require("telescope.builtin").oldfiles()
-          end,
+        tags = {
+          theme = "dropdown",
         },
-        {
-          "<C-T>",
-          function()
-            require("telescope.builtin").tags()
-          end,
+        live_grep = {
+          theme = "dropdown",
         },
-        {
-          "<C-A>",
-          function()
-            require("telescope.builtin").live_grep()
-          end,
+        buffers = {
+          theme = "dropdown",
         },
-        {
-          "<C-B>",
-          function()
-            require("telescope.builtin").buffers()
-          end,
-        },
-        {
-          "<leader>fh",
-          function()
-            require("telescope.builtin").help_tags()
-          end,
+        help_tags = {
+          theme = "dropdown",
         },
       },
-      opts = {
-        pickers = {
-          find_files = {
-            theme = "dropdown",
-          },
-          oldfiles = {
-            theme = "dropdown",
-          },
-          tags = {
-            theme = "dropdown",
-          },
-          live_grep = {
-            theme = "dropdown",
-          },
-          buffers = {
-            theme = "dropdown",
-          },
-          help_tags = {
-            theme = "dropdown",
-          },
+      defaults = {
+        vimgrep_arguments = {
+          "rg",
+          "--color=never",
+          "--no-heading",
+          "--with-filename",
+          "--line-number",
+          "--column",
+          "--smart-case",
         },
-        defaults = {
-          vimgrep_arguments = {
-            "rg",
-            "--color=never",
-            "--no-heading",
-            "--with-filename",
-            "--line-number",
-            "--column",
-            "--smart-case",
+        prompt_prefix = " ",
+        selection_caret = "● ",
+        entry_prefix = "  ",
+        initial_mode = "insert",
+        selection_strategy = "reset",
+        sorting_strategy = "ascending",
+        layout_strategy = "horizontal",
+        layout_config = {
+          horizontal = {
+            prompt_position = "top",
+            preview_width = 0.55,
+            results_width = 0.8,
           },
-          prompt_prefix = " ",
-          selection_caret = "● ",
-          entry_prefix = "  ",
+          vertical = {
+            mirror = false,
+          },
+          width = 0.67,
+          height = 0.60,
+          preview_cutoff = 80,
+        },
+        file_ignore_patterns = { "node_modules", ".git" },
+        path_display = { "smart" },
+        winblend = 6,
+        color_devicons = true,
+        set_env = { ["COLORTERM"] = "truecolor" },
+      },
+      extensions = {
+        file_browser = {
+          hijack_netrw = true,
+          previewer = false,
+          cwd = "%:p:h",
           initial_mode = "insert",
-          selection_strategy = "reset",
+          select_buffer = true,
+          layout_strategy = "vertical",
           sorting_strategy = "ascending",
-          layout_strategy = "horizontal",
-          layout_config = {
-            horizontal = {
-              prompt_position = "top",
-              preview_width = 0.55,
-              results_width = 0.8,
-            },
-            vertical = {
-              mirror = false,
-            },
-            width = 0.67,
-            height = 0.60,
-            preview_cutoff = 80,
-          },
-          file_ignore_patterns = { "node_modules", ".git" },
-          path_display = { "smart" },
-          winblend = 6,
+          hidden = false,
+          git_status = true,
           color_devicons = true,
-          set_env = { ["COLORTERM"] = "truecolor" },
-        },
-        extensions = {
-          file_browser = {
-            hijack_netrw = true,
-            previewer = false,
-            cwd = "%:p:h",
-            initial_mode = "insert",
-            select_buffer = true,
-            layout_strategy = "vertical",
-            sorting_strategy = "ascending",
-            hidden = false,
-            git_status = true,
-            color_devicons = true,
-            use_less = true,
-            layout_config = {
-              anchor = "W",
-              prompt_position = "bottom",
-              width = 0.2,
-              height = 0.99,
-            },
+          use_less = true,
+          layout_config = {
+            anchor = "W",
+            prompt_position = "bottom",
+            width = 0.2,
+            height = 0.99,
           },
         },
       },
-      config = function(_, opts)
-        local trouble = require("trouble.providers.telescope")
-        local extend_opts = vim.tbl_deep_extend("force", opts, {
-          file_sorter = require("telescope.sorters").get_fuzzy_file,
-          generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
-          mappings = {
-            i = { ["<c-t>"] = trouble.open_with_trouble },
-            n = { ["<c-t>"] = trouble.open_with_trouble },
-          },
-          file_previewer = require("telescope.previewers").cat.new,
-          grep_previewer = require("telescope.previewers").vimgrep.new,
-          qflist_previewer = require("telescope.previewers").qflist.new,
-        })
-        require("telescope").setup(extend_opts)
-        require("telescope").load_extension("file_browser")
-        local dap_present = pcall(require, "mfussenegger/nvim-dap")
-        if dap_present then
-          require("telescope").load_extension("dap")
-        end
-        require("telescope").load_extension("gh")
-        vim.cmd([[
+    },
+    config = function(_, opts)
+      local trouble = require("trouble.providers.telescope")
+      local extend_opts = vim.tbl_deep_extend("force", opts, {
+        file_sorter = require("telescope.sorters").get_fuzzy_file,
+        generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
+        mappings = {
+          i = { ["<c-t>"] = trouble.open_with_trouble },
+          n = { ["<c-t>"] = trouble.open_with_trouble },
+        },
+        file_previewer = require("telescope.previewers").cat.new,
+        grep_previewer = require("telescope.previewers").vimgrep.new,
+        qflist_previewer = require("telescope.previewers").qflist.new,
+      })
+      require("telescope").setup(extend_opts)
+      require("telescope").load_extension("file_browser")
+      local dap_present = pcall(require, "mfussenegger/nvim-dap")
+      if dap_present then
+        require("telescope").load_extension("dap")
+      end
+      require("telescope").load_extension("gh")
+      vim.cmd([[
    	" Telescope theme support
    	hi link TelescopeBorder LineNr
    	hi link TelescopeMatching Constant
@@ -188,12 +227,12 @@ return {
    	hi link TelescopeResultsDiffDelete GitGutterDelete
    	hi link TelescopeResultsDiffUntracked Title
    ]])
-      end,
-      dependencies = {
-        "nvim-telescope/telescope-file-browser.nvim",
-        "nvim-telescope/telescope-dap.nvim",
-        "nvim-telescope/telescope-github.nvim",
-        "nvim-lua/plenary.nvim",
-      },
+    end,
+    dependencies = {
+      "nvim-telescope/telescope-file-browser.nvim",
+      "nvim-telescope/telescope-dap.nvim",
+      "nvim-telescope/telescope-github.nvim",
+      "nvim-lua/plenary.nvim",
     },
+  },
 }
