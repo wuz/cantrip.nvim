@@ -9,7 +9,7 @@ function M.get()
   if not M._keys then
   ---@class PluginLspKeys
     -- stylua: ignore
-    M._keys =  {
+    M._keys = {
       { "<leader>cd", vim.diagnostic.open_float, desc = "Line Diagnostics" },
       { "<leader>cl", "<cmd>LspInfo<cr>", desc = "Lsp Info" },
       { "gd", "<cmd>Telescope lsp_definitions<cr>", desc = "Goto Definition" },
@@ -29,7 +29,7 @@ function M.get()
       { "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" }, has = "codeAction" },
       { "<leader>cf", format, desc = "Format Document", has = "documentFormatting" },
       { "<leader>cf", format, desc = "Format Range", mode = "v", has = "documentRangeFormatting" },
-		{ "<leader>cr", vim.lsp.buf.rename, desc = "Rename", has = "rename" }
+      { "<leader>cr", vim.lsp.buf.rename, desc = "Rename", has = "rename" },
     }
   end
   return M._keys
@@ -55,7 +55,7 @@ function M.on_attach(client, buffer)
       opts.has = nil
       opts.silent = true
       opts.buffer = buffer
-      vim.keymap.set(keys.mode or "n", keys[1], keys[2], opts)
+      vim.keymap.set(keys.mode or "n", keys.lhs, keys.rhs, opts)
     end
   end
 end

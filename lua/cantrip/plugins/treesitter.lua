@@ -52,6 +52,7 @@ return {
         "regex",
         "tsx",
         "vim",
+        "vue",
         "yaml",
         "ruby",
         "scss",

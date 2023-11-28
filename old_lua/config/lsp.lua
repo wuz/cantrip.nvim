@@ -20,12 +20,13 @@ lsp.symbol("Info", " ")
 lsp.handlers()
 
 local on_attach = function(client, bufnr)
-
   local function buf_set_keymap(...)
     vim.api.nvim_buf_set_keymap(bufnr, ...)
   end
 
   vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+
+  notify("Binding keys")
 
   -- Mappings.
   map.n.nore.silent.buffer["gD"] = "<Cmd>lua vim.lsp.buf.declaration()<CR>"
