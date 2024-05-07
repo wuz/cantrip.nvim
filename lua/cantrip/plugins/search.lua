@@ -3,12 +3,42 @@ return {
     "folke/trouble.nvim",
     dependencies = { "nvim-web-devicons" },
     keys = {
-      { "<Leader>xx", "<cmd>Trouble<cr>" },
-      { "<Leader>xw", "<cmd>Trouble lsp_workspace_diagnostics<cr>" },
-      { "<Leader>xd", "<cmd>Trouble lsp_document_diagnostics<cr>" },
-      { "<Leader>xl", "<cmd>Trouble loclist<cr>" },
-      { "<Leader>xq", "<cmd>Trouble quickfix<cr>" },
-      { "gR", "<cmd>Trouble lsp_references<cr>" },
+      {
+        "<leader>xx",
+        function()
+          require("trouble").toggle()
+        end,
+      },
+      {
+        "<leader>xw",
+        function()
+          require("trouble").toggle("workspace_diagnostics")
+        end,
+      },
+      {
+        "<leader>xd",
+        function()
+          require("trouble").toggle("document_diagnostics")
+        end,
+      },
+      {
+        "<leader>xq",
+        function()
+          require("trouble").toggle("quickfix")
+        end,
+      },
+      {
+        "<leader>xl",
+        function()
+          require("trouble").toggle("loclist")
+        end,
+      },
+      {
+        "gR",
+        function()
+          require("trouble").toggle("lsp_references")
+        end,
+      },
     },
     init = function()
       vim.api.nvim_create_autocmd({ "BufLeave" }, {
@@ -26,20 +56,65 @@ return {
     },
   },
   {
-    "folke/flash.nvim",
-    event = "VeryLazy",
-    vscode = true,
-    ---@type Flash.Config
-    opts = {},
-    -- stylua: ignore
+    "ggandor/flit.nvim",
+    enabled = true,
+    keys = function()
+      ---@type LazyKeys[]
+      local ret = {}
+      for _, key in ipairs({ "f", "F", "t", "T" }) do
+        ret[#ret + 1] = { key, mode = { "n", "x", "o" }, desc = key }
+      end
+      return ret
+    end,
+    opts = { labeled_modes = "nx" },
+  },
+  {
+    "ggandor/leap.nvim",
+    enabled = true,
     keys = {
-      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-      { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+      { "s", mode = { "n", "x", "o" }, desc = "Leap forward to" },
+      { "S", mode = { "n", "x", "o" }, desc = "Leap backward to" },
+      { "gs", mode = { "n", "x", "o" }, desc = "Leap from windows" },
+    },
+    config = function(_, opts)
+      local leap = require("leap")
+      for k, v in pairs(opts) do
+        leap.opts[k] = v
+      end
+      leap.add_default_mappings(true)
+      vim.keymap.del({ "x", "o" }, "x")
+      vim.keymap.del({ "x", "o" }, "X")
+    end,
+  },
+  {
+    "echasnovski/mini.surround",
+    opts = {
+      mappings = {
+        add = "gza", -- Add surrounding in Normal and Visual modes
+        delete = "gzd", -- Delete surrounding
+        find = "gzf", -- Find surrounding (to the right)
+        find_left = "gzF", -- Find surrounding (to the left)
+        highlight = "gzh", -- Highlight surrounding
+        replace = "gzr", -- Replace surrounding
+        update_n_lines = "gzn", -- Update `n_lines`
+      },
     },
   },
+  -- {
+  --   "folke/flash.nvim",
+  --   event = "VeryLazy",
+  --   vscode = true,
+  --   ---@type Flash.Config
+  --   opts = {},
+  --   -- stylua: ignore
+  --   keys = {
+  --     { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+  --     { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+  --     { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+  --     { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+  --     { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+  --   },
+  -- },
   {
     "nvim-pack/nvim-spectre",
     cmd = "Spectre",
@@ -197,17 +272,32 @@ return {
       },
     },
     config = function(_, opts)
-      local trouble = require("trouble.providers.telescope")
+      local open_with_trouble = function(...)
+        return require("trouble.providers.telescope").open_with_trouble(...)
+      end
       local extend_opts = vim.tbl_deep_extend("force", opts, {
-        file_sorter = require("telescope.sorters").get_fuzzy_file,
-        generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
-        mappings = {
-          i = { ["<c-t>"] = trouble.open_with_trouble },
-          n = { ["<c-t>"] = trouble.open_with_trouble },
+        defaults = {
+          file_sorter = require("telescope.sorters").get_fuzzy_file,
+          generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
+          file_previewer = require("telescope.previewers").cat.new,
+          grep_previewer = require("telescope.previewers").vimgrep.new,
+          qflist_previewer = require("telescope.previewers").qflist.new,
+          mappings = {
+            i = { ["<C-T>"] = open_with_trouble },
+            n = { ["<C-T>"] = open_with_trouble },
+          },
+          get_selection_window = function()
+            local wins = vim.api.nvim_list_wins()
+            table.insert(wins, 1, vim.api.nvim_get_current_win())
+            for _, win in ipairs(wins) do
+              local buf = vim.api.nvim_win_get_buf(win)
+              if vim.bo[buf].buftype == "" then
+                return win
+              end
+            end
+            return 0
+          end,
         },
-        file_previewer = require("telescope.previewers").cat.new,
-        grep_previewer = require("telescope.previewers").vimgrep.new,
-        qflist_previewer = require("telescope.previewers").qflist.new,
       })
       require("telescope").setup(extend_opts)
       require("telescope").load_extension("file_browser")

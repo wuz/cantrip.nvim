@@ -1,27 +1,15 @@
 return {
+  -- auto completion
   {
-    "L3MON4D3/LuaSnip",
-    dependencies = {
-      {
-        "rafamadriz/friendly-snippets",
-        event = "InsertEnter",
-        config = function()
-          require("luasnip.loaders.from_vscode").lazy_load()
-        end,
-      },
-    },
-    opts = {
-      history = true,
-      delete_check_events = "TextChanged",
-    },
-  },
-  {
+    -- },
     "hrsh7th/nvim-cmp",
+    version = false, -- last release is way too old
+    event = "InsertEnter",
     dependencies = {
-      "lspkind-nvim",
-      { "hrsh7th/cmp-nvim-lsp" },
-      { "hrsh7th/cmp-buffer" },
-      { "hrsh7th/cmp-path" },
+      "onsails/lspkind-nvim",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
       { "hrsh7th/cmp-cmdline" },
       { "ray-x/cmp-treesitter" },
       { "quangnguyen30192/cmp-nvim-tags" },
@@ -29,100 +17,71 @@ return {
       { "saadparwaiz1/cmp_luasnip" },
     },
     opts = function()
-      local cmp = require("cmp")
       local lspkind = require("lspkind")
+      vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
+      local cmp = require("cmp")
+      local defaults = require("cmp.config.default")()
       return {
+        completion = {
+          completeopt = "menu,menuone,noinsert",
+        },
+        mapping = cmp.mapping.preset.insert({
+          ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+          ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-e>"] = cmp.mapping.abort(),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+          ["<S-CR>"] = cmp.mapping.confirm({
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+          }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+          ["<C-CR>"] = function(fallback)
+            cmp.abort()
+            fallback()
+          end,
+        }),
         snippet = {
           expand = function(args)
             require("luasnip").lsp_expand(args.body)
           end,
         },
+        sources = cmp.config.sources({
+          { name = "luasnip", option = { show_autosnippets = true, use_show_condition = false } },
+          { name = "nvim_lsp" },
+          -- { name = "rg" },
+          { name = "treesitter" },
+          -- { name = "tags" },
+          -- { name = "path" },
+        }, {
+          { name = "buffer" },
+        }),
         formatting = {
           format = lspkind.cmp_format({
             mode = "symbol_text",
             menu = {
-              buffer = "[Buffer]",
-              nvim_lsp = "[LSP]",
-              luasnip = "[LuaSnip]",
-              nvim_lua = "[Lua]",
-              latex_symbols = "[Latex]",
+              luasnip = "[snippet]",
+              buffer = "[buffer]",
+              nvim_lsp = "[lsp]",
+              nvim_lua = "[lua]",
+              latex_symbols = "[latex]",
             },
           }),
-          experimental = {
-            ghost_text = {
-              hl_group = "LspCodeLens",
-            },
+        },
+        experimental = {
+          ghost_text = {
+            hl_group = "CmpGhostText",
           },
         },
-        mapping = {
-          ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-          ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-          ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-f>"] = cmp.mapping.scroll_docs(4),
-          ["<C-Space>"] = cmp.mapping.complete(),
-          ["<C-e>"] = cmp.mapping.close(),
-          ["<CR>"] = cmp.mapping.confirm({
-            select = true,
-          }),
-          ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_next_item()
-            elseif require("luasnip").expand_or_jumpable() then
-              vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
-            else
-              fallback()
-            end
-          end, {
-            "i",
-            "s",
-          }),
-          ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_prev_item()
-            elseif require("luasnip").jumpable(-1) then
-              vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
-            else
-              fallback()
-            end
-          end, {
-            "i",
-            "s",
-          }),
-        },
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" },
-          { name = "rg" },
-          { name = "treesitter" },
-          { name = "tags" },
-          { name = "path" },
-        }, {
-          { name = "buffer" },
-        }),
+        sorting = defaults.sorting,
       }
     end,
-    init = function()
-      vim.o.completeopt = "menuone,noselect"
-    end,
+    ---@param opts cmp.ConfigSchema
     config = function(_, opts)
-      vim.cmd([[
-  " gray
-  highlight! CmpItemAbbrDeprecated guibg=NONE gui=strikethrough guifg=#808080
-  " blue
-  highlight! CmpItemAbbrMatch guibg=NONE guifg=#569CD6
-  highlight! CmpItemAbbrMatchFuzzy guibg=NONE guifg=#569CD6
-  " light blue
-  highlight! CmpItemKindVariable guibg=NONE guifg=#9CDCFE
-  highlight! CmpItemKindInterface guibg=NONE guifg=#9CDCFE
-  highlight! CmpItemKindText guibg=NONE guifg=#9CDCFE
-  " pink
-  highlight! CmpItemKindFunction guibg=NONE guifg=#C586C0
-  highlight! CmpItemKindMethod guibg=NONE guifg=#C586C0
-  " front
-  highlight! CmpItemKindKeyword guibg=NONE guifg=#D4D4D4
-  highlight! CmpItemKindProperty guibg=NONE guifg=#D4D4D4
-  highlight! CmpItemKindUnit guibg=NONE guifg=#D4D4D4
-  ]])
+      for _, source in ipairs(opts.sources) do
+        source.group_index = source.group_index or 1
+      end
       local cmp = require("cmp")
       cmp.setup(opts)
 
@@ -142,10 +101,116 @@ return {
         }),
       })
 
-      require("luasnip").filetype_extend("ruby", { "rails" })
-      require("luasnip.loaders.from_vscode").lazy_load()
+      cmp.event:on("confirm_done", function(event)
+        if not vim.tbl_contains(opts.auto_brackets or {}, vim.bo.filetype) then
+          return
+        end
+        local entry = event.entry
+        local item = entry:get_completion_item()
+        if vim.tbl_contains({ Kind.Function, Kind.Method }, item.kind) then
+          local keys = vim.api.nvim_replace_termcodes("()<left>", false, false, true)
+          vim.api.nvim_feedkeys(keys, "i", true)
+        end
+      end)
     end,
   },
+
+  -- snippets
+  {
+    "L3MON4D3/LuaSnip",
+    build = "make install_jsregexp",
+    version = "v2.*",
+    dependencies = {
+      {
+        "rafamadriz/friendly-snippets",
+        config = function()
+          local luasnip = require("luasnip")
+
+          luasnip.filetype_extend("ruby", { "rails" })
+          require("luasnip.loaders.from_vscode").lazy_load()
+          require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/lua/snippets/" })
+        end,
+      },
+      {
+        "nvim-cmp",
+        dependencies = {
+          "saadparwaiz1/cmp_luasnip",
+        },
+      },
+    },
+    opts = {
+      history = true,
+      delete_check_events = "TextChanged",
+      enable_autosnippets = true,
+    },
+    -- stylua: ignore
+    keys = {
+      {
+        "<tab>",
+        function()
+          return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
+        end,
+        expr = true,
+        silent = true,
+        mode = "i",
+      },
+      { "<tab>",   function() require("luasnip").jump(1) end,  mode = "s" },
+      { "<s-tab>", function() require("luasnip").jump(-1) end, mode = { "i", "s" } },
+    },
+  },
+
+  -- {
+  --   "nvim-cmp",
+  --   opts = {
+  --     snippet = {
+  --       expand = function(args)
+  --         vim.snippet.expand(args.body)
+  --       end,
+  --     },
+  --   },
+  --   keys = {
+  --     {
+  --       "<Tab>",
+  --       function()
+  --         if vim.snippet.jumpable(1) then
+  --           vim.schedule(function()
+  --             vim.snippet.jump(1)
+  --           end)
+  --           return
+  --         end
+  --         return "<Tab>"
+  --       end,
+  --       expr = true,
+  --       silent = true,
+  --       mode = "i",
+  --     },
+  --     {
+  --       "<Tab>",
+  --       function()
+  --         vim.schedule(function()
+  --           vim.snippet.jump(1)
+  --         end)
+  --       end,
+  --       silent = true,
+  --       mode = "s",
+  --     },
+  --     {
+  --       "<S-Tab>",
+  --       function()
+  --         if vim.snippet.jumpable(-1) then
+  --           vim.schedule(function()
+  --             vim.snippet.jump(-1)
+  --           end)
+  --           return
+  --         end
+  --         return "<S-Tab>"
+  --       end,
+  --       expr = true,
+  --       silent = true,
+  --       mode = { "i", "s" },
+  --     },
+  --   },
+  -- },
   {
     "echasnovski/mini.pairs",
     event = "VeryLazy",

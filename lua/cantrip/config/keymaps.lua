@@ -37,9 +37,6 @@ map({ "n", "v" }, "<leader>P", '"+P')
 map({ "n", "v" }, "<leader>y", '"+y')
 map({ "n", "v" }, "<leader>Y", '"+Y')
 
-map("n", "<leader>d", '"+dd')
-map("v", "<leader>d", '"+d')
-
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 map("n", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next search result" })
 map("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next search result" })

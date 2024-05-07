@@ -2,14 +2,34 @@ return {
   { "folke/lazy.nvim", version = "*" },
   {
     "wuz/cantrip.nvim",
-    lazy = false,     -- make sure we load this during startup
+    lazy = false, -- make sure we load this during startup
     priority = 10000, -- load before anything else
     version = "*",
     config = true,
   },
-  -- {
-  --   "nathom/filetype.nvim",
-  -- },
+  "folke/which-key.nvim",
+  event = "VeryLazy",
+  init = function()
+    vim.o.timeout = true
+    vim.o.timeoutlen = 300
+  end,
+  {
+    "nathom/filetype.nvim",
+    opts = function()
+      return {
+        overrides = {
+          function_extensions = {
+            ["json"] = function()
+              vim.bo.filetype = "jsonc"
+            end,
+          },
+        },
+      }
+    end,
+    config = function(_, opts)
+      require("filetype").setup(opts)
+    end,
+  },
   { "nvim-lua/plenary.nvim" },
   {
     "dstein64/vim-startuptime",

@@ -6,14 +6,23 @@ return {
     event = { "BufReadPost", "BufNewFile" },
     keys = {
       { "<c-space>", desc = "Increment selection" },
-      { "<bs>", desc = "Schrink selection", mode = "x" },
+      { "<bs>",      desc = "Schrink selection",  mode = "x" },
     },
     ---@type TSConfig
     opts = {
       highlight = { enable = true },
       indent = { enable = true },
-      context_commentstring = { enable = true, enable_autocmd = false },
       autopairs = { enable = true },
+      tree_docs = {
+        enable = true,
+        spec_config = {
+          jsdoc = {
+            slots = {
+              class = { description = true },
+            },
+          },
+        },
+      },
       refactor = {
         highlight_definitions = { enable = true },
         highlight_current_scope = { enable = true },
@@ -46,8 +55,10 @@ return {
         "html",
         "javascript",
         "json",
+        "jsonc",
         "lua",
         "python",
+        "graphql",
         "query",
         "regex",
         "tsx",
@@ -72,35 +83,39 @@ return {
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
       require("nvim-treesitter.install").prefer_git = true
+      require("ts_context_commentstring").setup({})
+      vim.g.skip_ts_context_commentstring_module = true
       local parsers = require("nvim-treesitter.parsers").get_parser_configs()
       for _, p in pairs(parsers) do
         p.install_info.url = p.install_info.url:gsub("https://github.com/", "git@github.com:")
       end
+      vim.treesitter.language.register("markdown", "mdx")
     end,
   },
-  { "nvim-treesitter/nvim-treesitter-refactor", dependencies = { "nvim-treesitter" } },
+  { "nvim-treesitter/nvim-treesitter-refactor",    dependencies = { "nvim-treesitter" } },
   { "JoosepAlviste/nvim-ts-context-commentstring", dependencies = { "nvim-treesitter" } },
-  { "RRethy/nvim-treesitter-textsubjects", dependencies = { "nvim-treesitter" } },
+  { "RRethy/nvim-treesitter-textsubjects",         dependencies = { "nvim-treesitter" } },
   { "nvim-treesitter/nvim-treesitter-textobjects", dependencies = { "nvim-treesitter" } },
-  { "windwp/nvim-ts-autotag", dependencies = { "nvim-treesitter" } },
-  { "mrjones2014/nvim-ts-rainbow", dependencies = { "nvim-treesitter" } },
+  { "windwp/nvim-ts-autotag",                      dependencies = { "nvim-treesitter" } },
+  { "mrjones2014/nvim-ts-rainbow",                 dependencies = { "nvim-treesitter" } },
+  { "nvim-treesitter/nvim-tree-docs",              dependencies = { "nvim-treesitter" } },
   {
     "Wansmer/treesj",
     dependencies = { "nvim-treesitter" },
     config = function()
-      require("treesj").setup({--[[ your config ]]
+      require("treesj").setup({ --[[ your config ]]
       })
     end,
   },
   {
     "abecodes/tabout.nvim",
     opts = {
-      tabkey = "<Tab>", -- key to trigger tabout, set to an empty string to disable
+      tabkey = "<Tab>",             -- key to trigger tabout, set to an empty string to disable
       backwards_tabkey = "<S-Tab>", -- key to trigger backwards tabout, set to an empty string to disable
-      act_as_tab = true, -- shift content if tab out is not possible
-      act_as_shift_tab = false, -- reverse shift content if tab out is not possible (if your keyboard/terminal supports <S-Tab>)
-      enable_backwards = true, -- well ...
-      completion = true, -- if the tabkey is used in a completion pum
+      act_as_tab = true,            -- shift content if tab out is not possible
+      act_as_shift_tab = false,     -- reverse shift content if tab out is not possible (if your keyboard/terminal supports <S-Tab>)
+      enable_backwards = true,      -- well ...
+      completion = true,            -- if the tabkey is used in a completion pum
       tabouts = {
         { open = "'", close = "'" },
         { open = '"', close = '"' },
