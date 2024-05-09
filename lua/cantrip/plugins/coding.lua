@@ -1,21 +1,8 @@
 return {
-  { "antoinemadec/FixCursorHold.nvim" },
+  -- Comments
   {
     "echasnovski/mini.comment",
     version = false,
-    config = function()
-      require("mini.comment").setup()
-    end,
-  },
-  {
-    "echasnovski/mini.sessions",
-    version = false,
-    config = function()
-      require("mini.sessions").setup()
-    end,
-  },
-  {
-    "nguyenvukhang/nvim-toggler",
     config = true,
   },
   {
@@ -47,5 +34,38 @@ return {
     },
     config = true,
   },
-  { "tpope/vim-repeat" },
+  -- / Comments
+  -- Highlight traling spaces
+  {
+    "echasnovski/mini.trailspace",
+    version = false,
+    config = true,
+  },
+  -- Surround code
+  {
+    "echasnovski/mini.surround",
+    opts = {
+      mappings = {
+        add = "gza",            -- Add surrounding in Normal and Visual modes
+        delete = "gzd",         -- Delete surrounding
+        find = "gzf",           -- Find surrounding (to the right)
+        find_left = "gzF",      -- Find surrounding (to the left)
+        highlight = "gzh",      -- Highlight surrounding
+        replace = "gzr",        -- Replace surrounding
+        update_n_lines = "gzn", -- Update `n_lines`
+      },
+    },
+  },
+  -- Toggle between values
+  {
+    "nguyenvukhang/nvim-toggler",
+    config = true,
+  },
+  -- Align items
+  {
+    "junegunn/vim-easy-align",
+    keys = {
+      { "ga", "<Plug>(EasyAlign)" },
+    },
+  },
 }

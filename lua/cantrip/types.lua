@@ -1,0 +1,2 @@
+---@class CantripGlobals
+vim.g = {}

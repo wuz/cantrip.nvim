@@ -50,24 +50,11 @@ return {
         enable = true,
       },
       ensure_installed = {
-        "bash",
         "vimdoc",
-        "html",
-        "javascript",
-        "json",
-        "jsonc",
-        "lua",
-        "python",
-        "graphql",
         "query",
         "regex",
-        "tsx",
         "vim",
-        "vue",
         "yaml",
-        "ruby",
-        "scss",
-        "css",
       },
       incremental_selection = {
         enable = true,
@@ -89,7 +76,6 @@ return {
       for _, p in pairs(parsers) do
         p.install_info.url = p.install_info.url:gsub("https://github.com/", "git@github.com:")
       end
-      vim.treesitter.language.register("markdown", "mdx")
     end,
   },
   { "nvim-treesitter/nvim-treesitter-refactor",    dependencies = { "nvim-treesitter" } },
@@ -99,57 +85,4 @@ return {
   { "windwp/nvim-ts-autotag",                      dependencies = { "nvim-treesitter" } },
   { "mrjones2014/nvim-ts-rainbow",                 dependencies = { "nvim-treesitter" } },
   { "nvim-treesitter/nvim-tree-docs",              dependencies = { "nvim-treesitter" } },
-  {
-    "Wansmer/treesj",
-    dependencies = { "nvim-treesitter" },
-    config = function()
-      require("treesj").setup({ --[[ your config ]]
-      })
-    end,
-  },
-  {
-    "abecodes/tabout.nvim",
-    opts = {
-      tabkey = "<Tab>",             -- key to trigger tabout, set to an empty string to disable
-      backwards_tabkey = "<S-Tab>", -- key to trigger backwards tabout, set to an empty string to disable
-      act_as_tab = true,            -- shift content if tab out is not possible
-      act_as_shift_tab = false,     -- reverse shift content if tab out is not possible (if your keyboard/terminal supports <S-Tab>)
-      enable_backwards = true,      -- well ...
-      completion = true,            -- if the tabkey is used in a completion pum
-      tabouts = {
-        { open = "'", close = "'" },
-        { open = '"', close = '"' },
-        { open = "`", close = "`" },
-        { open = "(", close = ")" },
-        { open = "[", close = "]" },
-        { open = "{", close = "}" },
-      },
-      ignore_beginning = true, --[[ if the cursor is at the beginning of a filled element it will rather tab out than shift the content ]]
-      exclude = {}, -- tabout will ignore these filetypes
-    },
-    config = function(_, opts)
-      require("tabout").setup(opts)
-    end,
-    dependencies = {
-      "nvim-treesitter",
-      "nvim-cmp",
-    },
-  },
-  {
-    "code-biscuits/nvim-biscuits",
-    opts = {
-      show_on_start = true,
-      cursor_line_only = true,
-      default_config = {
-        prefix_string = "» ",
-      },
-    },
-    config = function(_, opts)
-      vim.cmd([[highlight! link BiscuitColor Comment]])
-      require("nvim-biscuits").setup(opts)
-    end,
-    dependencies = {
-      "nvim-treesitter",
-    },
-  },
 }

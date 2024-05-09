@@ -158,68 +158,15 @@ return {
       { "<s-tab>", function() require("luasnip").jump(-1) end, mode = { "i", "s" } },
     },
   },
-
   -- {
-  --   "nvim-cmp",
+  --   "echasnovski/mini.pairs",
+  --   event = "VeryLazy",
   --   opts = {
-  --     snippet = {
-  --       expand = function(args)
-  --         vim.snippet.expand(args.body)
-  --       end,
-  --     },
+  --     ['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^%a\\].", register = { cr = false } },
+  --     ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^%a\\].", register = { cr = false } },
   --   },
-  --   keys = {
-  --     {
-  --       "<Tab>",
-  --       function()
-  --         if vim.snippet.jumpable(1) then
-  --           vim.schedule(function()
-  --             vim.snippet.jump(1)
-  --           end)
-  --           return
-  --         end
-  --         return "<Tab>"
-  --       end,
-  --       expr = true,
-  --       silent = true,
-  --       mode = "i",
-  --     },
-  --     {
-  --       "<Tab>",
-  --       function()
-  --         vim.schedule(function()
-  --           vim.snippet.jump(1)
-  --         end)
-  --       end,
-  --       silent = true,
-  --       mode = "s",
-  --     },
-  --     {
-  --       "<S-Tab>",
-  --       function()
-  --         if vim.snippet.jumpable(-1) then
-  --           vim.schedule(function()
-  --             vim.snippet.jump(-1)
-  --           end)
-  --           return
-  --         end
-  --         return "<S-Tab>"
-  --       end,
-  --       expr = true,
-  --       silent = true,
-  --       mode = { "i", "s" },
-  --     },
-  --   },
+  --   config = function(_, opts)
+  --     require("mini.pairs").setup(opts)
+  --   end,
   -- },
-  {
-    "echasnovski/mini.pairs",
-    event = "VeryLazy",
-    opts = {
-      ['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^%a\\].", register = { cr = false } },
-      ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^%a\\].", register = { cr = false } },
-    },
-    config = function(_, opts)
-      require("mini.pairs").setup(opts)
-    end,
-  },
 }

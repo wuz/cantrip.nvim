@@ -1,5 +1,3 @@
-local g = vim.g
-
 return {
   {
     "nvim-neo-tree/neo-tree.nvim",
@@ -8,6 +6,26 @@ return {
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
       "MunifTanjim/nui.nvim",
+      "3rd/image.nvim",
+      {
+        "s1n7ax/nvim-window-picker",
+        version = "2.*",
+        config = function()
+          require("window-picker").setup({
+            filter_rules = {
+              include_current_win = false,
+              autoselect_one = true,
+              -- filter using buffer options
+              bo = {
+                -- if the file type is one of following, the window will be ignored
+                filetype = { "neo-tree", "neo-tree-popup", "notify" },
+                -- if the buffer type is one of following, the window will be ignored
+                buftype = { "terminal", "quickfix" },
+              },
+            },
+          })
+        end,
+      },
     },
     keys = {
       {
@@ -18,7 +36,7 @@ return {
         desc = "Explorer NeoTree (root dir)",
       },
       {
-        "<leader>e",
+        "\\",
         function()
           require("neo-tree.command").execute({ toggle = true, dir = vim.loop.cwd() })
         end,
@@ -54,8 +72,10 @@ return {
         },
       },
       window = {
+        position = "float",
         mappings = {
           ["<space>"] = "none",
+          ["P"] = { "toggle_preview", config = { use_float = true, use_image_nvim = true } },
         },
       },
       default_component_configs = {
@@ -64,6 +84,27 @@ return {
           expander_collapsed = "",
           expander_expanded = "",
           expander_highlight = "NeoTreeExpander",
+        },
+      },
+      git_status = {
+        window = {
+          position = "float",
+          mappings = {
+            ["A"] = "git_add_all",
+            ["gu"] = "git_unstage_file",
+            ["ga"] = "git_add_file",
+            ["gr"] = "git_revert_file",
+            ["gc"] = "git_commit",
+            ["gp"] = "git_push",
+            ["gg"] = "git_commit_and_push",
+            ["o"] = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
+            ["oc"] = { "order_by_created", nowait = false },
+            ["od"] = { "order_by_diagnostics", nowait = false },
+            ["om"] = { "order_by_modified", nowait = false },
+            ["on"] = { "order_by_name", nowait = false },
+            ["os"] = { "order_by_size", nowait = false },
+            ["ot"] = { "order_by_type", nowait = false },
+          },
         },
       },
     },
@@ -80,106 +121,3 @@ return {
     end,
   },
 }
-
---  {
---    "kyazdani42/nvim-tree.lua",
---    cmd = {
---      "NvimTreeOpen",
---      "NvimTreeFocus",
---      "NvimTreeToggle",
---      "NvimTreeFindFileToggle",
---    },
---    keys = {
---      { "<Leader>/", ":NvimTreeFindFileToggle <CR>" },
---    },
---    dependencies = { "nvim-web-devicons" },
---    opts = function()
---      local list = {
---        { key = { "<CR>", "o", "<2-LeftMouse>" }, action = "edit" },
---        { key = "<C-e>", action = "edit_in_place" },
---        { key = { "O" }, action = "edit_no_picker" },
---        { key = { "<2-RightMouse>", "<C-]>" }, action = "cd" },
---        { key = "<C-v>", action = "vsplit" },
---        { key = "<C-x>", action = "split" },
---        { key = "<C-t>", action = "tabnew" },
---        { key = "<", action = "prev_sibling" },
---        { key = ">", action = "next_sibling" },
---        { key = "P", action = "parent_node" },
---        { key = "<BS>", action = "close_node" },
---        { key = "<Tab>", action = "preview" },
---        { key = "K", action = "first_sibling" },
---        { key = "J", action = "last_sibling" },
---        { key = "I", action = "toggle_git_ignored" },
---        { key = "H", action = "toggle_dotfiles" },
---        { key = "R", action = "refresh" },
---        { key = "n", action = "create" },
---        { key = "d", action = "remove" },
---        { key = "D", action = "trash" },
---        { key = "r", action = "rename" },
---        { key = "<C-r>", action = "full_rename" },
---        { key = "x", action = "cut" },
---        { key = "c", action = "copy" },
---        { key = "p", action = "paste" },
---        { key = "y", action = "copy_name" },
---        { key = "Y", action = "copy_path" },
---        { key = "gy", action = "copy_absolute_path" },
---        { key = "[c", action = "prev_git_item" },
---        { key = "]c", action = "next_git_item" },
---        { key = "-", action = "dir_up" },
---        { key = "s", action = "system_open" },
---        { key = "q", action = "close" },
---        { key = "?", action = "toggle_help" },
---        { key = "W", action = "collapse_all" },
---        { key = "S", action = "search_node" },
---        { key = "<C-k>", action = "toggle_file_info" },
---        { key = ".", action = "run_file_command" },
---      }
---      return {
---        open_on_tab = true,
---        hijack_cursor = true,
---        view = {
---          hide_root_folder = true,
---          mappings = {
---            list = list,
---          },
---        },
---      }
---    end,
---    config = function(_, opts)
---      require("nvim-tree").setup(opts)
---      g.nvim_tree_highlight_opened_files = 0
---      g.nvim_tree_root_folder_modifier = table.concat({ ":t:gs?$?/..", string.rep(" ", 1000), "?:gs?^??" })
---
---      g.nvim_tree_show_icons = {
---        folders = 1,
---        -- folder_arrows= 1
---        files = 1,
---        git = 1,
---      }
---
---      g.nvim_tree_icons = {
---        default = "",
---        symlink = "",
---        git = {
---          deleted = "",
---          ignored = "◌",
---          renamed = "➜",
---          staged = "✓",
---          unmerged = "",
---          unstaged = "✗",
---          untracked = "",
---        },
---        folder = {
---          -- disable indent_markers option to get arrows working or if you want both arrows and indent then just add the arrow icons in front            ofthe default and opened folders below!
---          -- arrow_open = "",
---          -- arrow_closed = "",
---          default = "",
---          empty = "", -- 
---          empty_open = "",
---          open = "",
---          symlink = "",
---          symlink_open = "",
---        },
---      }
---    end,
---  },

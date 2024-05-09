@@ -1,28 +1,71 @@
 return {
   -- {
+  --   "folke/flash.nvim",
+  --   event = "VeryLazy",
+  --   vscode = true,
+  --   ---@type Flash.Config
+  --   opts = {},
+  --   -- stylua: ignore
+  --   keys = {
+  --     { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+  --     { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+  --     { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+  --     { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+  --     { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+  --   },
+  -- },
+  --   {
+  --     "hoob3rt/lualine.nvim",
+  --     init = function()
+  --       vim.cmd("autocmd User LspProgressUpdate let &ro = &ro")
+  --     end,
+  --     opts = function()
+  --       local present, lsp_status = pcall(require, "lsp-status")
+  --       local function clock()
+  --         return " " .. os.date("%H:%M")
+  --       end
+  --
+  --       local function lsp_progress()
+  --         if present and vim.lsp.get_active_clients() > 0 then
+  --           lsp_status.status()
+  --         end
+  --       end
+  --       return {
+  --         options = {
+  --           theme = "tokyonight",
+  --           icons_enabled = true,
+  --           -- section_separators = {"", ""},
+  --           -- component_separators = {"", ""}
+  --           component_separators = { left = "", right = "" },
+  --           section_separators = { left = "", right = "" },
+  --         },
+  --         sections = {
+  --           lualine_a = { "mode" },
+  --           lualine_b = { "branch", "diff" },
+  --           lualine_c = { { "diagnostics", sources = { "nvim_diagnostic" } }, { "filename", path = 1 } },
+  --           lualine_x = { "filetype", lsp_progress },
+  --           lualine_y = { "diff" },
+  --           lualine_z = { clock },
+  --         },
+  --         inactive_sections = {
+  --           lualine_a = {},
+  --           lualine_b = {},
+  --           lualine_c = {},
+  --           lualine_x = {},
+  --           lualine_y = {},
+  --         },
+  --       }
+  --     end,
+  --   },
+  -- {
+  --   "lukas-reineke/virt-column.nvim",
+  --   config = true,
+  -- },
+  -- {
   --   "ellisonleao/carbon-now.nvim",
   --   opts = {
   --     open_cmd = "open",
   --   },
   --   cmd = "CarbonNow",
   -- },
-  {
-    "andweeb/presence.nvim",
-    event = "VeryLazy",
-    opts = {
-      auto_update = true, -- Update activity based on autocmd events (if `false`, map or manually execute `:lua package.loaded.presence:update()`)
-      neovim_image_text = "Slowly losing my mind", -- Text displayed when hovered over the Neovim image
-      main_image = "neovim", -- Main image display (either "neovim" or "file")
-      enable_line_number = false, -- Displays the current line number instead of the current project
-      blacklist = {}, -- A list of strings or Lua patterns that disable Rich Presence if the current file name, path, or workspace matches
-
-      editing_text = "Editing %s", -- Format string rendered when an editable file is loaded in the buffer (either string or function(filename: string): string)
-      file_explorer_text = "Browsing %s", -- Format string rendered when browsing a file explorer (either string or function(file_explorer_name: string): string)
-      git_commit_text = "Committing changes", -- Format string rendered when committing changes in git (either string or function(filename: string): string)
-      plugin_manager_text = "Managing plugins", -- Format string rendered when managing plugins (either string or function(plugin_manager_name: string): string)
-      reading_text = "Reading %s", -- Format string rendered when a read-only or unmodifiable file is loaded in the buffer (either string or function(filename: string): string)
-      workspace_text = "Working on %s", -- Format string rendered when in a git repository (either string or function(project_name: string|nil, filename: string): string)
-      line_number_text = "Line %s out of %s", -- Format string rendered when `enable_line_number` is set to true (either string or function(line_number: number, line_count: number): string)
-    },
-  },
 }

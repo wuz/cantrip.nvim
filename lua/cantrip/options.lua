@@ -7,15 +7,15 @@ local c = vim.cmd
 local wo = vim.wo
 local expand = vim.fn.expand
 
-opt.hidden = true -- remember buffer history
+opt.hidden = true  -- remember buffer history
 
 opt.history = 1000 -- increase history from 20 to 1000
 
 -- Undo/Backups
-opt.undofile = true -- persistent undo
+opt.undofile = true                                -- persistent undo
 o.undodir = expand("$HOME/.local/share/nvim/undo") -- use global undo directory
 opt.ttyfast = true
-opt.relativenumber = false --make line numbers relative
+opt.relativenumber = false                         --make line numbers relative
 
 -- show line numbers
 opt.nu = true
@@ -24,7 +24,7 @@ opt.nu = true
 opt.backspace = "indent,eol,start"
 
 -- Always show status line
-opt.laststatus = 2
+opt.laststatus = 0
 
 -- enable extended regexes.
 opt.magic = true
@@ -57,9 +57,10 @@ opt.showmatch = true
 
 -- autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
-opt.timeout = false
+opt.timeout = true
 opt.ttimeout = true
 opt.ttimeoutlen = 10
+opt.timeoutlen = 300 -- Lower than default (1000) to quickly trigger which-key
 
 -- Global
 opt.mouse = "a"
@@ -75,22 +76,22 @@ opt.splitright = true
 
 -- Indent
 c("filetype indent on")
-opt.expandtab = true -- tabs are spaces
-opt.softtabstop = 2 -- number of columns in insert mode
+opt.expandtab = true   -- tabs are spaces
+opt.softtabstop = 2    -- number of columns in insert mode
 opt.tabstop = 2
 opt.smartindent = true -- indent files smartly
 opt.shiftwidth = 2
 
 -- Search
-opt.incsearch = true -- search as characters are typed
-opt.hlsearch = true -- highlight matches
+opt.incsearch = true  -- search as characters are typed
+opt.hlsearch = true   -- highlight matches
 opt.ignorecase = true -- ignore case of searches
-opt.gdefault = true -- default to global search
-opt.smartcase = true -- ignore ignorecase if uppercase letters
+opt.gdefault = true   -- default to global search
+opt.smartcase = true  -- ignore ignorecase if uppercase letters
 
 opt.textwidth = 80
 opt.wrapscan = true -- search wraps around end of file
-opt.wrap = false -- Disable line wrap
+opt.wrap = false    -- Disable line wrap
 
 -- Fix markdown indentation settings
 vim.g.markdown_recommended_style = 0

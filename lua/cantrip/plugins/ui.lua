@@ -1,110 +1,63 @@
 return {
+  -- Better icons in nvim
   { "nvim-tree/nvim-web-devicons", event = "VeryLazy" },
+  -- Inline annotation adding context to tags/brackes/parens/etc
+  {
+    "code-biscuits/nvim-biscuits",
+    opts = {
+      show_on_start = true,
+      cursor_line_only = true,
+      default_config = {
+        prefix_string = "» ",
+      },
+    },
+    config = function(_, opts)
+      vim.cmd([[highlight! link BiscuitColor Comment]])
+      require("nvim-biscuits").setup(opts)
+    end,
+    dependencies = {
+      "nvim-treesitter",
+    },
+  },
+  -- Better ui.select and ui.input
   {
     "stevearc/dressing.nvim",
   },
+  -- Indent highlight groups
   {
-    "mawkler/modicator.nvim",
-    dependencies = "folke/tokyonight.nvim",
-    init = function()
-      vim.o.cursorline = true
-      vim.o.number = true
-      vim.o.termguicolors = true
-    end,
-    config = function()
-      require("modicator").setup({
-        show_warnings = false,
-        highlights = {
-          defaults = { bold = true },
-        },
-      })
+    "lukas-reineke/indent-blankline.nvim",
+    event = "BufEnter",
+    main = "ibl",
+    config = function(_, opts)
+      vim.cmd([[highlight IndentBlanklineIndent1 guibg=#1f1f1f gui=nocombine]])
+      vim.cmd([[highlight IndentBlanklineIndent2 guibg=#1a1a1a gui=nocombine]])
+
+      vim.opt.list = true
+      vim.opt.listchars:append("eol:↴")
+
+      require("ibl").setup(opts)
     end,
   },
-  {
-    "echasnovski/mini.bufremove",
-    version = false,
-    config = function()
-      require("mini.bufremove").setup()
-    end,
-  },
+  -- Dim inactive panes
+  { "sunjon/shade.nvim" },
+  -- highlight the word under the cursor
   {
     "echasnovski/mini.cursorword",
     version = false,
-    config = function()
-      require("mini.cursorword").setup()
-    end,
+    config = true,
   },
-  {
-    "echasnovski/mini.trailspace",
-    version = false,
-    config = function()
-      require("mini.trailspace").setup()
-    end,
-  },
-  {
-    "nkakouros-original/numbers.nvim",
-  },
-  { "sunjon/shade.nvim" },
+  -- Focus sections of code, with treesitter
   {
     "folke/twilight.nvim",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
     cmd = { "Twilight", "TwilightEnable", "TwilightDisable" },
     keys = {
       { "<leader>fc", ":Twilight", desc = "Focus Code" },
     },
   },
-  {
-    "akinsho/bufferline.nvim",
-    dependencies = "nvim-tree/nvim-web-devicons",
-    event = "VeryLazy",
-    keys = {
-      { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle pin" },
-      { "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete non-pinned buffers" },
-      { "<leader>bo", "<Cmd>BufferLineCloseOthers<CR>", desc = "Delete other buffers" },
-      { "<leader>br", "<Cmd>BufferLineCloseRight<CR>", desc = "Delete buffers to the right" },
-      { "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>", desc = "Delete buffers to the left" },
-      { "<S-h>", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev buffer" },
-      { "<S-l>", "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer" },
-      { "[b", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev buffer" },
-      { "]b", "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer" },
-    },
-    opts = {
-      options = {
-        hover = {
-          enabled = true,
-          delay = 200,
-          reveal = { "close" },
-        },
-        close_command = function(n)
-          require("mini.bufremove").delete(n, false)
-        end,
-        -- stylua: ignore
-        right_mouse_command = function(n) require("mini.bufremove").delete(n, false) end,
-        offsets = {
-          {
-            filetype = "neo-tree",
-            text = "Neo-tree",
-            highlight = "Directory",
-            text_align = "left",
-          },
-        },
-        buffer_close_icon = "󰅖",
-        modified_icon = "●",
-        close_icon = "",
-        show_close_icon = true,
-        left_trunc_marker = "",
-        right_trunc_marker = "",
-        max_name_length = 14,
-        max_prefix_length = 13,
-        tab_size = 20,
-        show_tab_indicators = true,
-        enforce_regular_tabs = false,
-        view = "multiwindow",
-        separator_style = "thick",
-        always_show_bufferline = true,
-        diagnostics = "nvim_lsp",
-      },
-    },
-  },
+  -- highlight matched information
   {
     "kevinhwang91/nvim-hlslens",
     config = function()
@@ -125,116 +78,86 @@ return {
   ]])
     end,
   },
+  -- change colors based on current vim mode
   {
-    "norcalli/nvim-colorizer.lua",
-    event = "VeryLazy",
-    opts = {
-      css = { css = true },
-      lua = { css = true },
-      typescript = { css = true },
-      javascript = { css = true },
-      typescriptreact = { css = true },
-      javascriptreact = { css = true },
-      html = { css = true },
+    "mawkler/modicator.nvim",
+    dependencies = "folke/tokyonight.nvim",
+    init = function()
+      vim.o.cursorline = true
+      vim.o.number = true
+      vim.o.termguicolors = true
+    end,
+    config = function()
+      require("modicator").setup({
+        show_warnings = false,
+        highlights = {
+          defaults = { bold = true },
+        },
+      })
+    end,
+  },
+  -- Build custom UIs
+  {
+    "anuvyklack/hydra.nvim",
+  },
+  -- show lightbulb when line has code actions
+  {
+    "kosayoda/nvim-lightbulb",
+    init = function()
+      vim.cmd([[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]])
+    end,
+    opt = {
+      ignore = { "null-ls" },
+      sign = {
+        enabled = true,
+      },
     },
   },
+  -- Floating statusbars
   {
-    "lukas-reineke/indent-blankline.nvim",
-    event = "BufEnter",
-    main = "ibl",
-    config = function(_, opts)
-      vim.cmd([[highlight IndentBlanklineIndent1 guibg=#1f1f1f gui=nocombine]])
-      vim.cmd([[highlight IndentBlanklineIndent2 guibg=#1a1a1a gui=nocombine]])
-
-      vim.opt.list = true
-      vim.opt.listchars:append("eol:↴")
-
-      require("ibl").setup(opts)
-    end,
-  },
-  {
-    "winston0410/range-highlight.nvim",
-    dependencies = { "winston0410/cmd-parser.nvim" },
-  },
-  {
-    "karb94/neoscroll.nvim",
-  },
-  {
-    "petertriho/nvim-scrollbar",
-    opts = function()
-      local colors = require("tokyonight.colors").setup()
-      return {
-        handle = {
-          color = colors.bg_highlight,
+    "b0o/incline.nvim",
+    event = "VeryLazy",
+    opts = {
+      window = {
+        placement = {
+          vertical = "bottom",
+          horizontal = "center",
         },
-        marks = {
-          Search = { color = colors.orange },
-          Error = { color = colors.error },
-          Warn = { color = colors.warning },
-          Info = { color = colors.info },
-          Hint = { color = colors.hint },
-          Misc = { color = colors.purple },
-        },
-        excluded_filetypes = {
-          "prompt",
-          "TelescopePrompt",
-        },
-        handlers = {
-          diagnostic = true,
-          search = true,
-        },
-      }
-    end,
-    config = function(_, opts)
-      require("scrollbar").setup(opts)
-      require("scrollbar.handlers.search").setup()
-    end,
+        padding = 0,
+        margin = { vertical = 0, horizontal = 0 },
+      },
+      hide = {
+        cursorline = true,
+      },
+      render = function(props)
+        local helpers = require("incline.helpers")
+        local navic = require("nvim-navic")
+        local devicons = require("nvim-web-devicons")
+        local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+        if filename == "" then
+          filename = "[No Name]"
+        end
+        local ft_icon, ft_color = devicons.get_icon_color(filename)
+        local modified = vim.bo[props.buf].modified
+        local res = {
+          ft_icon and { " ", ft_icon, " ", guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or "",
+          " ",
+          { filename, gui = modified and "bold,italic" or "bold" },
+          guibg = "#44406e",
+        }
+        if props.focused then
+          for _, item in ipairs(navic.get_data(props.buf) or {}) do
+            table.insert(res, {
+              { " > ", group = "NavicSeparator" },
+              { item.icon, group = "NavicIcons" .. item.type },
+              { item.name, group = "NavicText" },
+            })
+          end
+        end
+        table.insert(res, " ")
+        return res
+      end,
+    },
+    config = true,
   },
-  --   {
-  --     "hoob3rt/lualine.nvim",
-  --     init = function()
-  --       vim.cmd("autocmd User LspProgressUpdate let &ro = &ro")
-  --     end,
-  --     opts = function()
-  --       local present, lsp_status = pcall(require, "lsp-status")
-  --       local function clock()
-  --         return " " .. os.date("%H:%M")
-  --       end
-  --
-  --       local function lsp_progress()
-  --         if present and vim.lsp.get_active_clients() > 0 then
-  --           lsp_status.status()
-  --         end
-  --       end
-  --       return {
-  --         options = {
-  --           theme = "tokyonight",
-  --           icons_enabled = true,
-  --           -- section_separators = {"", ""},
-  --           -- component_separators = {"", ""}
-  --           component_separators = { left = "", right = "" },
-  --           section_separators = { left = "", right = "" },
-  --         },
-  --         sections = {
-  --           lualine_a = { "mode" },
-  --           lualine_b = { "branch", "diff" },
-  --           lualine_c = { { "diagnostics", sources = { "nvim_diagnostic" } }, { "filename", path = 1 } },
-  --           lualine_x = { "filetype", lsp_progress },
-  --           lualine_y = { "diff" },
-  --           lualine_z = { clock },
-  --         },
-  --         inactive_sections = {
-  --           lualine_a = {},
-  --           lualine_b = {},
-  --           lualine_c = {},
-  --           lualine_x = {},
-  --           lualine_y = {},
-  --         },
-  --       }
-  --     end,
-  --   },
-  -- {
-  --   "lukas-reineke/virt-column.nvim",
-  --   config = true,
-  -- },
 }

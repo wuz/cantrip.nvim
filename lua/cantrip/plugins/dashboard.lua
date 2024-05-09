@@ -1,9 +1,11 @@
 return {
   {
     "goolord/alpha-nvim",
-    dependencies = { "nvim-web-devicons" },
+    dependencies = { "nvim-web-devicons", "ThePrimeagen/harpoon", "nvim-telescope/telescope.nvim" },
     opts = function()
+      local harpoon = require("harpoon")
       local dashboard = require("alpha.themes.dashboard")
+      local conf = require("telescope.config").values
       local function button(sc, txt, keybind)
         local sc_ = sc:gsub("%s", ""):gsub("SPC", "<leader>")
 
@@ -32,6 +34,24 @@ return {
         }
       end
 
+      local function toggle_telescope(harpoon_files)
+        local file_paths = {}
+        for _, item in ipairs(harpoon_files.items) do
+          table.insert(file_paths, item.value)
+        end
+
+        require("telescope.pickers")
+            .new({}, {
+              prompt_title = "Harpoon",
+              finder = require("telescope.finders").new_table({
+                results = file_paths,
+              }),
+              previewer = conf.file_previewer({}),
+              sorter = conf.generic_sorter({}),
+            })
+            :find()
+      end
+
       local ascii = {
         "       .―――――.                   ╔╦╦╦╗   ",
         "   .―――│_   _│           .―.     ║~~~║   ",
@@ -49,6 +69,9 @@ return {
       dashboard.section.header.val = ascii
 
       dashboard.section.buttons.val = {
+        button("e", "󰛢  Harpooned  ", function()
+          toggle_telescope(harpoon:list())
+        end),
         button("f", "  Find File  ", ":Telescope find_files<CR>"),
         button("o", "  Recent File  ", ":Telescope oldfiles<CR>"),
         button("n", "  New file  ", ":ene <BAR> startinsert <CR>"),

@@ -2,9 +2,9 @@ return {
   {
     "NeogitOrg/neogit",
     dependencies = {
-      "nvim-lua/plenary.nvim", -- required
+      "nvim-lua/plenary.nvim",         -- required
       "nvim-telescope/telescope.nvim", -- optional
-      "sindrets/diffview.nvim", -- optional
+      "sindrets/diffview.nvim",        -- optional
     },
     config = true,
   },
@@ -51,7 +51,7 @@ return {
           end,
         },
         mode = { "n", "x" },
-        body = "<leader>g",
+        body = "<leader>G",
         heads = {
           {
             "J",
@@ -80,11 +80,11 @@ return {
             { expr = true, desc = "prev hunk" },
           },
           { "s", ":Gitsigns stage_hunk<CR>", { silent = true, desc = "stage hunk" } },
-          { "u", gitsigns.undo_stage_hunk, { desc = "undo last stage" } },
-          { "S", gitsigns.stage_buffer, { desc = "stage buffer" } },
-          { "p", gitsigns.preview_hunk, { desc = "preview hunk" } },
-          { "d", gitsigns.toggle_deleted, { nowait = true, desc = "toggle deleted" } },
-          { "b", gitsigns.blame_line, { desc = "blame" } },
+          { "u", gitsigns.undo_stage_hunk,   { desc = "undo last stage" } },
+          { "S", gitsigns.stage_buffer,      { desc = "stage buffer" } },
+          { "p", gitsigns.preview_hunk,      { desc = "preview hunk" } },
+          { "d", gitsigns.toggle_deleted,    { nowait = true, desc = "toggle deleted" } },
+          { "b", gitsigns.blame_line,        { desc = "blame" } },
           {
             "B",
             function()
@@ -92,9 +92,9 @@ return {
             end,
             { desc = "blame show full" },
           },
-          { "/", gitsigns.show, { exit = true, desc = "show base file" } }, -- show the base of the file
+          { "/",       gitsigns.show,     { exit = true, desc = "show base file" } }, -- show the base of the file
           { "<Enter>", "<Cmd>Neogit<CR>", { exit = true, desc = "Neogit" } },
-          { "q", nil, { exit = true, nowait = true, desc = "exit" } },
+          { "q",       nil,               { exit = true, nowait = true, desc = "exit" } },
         },
       })
     end,

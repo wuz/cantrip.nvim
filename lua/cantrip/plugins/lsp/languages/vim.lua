@@ -3,28 +3,26 @@ return {
     "nvim-treesitter/nvim-treesitter",
     opts = function(_, opts)
       if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, {
-          "markdown",
-          "markdown_inline",
-        })
+        vim.list_extend(opts.ensure_installed, { "vim", "vimdoc" })
       end
     end,
-    init = function()
-      vim.treesitter.language.register("markdown", "mdx")
-    end,
   },
-  { "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
   {
     "williamboman/mason.nvim",
     opts = function(_, opts)
       if type(opts.ensure_installed) == "table" then
         vim.list_extend(opts.ensure_installed, {
-          "markdownlint",
-          "cbfmt",
-          "marksman",
-          "prettier",
+          "vim-language-server",
         })
       end
     end,
+  },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        vimls = {},
+      },
+    },
   },
 }

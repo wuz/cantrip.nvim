@@ -1,7 +1,7 @@
 -- imports
 local cmd = vim.cmd
-local autocmd = require("cantrip.utils.autocmd")
 local Boolean = require("cantrip.utils.boolean")
+local autocmd = require("cantrip.utils.autocmd")
 
 local Cantrip = {}
 
@@ -35,7 +35,7 @@ Cantrip.getConfig = function()
 end
 
 Cantrip.init = function()
-  require("cantrip.config.options")
+  require("cantrip.options")
 end
 
 Cantrip.lazy_file = function()
@@ -95,7 +95,7 @@ Cantrip.lazy_file = function()
 end
 
 Cantrip.setup = function(config)
-  require("cantrip.config.keymaps")
+  require("cantrip.keymaps")
   config = Cantrip._normalize(config)
   Cantrip._config = config
 
