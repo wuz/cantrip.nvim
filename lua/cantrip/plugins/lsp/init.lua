@@ -1,61 +1,75 @@
+local Cantrip = require("cantrip.utils")
 return {
   {
     "SmiteshP/nvim-navic",
     dependencies = {
       "neovim/nvim-lspconfig",
     },
+    init = function()
+      vim.g.navic_silence = true
+      Cantrip.lsp.on_attach(function(client, buffer)
+        if client.supports_method("textDocument/documentSymbol") then
+          require("nvim-navic").attach(client, buffer)
+        end
+      end)
+    end,
     config = true,
   },
+  { "onsails/lspkind-nvim" },
+  -- { "folke/neoconf.nvim",  cmd = "Neoconf", config = true },
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
+      -- "folke/neodev.nvim",
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "j-hui/fidget.nvim",
     },
-    opts = function()
-      local lspconfig = require("lspconfig")
-      return {
-        -- options for vim.diagnostic.config()
-        diagnostics = {
-          underline = true,
-          update_in_insert = false,
-          virtual_text = {
-            spacing = 4,
-            source = "if_many",
-            prefix = "●",
-            -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
-            -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
-            -- prefix = "icons",
-          },
-          severity_sort = true,
+    opts = {
+      -- options for vim.diagnostic.config()
+      diagnostics = {
+        underline = true,
+        update_in_insert = false,
+        virtual_text = {
+          spacing = 4,
+          source = "if_many",
+          prefix = "●",
+          -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
+          -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
+          -- prefix = "icons",
         },
-        -- Enable this to enable the builtin LSP inlay hints on Neovim >= 0.10.0
-        -- Be aware that you also will need to properly configure your LSP server to
-        -- provide the inlay hints.
-        inlay_hints = {
-          enabled = false,
+        severity_sort = true,
+        float = {
+          header = "",
+          source = true,
+          border = "solid",
+          focusable = true,
         },
-        -- add any global capabilities here
-        capabilities = {},
-        -- options for vim.lsp.buf.format
-        -- `bufnr` and `filter` is handled by the LazyVim formatter,
-        -- but can be also overridden when specified
-        format = {
-          formatting_options = nil,
-          timeout_ms = nil,
-        },
-        servers = {},
-        setup = {},
-      }
-    end,
+      },
+      -- Enable this to enable the builtin LSP inlay hints on Neovim >= 0.10.0
+      -- Be aware that you also will need to properly configure your LSP server to
+      -- provide the inlay hints.
+      inlay_hints = {
+        enabled = false,
+      },
+      -- add any global capabilities here
+      capabilities = {},
+      servers = {
+        yamlls = {},
+        gopls = {},
+      },
+      setup = {},
+    },
     config = function(_, opts)
-      local navic = require("nvim-navic")
       local fidget = require("fidget")
       local config = require("cantrip").getConfig()
       local servers = vim.tbl_deep_extend("force", opts.servers, config.lsp.servers or {})
       local setup_fns = vim.tbl_deep_extend("force", opts.setup, config.lsp.setup or {})
+      local lsp_status = require("lsp-status")
+
+      lsp_status.register_progress()
+
       local register_capability = vim.lsp.handlers["client/registerCapability"]
 
       vim.lsp.handlers["client/registerCapability"] = function(err, res, ctx)
@@ -68,17 +82,18 @@ return {
         return ret
       end
 
-      require("cantrip.utils.on_attach")(function(client, buffer)
+      Cantrip.lsp.on_attach(function(client, buffer)
         fidget.notify("Attached to " .. client.name)
-        navic.attach(client, buffer)
+        lsp_status.on_attach(client)
         require("cantrip.plugins.lsp.format").on_attach(client, buffer)
         require("cantrip.plugins.lsp.keymaps").on_attach(client, buffer)
       end)
+
       local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
       local function setup(server)
         local server_opts = vim.tbl_deep_extend("force", {
           capabilities = vim.deepcopy(capabilities),
-        }, servers[server] or {})
+        }, servers[server] or {}, lsp_status.capabilities)
 
         if setup_fns[server] then
           if opts.setup[server](server, server_opts) then
@@ -114,24 +129,21 @@ return {
       if have_mason then
         mlsp.setup({ ensure_installed = ensure_installed, handlers = { setup } })
       end
+      -- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+      --   border = "solid",
+      -- })
+
+      vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+        border = "solid",
+      })
     end,
   },
-  -- extra lsp tools
-  { "tami5/lspsaga.nvim",                  dependencies = "nvim-lspconfig" },
-  { "nvim-lua/lsp-status.nvim",            dependencies = "nvim-lspconfig" },
-  { "ray-x/lsp_signature.nvim",            dependencies = "nvim-lspconfig" },
-  { "simrat39/symbols-outline.nvim",       dependencies = "nvim-lspconfig" },
-  -- lsp-based formatters
+  -- -- extra lsp tools
+  { "tami5/lspsaga.nvim", dependencies = "nvim-lspconfig" },
+  { "nvim-lua/lsp-status.nvim", dependencies = "nvim-lspconfig" },
+  { "ray-x/lsp_signature.nvim", dependencies = "nvim-lspconfig" },
+  { "simrat39/symbols-outline.nvim", dependencies = "nvim-lspconfig" },
+  -- -- lsp-based formatters
   { import = "cantrip.plugins.lsp.conform" },
+  { import = "cantrip.plugins.lsp.lint" },
 }
-
--- "onsails/lspkind-nvim",
--- { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
---     {
---       "folke/neodev.nvim",
---       config = function()
---         require("neodev").setup({
---           library = { plugins = { "nvim-dap-ui", "neotest" }, types = true },
---         })
---       end,
---     },

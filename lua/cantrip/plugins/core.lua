@@ -6,11 +6,11 @@
 
 return {
   -- Plugin manager
-  { "folke/lazy.nvim",      version = "*" },
+  { "folke/lazy.nvim", version = "*" },
   -- Load cantrip as a plugin
   {
     "wuz/cantrip.nvim",
-    lazy = false,     -- make sure we load this during startup
+    lazy = false, -- make sure we load this during startup
     priority = 10000, -- load before anything else
     version = "*",
     config = true,
@@ -71,9 +71,11 @@ return {
   {
     "folke/which-key.nvim",
     optional = true,
+    opts_extend = { "spec" },
     opts = {
-      defaults = {
-        ["<leader>h"] = { name = "+harpoon" },
+      ---@type wk.Spec
+      spec = {
+        { "<leader>h", name = "+harpoon" },
       },
     },
   },
@@ -81,6 +83,7 @@ return {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
     dependencies = {
+      "neovim/nvim-lspconfig",
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope.nvim",
     },
@@ -94,15 +97,15 @@ return {
         end
 
         require("telescope.pickers")
-            .new({}, {
-              prompt_title = "Harpoon",
-              finder = require("telescope.finders").new_table({
-                results = file_paths,
-              }),
-              previewer = conf.file_previewer({}),
-              sorter = conf.generic_sorter({}),
-            })
-            :find()
+          .new({}, {
+            prompt_title = "Harpoon",
+            finder = require("telescope.finders").new_table({
+              results = file_paths,
+            }),
+            previewer = conf.file_previewer({}),
+            sorter = conf.generic_sorter({}),
+          })
+          :find()
       end
       return {
         {

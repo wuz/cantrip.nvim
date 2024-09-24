@@ -91,6 +91,14 @@ return {
             return label
           end
 
+          -- local function get_lint_progress()
+          --   local linters = require("lint").get_running()
+          --   if #linters == 0 then
+          --     return "󰦕"
+          --   end
+          --   return "󱉶 " .. table.concat(linters, ", ")
+          -- end
+
           local res = {
             { "", guifg = "#0e0e0e" },
             {
@@ -102,6 +110,7 @@ return {
             },
             { "", guifg = "#0e0e0e" },
           }
+
           if props.focused then
             for _, item in ipairs(navic.get_data(props.buf) or {}) do
               table.insert(res, {
@@ -111,6 +120,10 @@ return {
               })
             end
           end
+          table.insert(res, " ")
+          -- table.insert(res, {
+          --   { get_lint_progress() },
+          -- })
           table.insert(res, " ")
           return res
         end,

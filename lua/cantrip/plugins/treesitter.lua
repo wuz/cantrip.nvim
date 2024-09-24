@@ -8,20 +8,12 @@ return {
       { "<c-space>", desc = "Increment selection" },
       { "<bs>",      desc = "Schrink selection",  mode = "x" },
     },
-    ---@type TSConfig
     opts = {
       highlight = { enable = true },
       indent = { enable = true },
       autopairs = { enable = true },
       tree_docs = {
         enable = true,
-        spec_config = {
-          jsdoc = {
-            slots = {
-              class = { description = true },
-            },
-          },
-        },
       },
       refactor = {
         highlight_definitions = { enable = true },
@@ -66,7 +58,6 @@ return {
         },
       },
     },
-    ---@param opts TSConfig
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
       require("nvim-treesitter.install").prefer_git = true

@@ -1,7 +1,7 @@
 return {
   {
     "folke/trouble.nvim",
-    dependencies = { "nvim-web-devicons" },
+    dependencies = { "echasnovski/mini.icons" },
     keys = {
       {
         "<leader>xx",
@@ -10,15 +10,9 @@ return {
         end,
       },
       {
-        "<leader>xw",
-        function()
-          require("trouble").toggle("workspace_diagnostics")
-        end,
-      },
-      {
         "<leader>xd",
         function()
-          require("trouble").toggle("document_diagnostics")
+          require("trouble").toggle("diagnostics")
         end,
       },
       {
@@ -51,8 +45,9 @@ return {
       })
     end,
     opts = {
-      auto_open = true, -- automatically open the list when you have diagnostics
-      auto_close = true, -- automatically close the list when you have no diagnostics
+      modes = {
+        diagnostics = {},
+      },
     },
   },
 }

@@ -1,7 +1,7 @@
 return {
   {
     "goolord/alpha-nvim",
-    dependencies = { "nvim-web-devicons", "ThePrimeagen/harpoon", "nvim-telescope/telescope.nvim" },
+    dependencies = { "echasnovski/mini.icons", "ThePrimeagen/harpoon", "nvim-telescope/telescope.nvim" },
     opts = function()
       local harpoon = require("harpoon")
       local dashboard = require("alpha.themes.dashboard")
@@ -69,14 +69,13 @@ return {
       dashboard.section.header.val = ascii
 
       dashboard.section.buttons.val = {
-        button("e", "󰛢  Harpooned  ", function()
+        button("h", "󰛢  Harpooned  ", function()
           toggle_telescope(harpoon:list())
         end),
-        button("f", "  Find File  ", ":Telescope find_files<CR>"),
-        button("o", "  Recent File  ", ":Telescope oldfiles<CR>"),
+        button("<space>", "  Find File  ", ":Telescope find_files<CR>"),
+        button("m", "  Recent File  ", ":Telescope oldfiles<CR>"),
         button("n", "  New file  ", ":ene <BAR> startinsert <CR>"),
-        button("g", "  Find Word  ", ":Telescope live_grep<CR>"),
-        button("m", "  Bookmarks  ", ":Telescope marks<CR>"),
+        button("a", "  Find Word  ", ":Telescope live_grep<CR>"),
       }
       dashboard.section.footer.opts.hl = "Type"
       dashboard.section.header.opts.hl = "AlphaHeader"

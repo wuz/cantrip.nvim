@@ -15,7 +15,7 @@ opt.history = 1000 -- increase history from 20 to 1000
 opt.undofile = true                                -- persistent undo
 o.undodir = expand("$HOME/.local/share/nvim/undo") -- use global undo directory
 opt.ttyfast = true
-opt.relativenumber = false                         --make line numbers relative
+opt.relativenumber = true
 
 -- show line numbers
 opt.nu = true
@@ -50,7 +50,7 @@ opt.showmode = true
 opt.showtabline = 2
 
 -- Don't redraw all the time
-opt.lazyredraw = true
+-- opt.lazyredraw = true
 
 -- highlight matching [{}]
 opt.showmatch = true
@@ -66,7 +66,6 @@ opt.timeoutlen = 300 -- Lower than default (1000) to quickly trigger which-key
 opt.mouse = "a"
 opt.inccommand = "nosplit"
 opt.cursorline = true
-opt.lazyredraw = true
 opt.updatetime = 100
 wo.cursorcolumn = false
 wo.cursorline = true

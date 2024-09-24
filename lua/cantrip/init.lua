@@ -1,13 +1,15 @@
--- imports
 local cmd = vim.cmd
+
+vim.uv = vim.uv or vim.loop
+
 local Boolean = require("cantrip.utils.boolean")
 local autocmd = require("cantrip.utils.autocmd")
 
-local Cantrip = {}
+local M = {}
 
-Cantrip._config = {}
+M._config = {}
 
-Cantrip._translucentBackground = function()
+M._translucentBackground = function()
   cmd([[
     highlight Normal guibg=NONE ctermbg=NONE
     highlight LineNr guibg=NONE ctermbg=NONE
@@ -16,11 +18,11 @@ Cantrip._translucentBackground = function()
     ]])
 end
 
-Cantrip._setTheme = function(theme)
+M._setTheme = function(theme)
   cmd("colorscheme " .. theme)
 end
 
-Cantrip._normalize = function(config)
+M._normalize = function(config)
   config.theme = config.theme or "eldritch"
   config.translucent = Boolean.get(config.translucent, false)
   config.lsp = config.lsp or {
@@ -30,15 +32,15 @@ Cantrip._normalize = function(config)
   return config
 end
 
-Cantrip.getConfig = function()
-  return Cantrip._config
+M.getConfig = function()
+  return M._config
 end
 
-Cantrip.init = function()
+M.init = function()
   require("cantrip.options")
 end
 
-Cantrip.lazy_file = function()
+M.lazy_file = function()
   local Event = require("lazy.core.handler.event")
 
   -- We'll handle delayed execution of events ourselves
@@ -94,16 +96,16 @@ Cantrip.lazy_file = function()
   })
 end
 
-Cantrip.setup = function(config)
+M.setup = function(config)
   require("cantrip.keymaps")
-  config = Cantrip._normalize(config)
-  Cantrip._config = config
+  config = M._normalize(config)
+  M._config = config
 
-  Cantrip._setTheme(Cantrip._config["theme"])
+  M._setTheme(M._config["theme"])
   if config.translucent then
-    autocmd("CantripTranslucent", "ColorScheme * lua require'cantrip'._translucentBackground()")
+    autocmd("MTranslucent", "ColorScheme * lua require'cantrip'._translucentBackground()")
   end
-  Cantrip.init()
+  M.init()
 end
 
-return Cantrip
+return M

@@ -1,5 +1,20 @@
 return {
   -- {
+  --   "m4xshen/hardtime.nvim",
+  --   dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
+  --   opts = {
+  --     disabled_keys = {
+  --       ["<Up>"] = { "", "n" },
+  --       ["<Down>"] = { "", "n" },
+  --       ["<Left>"] = { "", "n" },
+  --       ["<Right>"] = { "", "n" },
+  --     },
+  --   },
+  --   config = function(_, opts)
+  --     require("hardtime").setup(opts)
+  --   end,
+  -- },
+  -- {
   --   "folke/flash.nvim",
   --   event = "VeryLazy",
   --   vscode = true,

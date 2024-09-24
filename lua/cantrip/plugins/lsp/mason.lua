@@ -10,9 +10,12 @@ return {
     build = ":MasonUpdate",
     opts = {
       ensure_installed = {
+        "prettierd",
+        "oxlint",
         "stylua",
         "shfmt",
         "json-lsp",
+        "selene",
       },
     },
     ---@param opts MasonSettings | {ensure_installed: string[]}

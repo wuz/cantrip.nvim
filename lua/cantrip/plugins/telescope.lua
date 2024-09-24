@@ -3,13 +3,13 @@ return {
     "nvim-telescope/telescope.nvim",
     keys = {
       {
-        "<C-P>",
+        "<leader><leader>",
         function()
           require("telescope.builtin").find_files()
         end,
       },
       {
-        "<C-N>",
+        "<leader>/n",
         function()
           require("telescope").extensions.notify.notify()
         end,
@@ -22,31 +22,31 @@ return {
       --   desc = "File Browser",
       -- },
       {
-        "<C-M>",
+        "<leader>/m",
         function()
           require("telescope.builtin").oldfiles()
         end,
       },
       {
-        "<C-T>",
+        "<leader>/t",
         function()
           require("telescope.builtin").tags()
         end,
       },
       {
-        "<C-A>",
+        "<leader>a",
         function()
           require("telescope.builtin").live_grep()
         end,
       },
       {
-        "<C-B>",
+        "<leader>/b",
         function()
           require("telescope.builtin").buffers()
         end,
       },
       {
-        "<leader>fh",
+        "<leader>/h",
         function()
           require("telescope.builtin").help_tags()
         end,
@@ -133,7 +133,7 @@ return {
     },
     config = function(_, opts)
       local open_with_trouble = function(...)
-        return require("trouble.providers.telescope").open_with_trouble(...)
+        return require("trouble.sources.telescope").open(...)
       end
       local extend_opts = vim.tbl_deep_extend("force", opts, {
         defaults = {

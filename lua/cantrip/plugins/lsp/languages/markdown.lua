@@ -22,7 +22,7 @@ return {
           "markdownlint",
           "cbfmt",
           "marksman",
-          "prettier",
+          "prettierd",
         })
       end
     end,

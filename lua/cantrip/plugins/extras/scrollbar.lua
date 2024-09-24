@@ -18,6 +18,8 @@ return {
         excluded_filetypes = {
           "prompt",
           "TelescopePrompt",
+          "noice",
+          "alpha",
         },
         handlers = {
           diagnostic = true,
@@ -30,5 +32,4 @@ return {
       require("scrollbar.handlers.search").setup()
     end,
   },
-  }
-
+}

@@ -132,9 +132,10 @@ return {
       {
         "folke/which-key.nvim",
         optional = true,
+        opts_extend = { "spec" },
         opts = {
-          defaults = {
-            ["<leader>d"] = { name = "+debug" },
+          spec = {
+            { "<leader>d", group = "debug" },
           },
         },
       },
