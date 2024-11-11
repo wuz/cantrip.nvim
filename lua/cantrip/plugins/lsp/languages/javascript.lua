@@ -72,15 +72,15 @@ return {
       -- LSP Server Settings
       ---@type lspconfig.options
       servers = {
-        tsserver = {
+        ts_ls = {
           enabled = false,
         },
-        ["rust-analyzer"] = {
-          -- enable clippy on save
-          checkOnSave = {
-            command = "clippy",
-          },
-        },
+        -- rust_analyzer = {
+        --   -- enable clippy on save
+        --   checkOnSave = {
+        --     command = "clippy",
+        --   },
+        -- },
         vtsls = {
           -- explicitly add default filetypes, so that we can extend
           -- them in related extras
@@ -123,22 +123,22 @@ return {
               "gD",
               function()
                 local params = vim.lsp.util.make_position_params()
-                Cantrip.lsp.execute({
+                Cantrip.lsp.execute {
                   command = "typescript.goToSourceDefinition",
                   arguments = { params.textDocument.uri, params.position },
                   open = true,
-                })
+                }
               end,
               desc = "Goto Source Definition",
             },
             {
               "gR",
               function()
-                Cantrip.lsp.execute({
+                Cantrip.lsp.execute {
                   command = "typescript.findAllFileReferences",
                   arguments = { vim.uri_from_bufnr(0) },
                   open = true,
-                })
+                }
               end,
               desc = "File References",
             },
@@ -165,7 +165,7 @@ return {
             {
               "<leader>cV",
               function()
-                Cantrip.lsp.execute({ command = "typescript.selectTypeScriptVersion" })
+                Cantrip.lsp.execute { command = "typescript.selectTypeScriptVersion" }
               end,
               desc = "Select TS workspace version",
             },

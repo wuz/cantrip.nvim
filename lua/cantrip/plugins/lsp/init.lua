@@ -1,30 +1,15 @@
 local Cantrip = require("cantrip.utils")
+
 return {
-  {
-    "SmiteshP/nvim-navic",
-    dependencies = {
-      "neovim/nvim-lspconfig",
-    },
-    init = function()
-      vim.g.navic_silence = true
-      Cantrip.lsp.on_attach(function(client, buffer)
-        if client.supports_method("textDocument/documentSymbol") then
-          require("nvim-navic").attach(client, buffer)
-        end
-      end)
-    end,
-    config = true,
-  },
-  { "onsails/lspkind-nvim" },
-  -- { "folke/neoconf.nvim",  cmd = "Neoconf", config = true },
+  { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      -- "folke/neodev.nvim",
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "j-hui/fidget.nvim",
+      -- "ms-jpq/coq_nvim",
     },
     opts = {
       -- options for vim.diagnostic.config()
@@ -55,10 +40,7 @@ return {
       },
       -- add any global capabilities here
       capabilities = {},
-      servers = {
-        yamlls = {},
-        gopls = {},
-      },
+      servers = {},
       setup = {},
     },
     config = function(_, opts)
@@ -66,9 +48,7 @@ return {
       local config = require("cantrip").getConfig()
       local servers = vim.tbl_deep_extend("force", opts.servers, config.lsp.servers or {})
       local setup_fns = vim.tbl_deep_extend("force", opts.setup, config.lsp.setup or {})
-      local lsp_status = require("lsp-status")
-
-      lsp_status.register_progress()
+      -- local coq = require("coq")
 
       local register_capability = vim.lsp.handlers["client/registerCapability"]
 
@@ -84,7 +64,6 @@ return {
 
       Cantrip.lsp.on_attach(function(client, buffer)
         fidget.notify("Attached to " .. client.name)
-        lsp_status.on_attach(client)
         require("cantrip.plugins.lsp.format").on_attach(client, buffer)
         require("cantrip.plugins.lsp.keymaps").on_attach(client, buffer)
       end)
@@ -93,7 +72,7 @@ return {
       local function setup(server)
         local server_opts = vim.tbl_deep_extend("force", {
           capabilities = vim.deepcopy(capabilities),
-        }, servers[server] or {}, lsp_status.capabilities)
+        }, servers[server] or {})
 
         if setup_fns[server] then
           if opts.setup[server](server, server_opts) then
@@ -127,7 +106,7 @@ return {
       end
 
       if have_mason then
-        mlsp.setup({ ensure_installed = ensure_installed, handlers = { setup } })
+        mlsp.setup { ensure_installed = ensure_installed, handlers = { setup } }
       end
       -- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
       --   border = "solid",
@@ -138,12 +117,6 @@ return {
       })
     end,
   },
-  -- -- extra lsp tools
-  { "tami5/lspsaga.nvim", dependencies = "nvim-lspconfig" },
-  { "nvim-lua/lsp-status.nvim", dependencies = "nvim-lspconfig" },
-  { "ray-x/lsp_signature.nvim", dependencies = "nvim-lspconfig" },
-  { "simrat39/symbols-outline.nvim", dependencies = "nvim-lspconfig" },
-  -- -- lsp-based formatters
   { import = "cantrip.plugins.lsp.conform" },
   { import = "cantrip.plugins.lsp.lint" },
 }

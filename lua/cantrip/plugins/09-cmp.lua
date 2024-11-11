@@ -25,30 +25,30 @@ return {
         completion = {
           completeopt = "menu,menuone,noinsert",
         },
-        mapping = cmp.mapping.preset.insert({
-          ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-          ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+        mapping = cmp.mapping.preset.insert {
+          ["<C-n>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
+          ["<C-p>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
           ["<C-b>"] = cmp.mapping.scroll_docs(-4),
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-e>"] = cmp.mapping.abort(),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-          ["<S-CR>"] = cmp.mapping.confirm({
+          ["<CR>"] = cmp.mapping.confirm { select = true }, -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+          ["<S-CR>"] = cmp.mapping.confirm {
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
-          }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+          }, -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
           ["<C-CR>"] = function(fallback)
             cmp.abort()
             fallback()
           end,
-        }),
+        },
         snippet = {
           expand = function(args)
             require("luasnip").lsp_expand(args.body)
           end,
         },
         sources = cmp.config.sources({
-          { name = "luasnip", option = { show_autosnippets = true, use_show_condition = false } },
+          { name = "luasnip",   option = { show_autosnippets = true, use_show_condition = false } },
           { name = "nvim_lsp" },
           -- { name = "rg" },
           { name = "treesitter" },
@@ -58,7 +58,7 @@ return {
           { name = "buffer" },
         }),
         formatting = {
-          format = lspkind.cmp_format({
+          format = lspkind.cmp_format {
             mode = "symbol_text",
             menu = {
               luasnip = "[snippet]",
@@ -67,7 +67,7 @@ return {
               nvim_lua = "[lua]",
               latex_symbols = "[latex]",
             },
-          }),
+          },
         },
         experimental = {
           ghost_text = {
@@ -128,7 +128,7 @@ return {
 
           luasnip.filetype_extend("ruby", { "rails" })
           require("luasnip.loaders.from_vscode").lazy_load()
-          require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/lua/snippets/" })
+          require("luasnip.loaders.from_lua").load { paths = "~/.config/nvim/lua/snippets/" }
         end,
       },
       {

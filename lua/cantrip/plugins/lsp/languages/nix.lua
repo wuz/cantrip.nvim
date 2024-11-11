@@ -17,13 +17,13 @@ return {
   --     end
   --   end,
   -- },
-  -- {
-  --   "neovim/nvim-lspconfig",
-  --   dependencies = { "LnL7/vim-nix" },
-  --   opts = {
-  --     servers = {
-  --       nil_ls = {},
-  --     },
-  --   },
-  -- },
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = { "LnL7/vim-nix" },
+    opts = {
+      servers = {
+        nixd = {},
+      },
+    },
+  },
 }

@@ -10,8 +10,7 @@ map("n", "<Leader>+", ':exe "vertical resize " . (winwidth(0) * 6/5)<CR>', { des
 map("n", "<Leader>-", ':exe "vertical resize " . (winwidth(0) * 5/6)<CR>', { desc = "Decrease window width" })
 
 map("n", "<leader>|", ":vsplit<CR><C-w><C-w>", { desc = "Split vertically" })
-map("n", "<leader>-", ":split<CR><C-w><C-w>", { desc = "Split horizontally" })
---
+map("n", "<leader>%", ":split<CR><C-w><C-w>", { desc = "Split horizontally" })
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 map("n", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next search result" })

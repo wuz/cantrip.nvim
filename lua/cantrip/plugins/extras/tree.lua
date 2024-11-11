@@ -11,7 +11,7 @@ return {
         "s1n7ax/nvim-window-picker",
         version = "2.*",
         config = function()
-          require("window-picker").setup({
+          require("window-picker").setup {
             filter_rules = {
               include_current_win = false,
               autoselect_one = true,
@@ -23,7 +23,7 @@ return {
                 buftype = { "terminal", "quickfix" },
               },
             },
-          })
+          }
         end,
       },
     },
@@ -31,14 +31,14 @@ return {
       {
         "<leader>E",
         function()
-          require("neo-tree.command").execute({ toggle = true })
+          require("neo-tree.command").execute { toggle = true }
         end,
         desc = "Explorer NeoTree (root dir)",
       },
       {
         "\\",
         function()
-          vim.api.nvim_exec("Neotree reveal", true)
+          require("neo-tree.command").execute { toggle = true, dir = vim.loop.cwd() }
         end,
         desc = "Explorer NeoTree (cwd)",
       },
@@ -53,20 +53,6 @@ return {
       end
     end,
     opts = {
-      event_handlers = {
-        {
-          event = "neo_tree_buffer_enter",
-          handler = function()
-            vim.cmd("highlight! Cursor blend=100")
-          end,
-        },
-        {
-          event = "neo_tree_buffer_leave",
-          handler = function()
-            vim.cmd("highlight! Cursor guibg=#5f87af blend=0")
-          end,
-        },
-      },
       sources = { "filesystem", "buffers", "git_status", "document_symbols" },
       open_files_do_not_replace_types = { "terminal", "Trouble", "qf", "Outline" },
       filesystem = {
@@ -110,12 +96,13 @@ return {
         filtered_items = {
           always_show = {
             ".storybook",
+            ".github",
             ".next",
           },
         },
       },
       window = {
-        position = "float",
+        position = "left",
         width = 40,
         mappings = {
           ["P"] = { "toggle_preview", config = { use_float = true, use_image_nvim = true } },
@@ -131,7 +118,7 @@ return {
       },
       git_status = {
         window = {
-          position = "float",
+          position = "left",
           mappings = {
             ["A"] = "git_add_all",
             ["gu"] = "git_unstage_file",
@@ -152,6 +139,10 @@ return {
       },
     },
     config = function(_, opts)
+      vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
+      vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
+      vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
+      vim.fn.sign_define("DiagnosticSignHint", { text = "󰌵", texthl = "DiagnosticSignHint" })
       require("neo-tree").setup(opts)
       vim.api.nvim_create_autocmd("TermClose", {
         pattern = "*lazygit",

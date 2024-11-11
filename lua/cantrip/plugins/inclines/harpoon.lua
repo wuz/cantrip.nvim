@@ -100,7 +100,6 @@ return {
           -- end
 
           local res = {
-            { "", guifg = "#0e0e0e" },
             {
               { get_diagnostic_label() },
               { get_git_diff() },
@@ -108,13 +107,12 @@ return {
               { get_file_name() },
               guibg = "#0e0e0e",
             },
-            { "", guifg = "#0e0e0e" },
           }
 
           if props.focused then
             for _, item in ipairs(navic.get_data(props.buf) or {}) do
               table.insert(res, {
-                { " > ",     group = "NavicSeparator" },
+                { " > ", group = "NavicSeparator" },
                 { item.icon, group = "NavicIcons" .. item.type },
                 { item.name, group = "NavicText" },
               })

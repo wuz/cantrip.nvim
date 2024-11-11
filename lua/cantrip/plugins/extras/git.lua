@@ -23,7 +23,7 @@ return {
  ^
  ^ ^              _<Enter>_: Neogit              _q_: exit
 ]]
-      Hydra({
+      Hydra {
         name = "Git",
         hint = hint,
         config = {
@@ -88,7 +88,7 @@ return {
           {
             "B",
             function()
-              gitsigns.blame_line({ full = true })
+              gitsigns.blame_line { full = true }
             end,
             { desc = "blame show full" },
           },
@@ -96,7 +96,7 @@ return {
           { "<Enter>", "<Cmd>Neogit<CR>", { exit = true, desc = "Neogit" } },
           { "q",       nil,               { exit = true, nowait = true, desc = "exit" } },
         },
-      })
+      }
     end,
   },
   { "f-person/git-blame.nvim", cmd = { "GitBlameToggle", "GitBlameEnable" } },

@@ -49,12 +49,12 @@ return {
       -- LSP Server Settings
       ---@type lspconfig.options
       servers = {
-        -- rust_analyzer = {
-        --   checkOnSave = {
-        --     command = "clippy",
-        --   },
-        -- },
-        -- bacon_ls = {},
+        rust_analyzer = {
+          checkOnSave = {
+            command = "clippy",
+          },
+        },
+        bacon_ls = {},
       },
       ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {},

@@ -23,7 +23,7 @@ M._setTheme = function(theme)
 end
 
 M._normalize = function(config)
-  config.theme = config.theme or "eldritch"
+  config.theme = config.theme or "cantrip_dark"
   config.translucent = Boolean.get(config.translucent, false)
   config.lsp = config.lsp or {
     format = {},
@@ -65,17 +65,17 @@ M.lazy_file = function()
     vim.api.nvim_exec_autocmds("User", { pattern = "LazyFile", modeline = false })
     for _, event in ipairs(events) do
       if vim.api.nvim_buf_is_valid(event.buf) then
-        Event.trigger({
+        Event.trigger {
           event = event.event,
           exclude = skips[event.event],
           data = event.data,
           buf = event.buf,
-        })
+        }
         if vim.bo[event.buf].filetype then
-          Event.trigger({
+          Event.trigger {
             event = "FileType",
             buf = event.buf,
-          })
+          }
         end
       end
     end
@@ -101,7 +101,7 @@ M.setup = function(config)
   config = M._normalize(config)
   M._config = config
 
-  M._setTheme(M._config["theme"])
+  M._setTheme(config.theme)
   if config.translucent then
     autocmd("MTranslucent", "ColorScheme * lua require'cantrip'._translucentBackground()")
   end

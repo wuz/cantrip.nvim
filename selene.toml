@@ -1,1 +1,4 @@
-std="lua51+vim"
+std = "neovim"
+
+[lints]
+mixed_table = "allow"

@@ -1,5 +1,8 @@
 return {
   {
+    "rktjmp/lush.nvim",
+  },
+  {
     "folke/tokyonight.nvim",
     lazy = true,
     opts = { style = "moon" },
@@ -66,7 +69,7 @@ return {
         BufferLineSeparator = { bg = black, fg = black },
         BufferLineModified = { fg = black },
         BufferlineBufferSelected = { fg = white }, -- active tabs to white
-        BufferlineBufferVisible = { fg = white }, -- active tabs to white
+        BufferlineBufferVisible = { fg = white },  -- active tabs to white
         BufferLineIndicatorVisible = { fg = black },
         IblIndent = { fg = faded_gray },
         IblScope = { fg = gray },
@@ -77,5 +80,8 @@ return {
         vim.api.nvim_set_hl(0, group, colors)
       end
     end,
+  },
+  {
+    "nyoom-engineering/oxocarbon.nvim",
   },
 }
