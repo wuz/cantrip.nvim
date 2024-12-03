@@ -1,7 +1,7 @@
 local Cantrip = require("cantrip.utils")
 
 return {
-  { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
+  { "folke/neoconf.nvim",                  cmd = "Neoconf", config = true },
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
@@ -9,6 +9,8 @@ return {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "j-hui/fidget.nvim",
+      "DNLHC/glance.nvim",
+      "saecki/live-rename.nvim",
       -- "ms-jpq/coq_nvim",
     },
     opts = {

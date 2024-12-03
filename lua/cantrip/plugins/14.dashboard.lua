@@ -43,11 +43,11 @@ return {
         require("telescope.pickers")
             .new({}, {
               prompt_title = "Harpoon",
-              finder = require("telescope.finders").new_table({
+              finder = require("telescope.finders").new_table {
                 results = file_paths,
-              }),
-              previewer = conf.file_previewer({}),
-              sorter = conf.generic_sorter({}),
+              },
+              previewer = conf.file_previewer {},
+              sorter = conf.generic_sorter {},
             })
             :find()
       end
@@ -72,7 +72,7 @@ return {
         button("h", "󰛢  Harpooned  ", function()
           toggle_telescope(harpoon:list())
         end),
-        button("<space>", "  Find File  ", ":Telescope find_files<CR>"),
+        button("<space>", "  Find File  ", ":Telescope smart_open<CR>"),
         button("m", "  Recent File  ", ":Telescope oldfiles<CR>"),
         button("n", "  New file  ", ":ene <BAR> startinsert <CR>"),
         button("a", "  Find Word  ", ":Telescope live_grep<CR>"),

@@ -18,7 +18,8 @@ return {
           cursorline = true,
         },
         render = function(props)
-          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+          local bufname = vim.api.nvim_buf_get_name(props.buf)
+          local filename = vim.fn.fnamemodify(bufname, ":t")
           if filename == "" then
             filename = "[No Name]"
           end
@@ -58,6 +59,11 @@ return {
             return label
           end
 
+          local function custom_buffer_name()
+            -- Return blank name if no matches found
+            return output
+          end
+
           local function get_harpoon_items()
             local harpoon = require("harpoon")
             local marks = harpoon:list().items
@@ -77,6 +83,30 @@ return {
               table.insert(label, { "| " })
             end
             return label
+          end
+
+          -- Get parent folder name and buffer name
+          local parentFolder = vim.fn.fnamemodify(bufname, ":h:t")
+
+          -- Next.js matching patterns
+          local patterns = {
+            ["page"] = "Page",
+            ["layout"] = "Layout",
+            ["loading"] = "Loading",
+            ["not%-found"] = "Not Found",
+            ["error"] = "Error",
+            ["route"] = "Route",
+            ["template"] = "Template",
+          }
+
+          -- Get the base filename without extension to be account for (.js,.ts,.jsx.tsx)
+          local baseName = vim.fn.fnamemodify(filename, ":r:t")
+
+          -- Match against the patterns and format accordingly
+          for file, label in pairs(patterns) do
+            if baseName:match("^" .. file .. "$") and parentFolder then
+              filename = parentFolder .. "/" .. label
+            end
           end
 
           local function get_file_name()
@@ -105,6 +135,7 @@ return {
               { get_git_diff() },
               { get_harpoon_items() },
               { get_file_name() },
+              { custom_buffer_name() },
               guibg = "#0e0e0e",
             },
           }

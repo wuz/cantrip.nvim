@@ -59,7 +59,7 @@ local theme = lush(function(injected_functions)
     CursorLine { CursorColumn },
     Cursor {},
     Directory { bold = true },
-    Visual { fg = Normal.bg, bg = Normal.fg },
+    Visual { fg = palette.bg2, bg = palette.fg2 },
     Conceal { bg = palette.bg1, fg = palette.bg1 },
 
     Comment { fg = Normal.bg.de(25).li(40), italic = true }, -- any comments

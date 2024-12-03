@@ -15,6 +15,7 @@ return {
         { "<leader>gh", group = "hunks" },
         { "<leader>q", group = "quit/session" },
         { "<leader>s", group = "search" },
+        { "<leader>f", group = "Find" },
         { "<leader>u", group = "ui", icon = { icon = "󰙵 ", color = "cyan" } },
         { "<leader>x", group = "diagnostics/quickfix", icon = { icon = "󱖫 ", color = "green" } },
         { "[", group = "prev" },
@@ -45,7 +46,7 @@ return {
       {
         "<leader>?",
         function()
-          require("which-key").show({ global = false })
+          require("which-key").show { global = false }
         end,
         desc = "Buffer Local Keymaps (which-key)",
       },

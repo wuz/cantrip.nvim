@@ -9,6 +9,13 @@ return {
     "stevearc/dressing.nvim",
     opts = {},
   },
+  {
+    "stevearc/quicker.nvim",
+    event = "FileType qf",
+    ---@module "quicker"
+    ---@type quicker.SetupOptions
+    opts = {},
+  },
   -- mini.icons with nvim web devicon mocking
   {
     "echasnovski/mini.icons",
@@ -31,6 +38,13 @@ return {
         char = "│",
       },
     },
+  },
+  {
+    "mcauley-penney/visual-whitespace.nvim",
+  },
+  {
+    "sphamba/smear-cursor.nvim",
+    opts = {},
   },
   {
     "kevinhwang91/nvim-hlslens",

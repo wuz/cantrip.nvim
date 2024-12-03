@@ -28,7 +28,12 @@
 
 # What is Cantrip?
 
-cantrip is a Neovim config pack designed to use cutting-edge settings and packages.
+cantrip is a Neovim config pack designed to:
+1. Use cutting-edge settings and packages
+2. Not break existing vim paradigms
+
+This means that packages and settings should augment existing vim commands or
+add net-new functionality without breaking any existing keys.
 
 # Installation
 

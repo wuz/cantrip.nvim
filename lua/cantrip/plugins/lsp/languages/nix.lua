@@ -22,7 +22,11 @@ return {
     dependencies = { "LnL7/vim-nix" },
     opts = {
       servers = {
-        nixd = {},
+        nixd = {
+          formatting = {
+            command = { "nixfmt" },
+          },
+        },
       },
     },
   },

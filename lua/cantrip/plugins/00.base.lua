@@ -49,7 +49,7 @@ return {
     config = true,
   },
   {
-    "anuvyklack/hydra.nvim",
+    "nvimtools/hydra.nvim",
   },
   {
     -- Log timing of editor startup
