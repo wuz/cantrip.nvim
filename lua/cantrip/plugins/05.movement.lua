@@ -1,5 +1,0 @@
-return {
-  {
-    "chrisgrieser/nvim-spider",
-  },
-}

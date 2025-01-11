@@ -2,12 +2,11 @@ return {
   {
     "NeogitOrg/neogit",
     dependencies = {
-      "nvim-lua/plenary.nvim", -- required
-      "nvim-telescope/telescope.nvim", -- optional
+      "nvim-lua/plenary.nvim",  -- required
       "sindrets/diffview.nvim", -- optional
     },
     keys = {
-      { "<leader>g", group = "Git" },
+      { "<leader>g",  group = "Git" },
       { "<leader>gn", "<cmd>Neogit<CR>", desc = "Neogit" },
     },
     config = true,
@@ -21,77 +20,40 @@ return {
           require("litee.lib").setup()
         end,
       },
-      {
-        "goolord/alpha-nvim",
-        opts = function(_, opts)
-          local function button(sc, txt, keybind)
-            local sc_ = sc:gsub("%s", ""):gsub("SPC", "<leader>")
-
-            local opts = {
-              position = "center",
-              text = txt,
-              shortcut = sc,
-              cursor = 5,
-              width = 36,
-              align_shortcut = "right",
-              hl = "AlphaButtons",
-            }
-
-            if keybind then
-              opts.keymap = { "n", sc_, keybind, { noremap = true, silent = true } }
-            end
-
-            return {
-              type = "button",
-              val = txt,
-              on_press = function()
-                local key = vim.api.nvim_replace_termcodes(sc_, true, false, true)
-                vim.api.nvim_feedkeys(key, "normal", false)
-              end,
-              opts = opts,
-            }
-          end
-          if type(opts.section.buttons.val) == "table" then
-            vim.list_extend(opts.section.buttons.val, {
-              button("g", "  Github", ":Telescope gh pull_request<CR>"),
-            })
-          end
-        end,
-      },
     },
     keys = {
-      { "<leader>g", group = "Git" },
-      { "<leader>gh", group = "Github", desc = "Github" },
-      { "<leader>ghc", group = "Commits", desc = "Commits" },
-      { "<leader>ghcc", "<cmd>GHCloseCommit<cr>", desc = "Close" },
-      { "<leader>ghce", "<cmd>GHExpandCommit<cr>", desc = "Expand" },
-      { "<leader>ghco", "<cmd>GHOpenToCommit<cr>", desc = "Open To" },
-      { "<leader>ghcp", "<cmd>GHPopOutCommit<cr>", desc = "Pop Out" },
+      { "<leader>g",    group = "Git" },
+      { "<leader>gh",   group = "Github",            desc = "Github" },
+      { "<leader>ghc",  group = "Commits",           desc = "Commits" },
+      { "<leader>ghcc", "<cmd>GHCloseCommit<cr>",    desc = "Close" },
+      { "<leader>ghce", "<cmd>GHExpandCommit<cr>",   desc = "Expand" },
+      { "<leader>ghco", "<cmd>GHOpenToCommit<cr>",   desc = "Open To" },
+      { "<leader>ghcp", "<cmd>GHPopOutCommit<cr>",   desc = "Pop Out" },
       { "<leader>ghcz", "<cmd>GHCollapseCommit<cr>", desc = "Collapse" },
-      { "<leader>ghi", group = "Issues", desc = "Issues" },
-      { "<leader>ghip", "<cmd>GHPreviewIssue<cr>", desc = "Preview" },
-      { "<leader>ghl", group = "Litee", desc = "Litee" },
-      { "<leader>ghlt", "<cmd>LTPanel<cr>", desc = "Toggle Panel" },
-      { "<leader>ghp", group = "Pull Request", desc = "Pull Request" },
-      { "<leader>ghpc", "<cmd>GHClosePR<cr>", desc = "Close" },
-      { "<leader>ghpd", "<cmd>GHPRDetails<cr>", desc = "Details" },
-      { "<leader>ghpe", "<cmd>GHExpandPR<cr>", desc = "Expand" },
-      { "<leader>ghpo", "<cmd>GHOpenPR<cr>", desc = "Open" },
-      { "<leader>ghpp", "<cmd>GHPopOutPR<cr>", desc = "PopOut" },
-      { "<leader>ghpr", "<cmd>GHRefreshPR<cr>", desc = "Refresh" },
-      { "<leader>ghpt", "<cmd>GHOpenToPR<cr>", desc = "Open To" },
-      { "<leader>ghpz", "<cmd>GHCollapsePR<cr>", desc = "Collapse" },
-      { "<leader>ghr", group = "Review", desc = "Review" },
-      { "<leader>ghrb", "<cmd>GHStartReview<cr>", desc = "Begin" },
-      { "<leader>ghrc", "<cmd>GHCloseReview<cr>", desc = "Close" },
-      { "<leader>ghrd", "<cmd>GHDeleteReview<cr>", desc = "Delete" },
-      { "<leader>ghre", "<cmd>GHExpandReview<cr>", desc = "Expand" },
-      { "<leader>ghrs", "<cmd>GHSubmitReview<cr>", desc = "Submit" },
+      { "<leader>ghi",  group = "Issues",            desc = "Issues" },
+      { "<leader>ghip", "<cmd>GHPreviewIssue<cr>",   desc = "Preview" },
+      { "<leader>ghl",  group = "Litee",             desc = "Litee" },
+      { "<leader>ghlt", "<cmd>LTPanel<cr>",          desc = "Toggle Panel" },
+      { "<leader>ghp",  group = "Pull Request",      desc = "Pull Request" },
+      { "<leader>ghpc", "<cmd>GHClosePR<cr>",        desc = "Close" },
+      { "<leader>ghpd", "<cmd>GHPRDetails<cr>",      desc = "Details" },
+      { "<leader>ghpe", "<cmd>GHExpandPR<cr>",       desc = "Expand" },
+      { "<leader>ghpo", "<cmd>GHOpenPR<cr>",         desc = "Open" },
+      { "<leader>ghpp", "<cmd>GHPopOutPR<cr>",       desc = "PopOut" },
+      { "<leader>ghpr", "<cmd>GHRefreshPR<cr>",      desc = "Refresh" },
+      { "<leader>ghpt", "<cmd>GHOpenToPR<cr>",       desc = "Open To" },
+      { "<leader>ghpz", "<cmd>GHCollapsePR<cr>",     desc = "Collapse" },
+      { "<leader>ghr",  group = "Review",            desc = "Review" },
+      { "<leader>ghrb", "<cmd>GHStartReview<cr>",    desc = "Begin" },
+      { "<leader>ghrc", "<cmd>GHCloseReview<cr>",    desc = "Close" },
+      { "<leader>ghrd", "<cmd>GHDeleteReview<cr>",   desc = "Delete" },
+      { "<leader>ghre", "<cmd>GHExpandReview<cr>",   desc = "Expand" },
+      { "<leader>ghrs", "<cmd>GHSubmitReview<cr>",   desc = "Submit" },
       { "<leader>ghrz", "<cmd>GHCollapseReview<cr>", desc = "Collapse" },
-      { "<leader>ght", group = "Threads", desc = "Threads" },
-      { "<leader>ghtc", "<cmd>GHCreateThread<cr>", desc = "Create" },
-      { "<leader>ghtn", "<cmd>GHNextThread<cr>", desc = "Next" },
-      { "<leader>ghtt", "<cmd>GHToggleThread<cr>", desc = "Toggle" },
+      { "<leader>ght",  group = "Threads",           desc = "Threads" },
+      { "<leader>ghtc", "<cmd>GHCreateThread<cr>",   desc = "Create" },
+      { "<leader>ghtn", "<cmd>GHNextThread<cr>",     desc = "Next" },
+      { "<leader>ghtt", "<cmd>GHToggleThread<cr>",   desc = "Toggle" },
     },
     config = function()
       require("litee.gh").setup()
@@ -166,11 +128,11 @@ return {
             { expr = true, desc = "prev hunk" },
           },
           { "s", ":Gitsigns stage_hunk<CR>", { silent = true, desc = "stage hunk" } },
-          { "u", gitsigns.undo_stage_hunk, { desc = "undo last stage" } },
-          { "S", gitsigns.stage_buffer, { desc = "stage buffer" } },
-          { "p", gitsigns.preview_hunk, { desc = "preview hunk" } },
-          { "d", gitsigns.toggle_deleted, { nowait = true, desc = "toggle deleted" } },
-          { "b", gitsigns.blame_line, { desc = "blame" } },
+          { "u", gitsigns.undo_stage_hunk,   { desc = "undo last stage" } },
+          { "S", gitsigns.stage_buffer,      { desc = "stage buffer" } },
+          { "p", gitsigns.preview_hunk,      { desc = "preview hunk" } },
+          { "d", gitsigns.toggle_deleted,    { nowait = true, desc = "toggle deleted" } },
+          { "b", gitsigns.blame_line,        { desc = "blame" } },
           {
             "B",
             function()
@@ -178,35 +140,12 @@ return {
             end,
             { desc = "blame show full" },
           },
-          { "/", gitsigns.show, { exit = true, desc = "show base file" } }, -- show the base of the file
+          { "/",       gitsigns.show,     { exit = true, desc = "show base file" } }, -- show the base of the file
           { "<Enter>", "<Cmd>Neogit<CR>", { exit = true, desc = "Neogit" } },
-          { "q", nil, { exit = true, nowait = true, desc = "exit" } },
+          { "q",       nil,               { exit = true, nowait = true, desc = "exit" } },
         },
       }
     end,
   },
   { "f-person/git-blame.nvim", cmd = { "GitBlameToggle", "GitBlameEnable" } },
-  {
-    "kdheepak/lazygit.nvim",
-    lazy = true,
-    cmd = {
-      "LazyGit",
-      "LazyGitConfig",
-      "LazyGitCurrentFile",
-      "LazyGitFilter",
-      "LazyGitFilterCurrentFile",
-    },
-    dependencies = {
-      "nvim-telescope/telescope.nvim",
-      "nvim-lua/plenary.nvim",
-    },
-    config = function()
-      require("telescope").load_extension("lazygit")
-    end,
-    -- setting the keybinding for LazyGit with 'keys' is recommended in
-    -- order to load the plugin when the command is run for the first time
-    keys = {
-      { "<leader>gui", "<cmd>LazyGit<cr>", desc = "LazyGit" },
-    },
-  },
 }

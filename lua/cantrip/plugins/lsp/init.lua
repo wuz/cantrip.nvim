@@ -9,9 +9,13 @@ return {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "j-hui/fidget.nvim",
-      "DNLHC/glance.nvim",
       "saecki/live-rename.nvim",
-      -- "ms-jpq/coq_nvim",
+      { "onsails/lspkind-nvim" },
+      -- -- extra lsp tools
+      { "tami5/lspsaga.nvim",            dependencies = "nvim-lspconfig" },
+      { "nvim-lua/lsp-status.nvim",      dependencies = "nvim-lspconfig" },
+      { "ray-x/lsp_signature.nvim",      dependencies = "nvim-lspconfig" },
+      { "simrat39/symbols-outline.nvim", dependencies = "nvim-lspconfig" },
     },
     opts = {
       -- options for vim.diagnostic.config()
@@ -50,7 +54,8 @@ return {
       local config = require("cantrip").getConfig()
       local servers = vim.tbl_deep_extend("force", opts.servers, config.lsp.servers or {})
       local setup_fns = vim.tbl_deep_extend("force", opts.setup, config.lsp.setup or {})
-      -- local coq = require("coq")
+      local cmp_present, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+      local blink_present, blink = pcall(require, "blink.cmp")
 
       local register_capability = vim.lsp.handlers["client/registerCapability"]
 
@@ -70,7 +75,16 @@ return {
         require("cantrip.plugins.lsp.keymaps").on_attach(client, buffer)
       end)
 
-      local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+      local capabilities = {}
+
+      if cmp_present then
+        capabilities = cmp_nvim_lsp.default_capabilities()
+      elseif blink_present then
+        capabilities = blink.get_lsp_capabilities()
+      else
+        capabilities = vim.lsp.protocol.make_client_capabilities()
+      end
+
       local function setup(server)
         local server_opts = vim.tbl_deep_extend("force", {
           capabilities = vim.deepcopy(capabilities),
@@ -121,4 +135,24 @@ return {
   },
   { import = "cantrip.plugins.lsp.conform" },
   { import = "cantrip.plugins.lsp.lint" },
+
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      {
+        "dnlhc/glance.nvim",
+        cmd = "Glance",
+      },
+    },
+    opts = function()
+      local Keys = require("cantrip.plugins.lsp.keymaps").get()
+      -- stylua: ignore
+      vim.list_extend(Keys, {
+        { "gD", "<cmd>Glance definitions<cr>",      desc = "Glance Definition",     has = "definition" },
+        { "gR", "<cmd>Glance references<cr>",       desc = "Glance References",     nowait = true },
+        { "gM", "<cmd>Glance implementations<cr>",  desc = "Glance implementations" },
+        { "gY", "<cmd>Glance type_definitions<cr>", desc = "Goto T[y]pe Definition" },
+      })
+    end,
+  },
 }

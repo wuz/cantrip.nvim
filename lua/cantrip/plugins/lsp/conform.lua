@@ -12,22 +12,18 @@ return {
       {
         "<leader>F",
         function()
-          require("conform").format({ formatters = { "injected" }, timeout_ms = 3000 })
+          require("conform").format { formatters = { "injected" }, timeout_ms = 3000 }
         end,
         mode = { "n", "v" },
         desc = "Format Injected Langs",
       },
     },
     opts = function()
-      local js_format = {
-        "prettierd",
-      }
+      local js_format = { "prettierd", lsp_format = "prefer" }
       ---@class ConformOpts
       local opts = {
         default_format_opts = {
           timeout_ms = 3000,
-          async = false, -- not recommended to change
-          quiet = false, -- not recommended to change
           lsp_format = "fallback", -- not recommended to change
         },
         format_on_save = {
@@ -45,6 +41,7 @@ return {
           graphql = { "prettierd" },
           nix = { "nixfmt" },
           yaml = { "yamlfmt", "actionlint" },
+          markdown = { "markdownlint-cli2", lsp_format = "first" },
         },
         ---@type table<string, conform.FormatterConfigOverride|fun(bufnr: integer): nil|conform.FormatterConfigOverride>
         formatters = {

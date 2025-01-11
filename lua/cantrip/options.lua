@@ -40,7 +40,7 @@ opt.visualbell = false
 opt.ofu = "syntaxcomplete#Complete"
 
 opt.cmdheight = 2
-opt.shortmess:append({ c = true })
+opt.shortmess:append { c = true }
 
 opt.signcolumn = "yes"
 
@@ -133,12 +133,18 @@ opt.winminwidth = 5
 c("set termguicolors")
 opt.background = "dark"
 opt.syntax = "on"
-opt.guicursor = "n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor"
+opt.guicursor = {
+  "n-sm:block",
+  "v:hor50",
+  "c-ci-cr-i-ve:ver10",
+  "o-r:hor10",
+  "a:Cursor/Cursor-blinkwait1-blinkon1-blinkoff1",
+}
 opt.fillchars = { vert = "┃" }
 
 c([[highlight VertSplit ctermbg=NONE]])
 
 if vim.fn.has("nvim-0.9.0") == 1 then
   opt.splitkeep = "screen"
-  opt.shortmess:append({ C = true })
+  opt.shortmess:append { C = true }
 end

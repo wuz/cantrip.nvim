@@ -13,16 +13,20 @@ return {
       vim.treesitter.language.register("markdown", "mdx")
     end,
   },
+  {
+    "davidmh/mdx.nvim",
+    config = true,
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+  },
   { "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
   {
     "williamboman/mason.nvim",
     opts = function(_, opts)
       if type(opts.ensure_installed) == "table" then
         vim.list_extend(opts.ensure_installed, {
-          "markdownlint",
+          "markdownlint-cli2",
           "cbfmt",
           "marksman",
-          "prettierd",
         })
       end
     end,

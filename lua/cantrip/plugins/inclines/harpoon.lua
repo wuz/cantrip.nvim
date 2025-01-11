@@ -2,14 +2,13 @@ return {
   {
     "b0o/incline.nvim",
     opts = function(_, opts)
-      local helpers = require("incline.helpers")
       local navic = require("nvim-navic")
-      local devicons = require("nvim-web-devicons")
+      local devicons = require("mini.icons")
       return vim.tbl_deep_extend("force", opts, {
         window = {
           placement = {
-            vertical = "bottom",
-            horizontal = "center",
+            vertical = "top",
+            horizontal = "right",
           },
           padding = 0,
           margin = { vertical = 0, horizontal = 0 },
@@ -23,7 +22,7 @@ return {
           if filename == "" then
             filename = "[No Name]"
           end
-          local ft_icon, ft_color = devicons.get_icon_color(filename)
+          local ft_icon, ft_color = devicons.get("file", filename)
 
           local function get_git_diff()
             local icons = { removed = " ", changed = " ", added = " " }
@@ -57,11 +56,6 @@ return {
               table.insert(label, { "| " })
             end
             return label
-          end
-
-          local function custom_buffer_name()
-            -- Return blank name if no matches found
-            return output
           end
 
           local function get_harpoon_items()
@@ -111,7 +105,7 @@ return {
 
           local function get_file_name()
             local label = {}
-            table.insert(label, { (ft_icon or "") .. " ", guifg = ft_color, guibg = "none" })
+            table.insert(label, { (ft_icon or "") .. " ", group = ft_color })
             table.insert(label, { vim.bo[props.buf].modified and " " or "", guifg = "#d19a66" })
             table.insert(label, { filename, gui = vim.bo[props.buf].modified and "bold,italic" or "bold" })
             if not props.focused then
@@ -121,22 +115,12 @@ return {
             return label
           end
 
-          -- local function get_lint_progress()
-          --   local linters = require("lint").get_running()
-          --   if #linters == 0 then
-          --     return "󰦕"
-          --   end
-          --   return "󱉶 " .. table.concat(linters, ", ")
-          -- end
-
           local res = {
             {
               { get_diagnostic_label() },
               { get_git_diff() },
               { get_harpoon_items() },
               { get_file_name() },
-              { custom_buffer_name() },
-              guibg = "#0e0e0e",
             },
           }
 
@@ -150,9 +134,6 @@ return {
             end
           end
           table.insert(res, " ")
-          -- table.insert(res, {
-          --   { get_lint_progress() },
-          -- })
           table.insert(res, " ")
           return res
         end,

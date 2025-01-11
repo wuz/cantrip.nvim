@@ -1,4 +1,3 @@
-
 return {
   {
     "b0o/incline.nvim",
@@ -31,9 +30,9 @@ return {
         local modified = vim.bo[props.buf].modified
         local res = {}
         table.insert(res, {
-          { " [ ", group = "NavicSeparator" },
+          { " [ ",              group = "NavicSeparator" },
           { lsp_status.status() },
-          { " ] ", group = "NavicSeparator" },
+          { " ] ",              group = "NavicSeparator" },
         })
         table.insert(res, {
           ft_icon and { " ", ft_icon, " ", guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or "",
@@ -45,7 +44,7 @@ return {
         if props.focused then
           for _, item in ipairs(navic.get_data(props.buf) or {}) do
             table.insert(res, {
-              { " > ", group = "NavicSeparator" },
+              { " > ",     group = "NavicSeparator" },
               { item.icon, group = "NavicIcons" .. item.type },
               { item.name, group = "NavicText" },
             })

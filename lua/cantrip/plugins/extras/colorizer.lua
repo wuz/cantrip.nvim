@@ -1,6 +1,11 @@
 return {
   {
-    "norcalli/nvim-colorizer.lua",
+    "brenoprata10/nvim-highlight-colors",
+    optional = true,
+    enabled = false,
+  },
+  {
+    "catgoose/nvim-colorizer.lua",
     event = "VeryLazy",
     opts = {
       css = { css = true },

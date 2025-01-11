@@ -1,6 +1,6 @@
 -- You probably always want to set this in your vim file
 vim.opt.background = "dark"
-vim.g.colors_name = "cantrip_dark"
+vim.g.colors_name = "neon_magic"
 
 -- By setting our module to nil, we clear lua's cache,
 -- which means the require ahead will *always* occur.
@@ -14,7 +14,9 @@ vim.g.colors_name = "cantrip_dark"
 --
 -- The performance impact of this call can be measured in the hundreds of
 -- *nanoseconds* and such could be considered "production safe".
-package.loaded["lush_theme.cantrip_dark"] = nil
+package.loaded["neon_magic"] = nil
+package.loaded["neon_magic.groups.base"] = nil
+package.loaded["neon_magic.groups.neotree"] = nil
 
 -- include our theme file and pass it to lush to apply
-require("lush")(require("lush_theme.cantrip_dark"))
+require("lush")(require("neon_magic").setup())

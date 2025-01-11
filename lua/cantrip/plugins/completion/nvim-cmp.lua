@@ -1,10 +1,15 @@
 return {
-  -- auto completion
+  {
+    "saghen/blink.cmp",
+    enabled = false,
+    optional = true,
+  },
   {
     -- },
     "hrsh7th/nvim-cmp",
     version = false, -- last release is way too old
     event = "InsertEnter",
+    enabled = false,
     dependencies = {
       "onsails/lspkind-nvim",
       "hrsh7th/cmp-nvim-lsp",
@@ -48,7 +53,8 @@ return {
           end,
         },
         sources = cmp.config.sources({
-          { name = "luasnip",   option = { show_autosnippets = true, use_show_condition = false } },
+          { name = "codecompanion" },
+          { name = "luasnip",      option = { show_autosnippets = true, use_show_condition = false } },
           { name = "nvim_lsp" },
           -- { name = "rg" },
           { name = "treesitter" },
@@ -114,59 +120,4 @@ return {
       end)
     end,
   },
-
-  -- snippets
-  {
-    "L3MON4D3/LuaSnip",
-    build = "make install_jsregexp",
-    version = "v2.*",
-    dependencies = {
-      {
-        "rafamadriz/friendly-snippets",
-        config = function()
-          local luasnip = require("luasnip")
-
-          luasnip.filetype_extend("ruby", { "rails" })
-          require("luasnip.loaders.from_vscode").lazy_load()
-          require("luasnip.loaders.from_lua").load { paths = "~/.config/nvim/lua/snippets/" }
-        end,
-      },
-      {
-        "nvim-cmp",
-        dependencies = {
-          "saadparwaiz1/cmp_luasnip",
-        },
-      },
-    },
-    opts = {
-      history = true,
-      delete_check_events = "TextChanged",
-      enable_autosnippets = true,
-    },
-    -- stylua: ignore
-    keys = {
-      {
-        "<tab>",
-        function()
-          return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
-        end,
-        expr = true,
-        silent = true,
-        mode = "i",
-      },
-      { "<tab>",   function() require("luasnip").jump(1) end,  mode = "s" },
-      { "<s-tab>", function() require("luasnip").jump(-1) end, mode = { "i", "s" } },
-    },
-  },
-  -- {
-  --   "echasnovski/mini.pairs",
-  --   event = "VeryLazy",
-  --   opts = {
-  --     ['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^%a\\].", register = { cr = false } },
-  --     ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^%a\\].", register = { cr = false } },
-  --   },
-  --   config = function(_, opts)
-  --     require("mini.pairs").setup(opts)
-  --   end,
-  -- },
 }
