@@ -36,6 +36,7 @@ return {
     opts = {
       sources = { "filesystem", "buffers", "git_status", "document_symbols" },
       open_files_do_not_replace_types = { "terminal", "Trouble", "qf", "Outline" },
+      close_if_last_window = true,
       filesystem = {
         components = {
           harpoon_index = function(config, node, _)
@@ -64,9 +65,9 @@ return {
           file = {
             { "harpoon_index" },
             { "icon" },
-            { "name",         use_git_status_colors = true },
+            { "name", use_git_status_colors = true },
             { "diagnostics" },
-            { "git_status",   highlight = "NeoTreeDimText" },
+            { "git_status", highlight = "NeoTreeDimText" },
           },
         },
         bind_to_cwd = false,
@@ -135,4 +136,22 @@ return {
       })
     end,
   },
+  -- {
+  --   "nvim-neo-tree/neo-tree.nvim",
+  --   dependencies = {
+  --     "folke/snacks.nvim",
+  --   },
+  --   opts = function(_, opts)
+  --     local Snacks = require("snacks")
+  --     local function on_move(data)
+  --       Snacks.rename.on_rename_file(data.source, data.destination)
+  --     end
+  --     local events = require("neo-tree.events")
+  --     opts.event_handlers = opts.event_handlers or {}
+  --     vim.list_extend(opts.event_handlers, {
+  --       { event = events.FILE_MOVED,   handler = on_move },
+  --       { event = events.FILE_RENAMED, handler = on_move },
+  --     })
+  --   end,
+  -- },
 }

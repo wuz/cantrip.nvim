@@ -7,11 +7,11 @@ return {
       return vim.tbl_deep_extend("force", opts, {
         window = {
           placement = {
-            vertical = "top",
-            horizontal = "right",
+            vertical = "bottom",
+            horizontal = "center",
           },
-          padding = 0,
-          margin = { vertical = 0, horizontal = 0 },
+          padding = 1,
+          margin = { vertical = 2, horizontal = 2 },
         },
         hide = {
           cursorline = true,
@@ -127,7 +127,7 @@ return {
           if props.focused then
             for _, item in ipairs(navic.get_data(props.buf) or {}) do
               table.insert(res, {
-                { " > ", group = "NavicSeparator" },
+                { " > ",     group = "NavicSeparator" },
                 { item.icon, group = "NavicIcons" .. item.type },
                 { item.name, group = "NavicText" },
               })
