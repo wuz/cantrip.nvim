@@ -4,6 +4,7 @@ vim.uv = vim.uv or vim.loop
 
 local Boolean = require("cantrip.utils.boolean")
 local autocmd = require("cantrip.utils.autocmd")
+local cantrip_ui = require("cantrip.ui")
 
 local M = {}
 
@@ -38,6 +39,7 @@ end
 
 M.init = function()
   require("cantrip.options")
+  -- cantrip_ui.lsp_hover.setup {}
 end
 
 M.lazy_file = function()

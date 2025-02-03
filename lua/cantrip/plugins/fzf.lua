@@ -8,7 +8,7 @@ local function symbols_filter(entry, ctx)
   return vim.tbl_contains(ctx.symbols_filter, entry.kind)
 end
 
-local function opts(_, opts)
+local function opts()
   local fzf = require("fzf-lua")
   local config = fzf.config
   local actions = fzf.actions
@@ -50,27 +50,6 @@ local function opts(_, opts)
       -- give it a try.
       include_current_session = true,
     },
-    previewers = {
-      builtin = {
-        -- fzf-lua is very fast, but it really struggled to preview a couple files
-        -- in a repo. Those files were very big JavaScript files (1MB, minified, all on a single line).
-        -- It turns out it was Treesitter having trouble parsing the files.
-        -- With this change, the previewer will not add syntax highlighting to files larger than 100KB
-        -- (Yes, I know you shouldn't have 100KB minified files in source control.)
-        syntax_limit_b = 1024 * 100, -- 100KB
-      },
-    },
-    grep = {
-      -- One thing I missed from Telescope was the ability to live_grep and the
-      -- run a filter on the filenames.
-      -- Ex: Find all occurrences of "enable" but only in the "plugins" directory.
-      -- With this change, I can sort of get the same behaviour in live_grep.
-      -- ex: > enable --*/plugins/*
-      -- I still find this a bit cumbersome. There's probably a better way of doing this.
-      rg_glob = true, -- enable glob parsing
-      glob_flag = "--iglob", -- case insensitive globs
-      glob_separator = "%s%-%-", -- query separator pattern (lua): ' --'
-    },
     defaults = {
       -- formatter = "path.filename_first",
       formatter = "path.dirname_first",
@@ -85,6 +64,7 @@ local function opts(_, opts)
           ["webp"] = img_previewer,
         },
         ueberzug_scaler = "fit_contain",
+        syntax_limit_b = 1024 * 100, -- 100KB
       },
     },
     -- Custom LazyVim option to configure vim.ui.select
@@ -129,16 +109,27 @@ local function opts(_, opts)
     },
     files = {
       cwd_prompt = false,
+      previewer = "bat",
       actions = {
         ["alt-i"] = { actions.toggle_ignore },
         ["alt-h"] = { actions.toggle_hidden },
       },
     },
     grep = {
+      previewer = "bat",
       actions = {
         ["alt-i"] = { actions.toggle_ignore },
         ["alt-h"] = { actions.toggle_hidden },
       },
+      -- One thing I missed from Telescope was the ability to live_grep and the
+      -- run a filter on the filenames.
+      -- Ex: Find all occurrences of "enable" but only in the "plugins" directory.
+      -- With this change, I can sort of get the same behaviour in live_grep.
+      -- ex: > enable --*/plugins/*
+      -- I still find this a bit cumbersome. There's probably a better way of doing this.
+      rg_glob = true, -- enable glob parsing
+      glob_flag = "--iglob", -- case insensitive globs
+      glob_separator = "%s%-%-", -- query separator pattern (lua): ' --'
     },
     lsp = {
       symbols = {
@@ -162,24 +153,6 @@ return {
     "ibhagwan/fzf-lua",
     cmd = "FzfLua",
     opts = opts,
-    config = function(_, opts)
-      if opts[1] == "default-title" then
-        -- use the same prompt for all pickers for profile `default-title` and
-        -- profiles that use `default-title` as base profile
-        local function fix(t)
-          t.prompt = t.prompt ~= nil and " " or nil
-          for _, v in pairs(t) do
-            if type(v) == "table" then
-              fix(v)
-            end
-          end
-          return t
-        end
-        opts = vim.tbl_deep_extend("force", fix(require("fzf-lua.profiles.default-title")), opts)
-        opts[1] = nil
-      end
-      require("fzf-lua").setup(opts)
-    end,
     init = function()
       vim.ui.select = function(...)
         require("lazy").load { plugins = { "fzf-lua" } }
