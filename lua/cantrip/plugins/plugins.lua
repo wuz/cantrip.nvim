@@ -14,11 +14,11 @@ end
 
 return {
   -- Plugin manager
-  { "folke/lazy.nvim",                 version = "*" },
+  { "folke/lazy.nvim", version = "*" },
   -- Load cantrip as a plugin
   {
     "wuz/cantrip.nvim",
-    lazy = false,     -- make sure we load this during startup
+    lazy = false, -- make sure we load this during startup
     priority = 10000, -- load before anything else
     version = "*",
     config = true,
@@ -32,90 +32,8 @@ return {
   -- UI Utilities
   { "MunifTanjim/nui.nvim" },
   -- Smoother scrolling
-  { "karb94/neoscroll.nvim",           config = true },
+  { "karb94/neoscroll.nvim", config = true },
   { "nvimtools/hydra.nvim" },
-  -- {
-  --   "goolord/alpha-nvim",
-  --   dependencies = { "echasnovski/mini.icons", "ThePrimeagen/harpoon", "nvim-telescope/telescope.nvim" },
-  --   opts = function()
-  --     local harpoon = require("harpoon")
-  --     local dashboard = require("alpha.themes.dashboard")
-  --     local conf = require("telescope.config").values
-  --     local function button(sc, txt, keybind)
-  --       local sc_ = sc:gsub("%s", ""):gsub("SPC", "<leader>")
-  --
-  --       local opts = {
-  --         position = "center",
-  --         text = txt,
-  --         shortcut = sc,
-  --         cursor = 5,
-  --         width = 36,
-  --         align_shortcut = "right",
-  --         hl = "AlphaButtons",
-  --       }
-  --
-  --       if keybind then
-  --         opts.keymap = { "n", sc_, keybind, { noremap = true, silent = true } }
-  --       end
-  --
-  --       return {
-  --         type = "button",
-  --         val = txt,
-  --         on_press = function()
-  --           local key = vim.api.nvim_replace_termcodes(sc_, true, false, true)
-  --           vim.api.nvim_feedkeys(key, "normal", false)
-  --         end,
-  --         opts = opts,
-  --       }
-  --     end
-  --
-  --     local function toggle_telescope(harpoon_files)
-  --       local file_paths = {}
-  --       for _, item in ipairs(harpoon_files.items) do
-  --         table.insert(file_paths, item.value)
-  --       end
-  --
-  --       require("telescope.pickers")
-  --         .new({}, {
-  --           prompt_title = "Harpoon",
-  --           finder = require("telescope.finders").new_table {
-  --             results = file_paths,
-  --           },
-  --           previewer = conf.file_previewer {},
-  --           sorter = conf.generic_sorter {},
-  --         })
-  --         :find()
-  --     end
-  --
-  --
-  --     dashboard.section.buttons.val = {
-  --       button("h", "󰛢  Harpooned  ", function()
-  --         toggle_telescope(harpoon:list())
-  --       end),
-  --       button("<space>", "  Find File  ", ":Telescope smart_open<CR>"),
-  --       button("m", "  Recent File  ", ":Telescope oldfiles<CR>"),
-  --       button("n", "  New file  ", ":ene <BAR> startinsert <CR>"),
-  --       button("a", "  Find Word  ", ":Telescope live_grep<CR>"),
-  --     }
-  --     dashboard.section.footer.opts.hl = "Type"
-  --     dashboard.section.header.opts.hl = "AlphaHeader"
-  --     dashboard.section.buttons.opts.hl = "AlphaButtons"
-  --     dashboard.opts.layout[1].val = 8
-  --     return dashboard
-  --   end,
-  --   config = function(_, dashboard)
-  --     require("alpha").setup(dashboard.opts)
-  --     vim.api.nvim_create_autocmd("User", {
-  --       pattern = "LazyVimStarted",
-  --       callback = function()
-  --         local stats = require("lazy").stats()
-  --         local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-  --         dashboard.section.footer.val = "cantrip loaded " .. stats.count .. " plugins in " .. ms .. "ms"
-  --         pcall(vim.cmd.AlphaRedraw)
-  --       end,
-  --     })
-  --   end,
-  -- },
   {
     "folke/snacks.nvim",
     ---@type snacks.Config
@@ -164,6 +82,11 @@ return {
       },
     },
   },
+  {
+    "mvllow/modes.nvim",
+    tag = "v0.2.1",
+    config = true,
+  },
   -- Colorscheme
   { "rktjmp/lush.nvim" },
   -- Configurable highlight patterns
@@ -172,6 +95,8 @@ return {
     version = "*",
     opts = require("cantrip.config.hipatterns"),
   },
+  -- Better a/i textobjects
+  { "echasnovski/mini.ai", version = false },
   -- Better ui.select and ui.input
   { "stevearc/dressing.nvim" },
   -- mini.icons with nvim web devicon mocking
@@ -210,7 +135,7 @@ return {
     init = function()
       vim.g.navic_silence = true
       Cantrip.lsp.on_attach(function(client, buffer)
-        if client.supports_method("textDocument/documentSymbol") then
+        if client:supports_method("textDocument/documentSymbol") then
           require("nvim-navic").attach(client, buffer)
         end
       end)
@@ -253,13 +178,25 @@ return {
     end,
     config = require("cantrip.config.treesitter").config,
   },
-  { "nvim-treesitter/nvim-treesitter-refactor",    dependencies = { "nvim-treesitter" }, lazy = true },
+  {
+    "m-demare/hlargs.nvim",
+    dependencies = { "nvim-treesitter" },
+    lazy = true,
+    config = true,
+  },
+  { "nvim-treesitter/nvim-treesitter-refactor", dependencies = { "nvim-treesitter" }, lazy = true },
   { "JoosepAlviste/nvim-ts-context-commentstring", dependencies = { "nvim-treesitter" }, lazy = true },
-  { "RRethy/nvim-treesitter-textsubjects",         dependencies = { "nvim-treesitter" }, lazy = true },
+  { "RRethy/nvim-treesitter-textsubjects", dependencies = { "nvim-treesitter" }, lazy = true },
+  { "nvim-treesitter/nvim-treesitter-context", dependencies = { "nvim-treesitter" }, lazy = true },
   { "nvim-treesitter/nvim-treesitter-textobjects", dependencies = { "nvim-treesitter" }, lazy = true },
-
+  {
+    "Wansmer/treesj",
+    keys = { "<space>m", "<space>j", "<space>s" },
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = true,
+  },
   -- Highlight trailing spaces
-  { "echasnovski/mini.trailspace",                 version = false,                      config = true },
+  { "echasnovski/mini.trailspace", version = false, config = true },
   -- Improve deleting buffers
   {
     "echasnovski/mini.bufremove",
@@ -286,8 +223,8 @@ return {
     keys = {
       { "<M-h>", "<cmd>bprev<cr>", desc = "Prev buffer" },
       { "<M-l>", "<cmd>bnext<cr>", desc = "Next buffer" },
-      { "[b",    "<cmd>bprev<cr>", desc = "Prev buffer" },
-      { "]b",    "<cmd>bnext<cr>", desc = "Next buffer" },
+      { "[b", "<cmd>bprev<cr>", desc = "Prev buffer" },
+      { "]b", "<cmd>bnext<cr>", desc = "Next buffer" },
     },
   },
 
@@ -297,19 +234,19 @@ return {
     version = false,
     opts = {
       mappings = {
-        add = "Za",            -- Add surrounding in Normal and Visual modes
-        delete = "Zd",         -- Delete surrounding
-        find = "Zf",           -- Find surrounding (to the right)
-        find_left = "ZF",      -- Find surrounding (to the left)
-        highlight = "Zh",      -- Highlight surrounding
-        replace = "Zr",        -- Replace surrounding
-        update_n_lines = "Zn", -- Update `n_lines`
+        add = "sa", -- Add surrounding in Normal and Visual modes
+        delete = "sd", -- Delete surrounding
+        find = "sf", -- Find surrounding (to the right)
+        find_left = "sF", -- Find surrounding (to the left)
+        highlight = "sh", -- Highlight surrounding
+        replace = "sr", -- Replace surrounding
+        update_n_lines = "sn", -- Update `n_lines`
       },
     },
     config = true,
   },
   -- Align code
-  { "echasnovski/mini.align",   version = false, config = true },
+  { "echasnovski/mini.align", version = false, config = true },
 
   {
     "folke/which-key.nvim",
@@ -500,7 +437,11 @@ return {
   -- fancy UI for the debugger
   {
     "rcarriga/nvim-dap-ui",
-    dependencies = { "nvim-neotest/nvim-nio" },
+    dependencies = {
+      "jay-babu/mason-nvim-dap.nvim",
+      "mfussenegger/nvim-dap",
+      "nvim-neotest/nvim-nio",
+    },
     -- stylua: ignore
     keys = {
       { "<leader>du", function() require("dapui").toggle({}) end, desc = "Dap UI" },
@@ -536,7 +477,7 @@ return {
           command = "node",
           args = {
             require("mason-registry").get_package("js-debug-adapter"):get_install_path()
-            .. "/js-debug/src/dapDebugServer.js",
+              .. "/js-debug/src/dapDebugServer.js",
             "${port}",
           },
         },
@@ -644,8 +585,8 @@ return {
           },
         },
         floating = {
-          max_height = nil,  -- These can be integers or a float between 0 and 1.
-          max_width = nil,   -- Floats will be treated as percentage of your screen.
+          max_height = nil, -- These can be integers or a float between 0 and 1.
+          max_width = nil, -- Floats will be treated as percentage of your screen.
           border = "single", -- Border style. Can be "single", "double" or "rounded"
           mappings = {
             close = { "q", "<Esc>" },
@@ -664,19 +605,38 @@ return {
     end,
   },
   {
-    "gabrielpoca/replacer.nvim",
-    lazy = true,
+    "stevearc/quicker.nvim",
+    event = "FileType qf",
     keys = {
       {
         "<leader>qr",
         function()
-          require("replacer").run()
+          require("quicker").toggle()
         end,
         desc = "run replacer.nvim",
       },
     },
+    ---@module "quicker"
+    ---@type quicker.SetupOptions
+    opts = {
+      keys = {
+        {
+          ">",
+          function()
+            require("quicker").expand { before = 2, after = 2, add_to_existing = true }
+          end,
+          desc = "Expand quickfix context",
+        },
+        {
+          "<",
+          function()
+            require("quicker").collapse()
+          end,
+          desc = "Collapse quickfix context",
+        },
+      },
+    },
   },
-
   {
     "Wansmer/sibling-swap.nvim",
     dependencies = { "nvim-treesitter" },
@@ -807,8 +767,8 @@ return {
     dependencies = { "tpope/vim-repeat" },
     enabled = true,
     keys = {
-      { "s",  mode = { "n", "x", "o" }, desc = "Leap forward to" },
-      { "S",  mode = { "n", "x", "o" }, desc = "Leap backward to" },
+      { "s", mode = { "n", "x", "o" }, desc = "Leap forward to" },
+      { "S", mode = { "n", "x", "o" }, desc = "Leap backward to" },
       { "gs", mode = { "n", "x", "o" }, desc = "Leap from windows" },
     },
     config = function(_, opts)
@@ -943,8 +903,8 @@ return {
     },
     opts = {
       gui_style = {
-        fg = "NONE",                         -- The gui style to use for the fg highlight group.
-        bg = "BOLD",                         -- The gui style to use for the bg highlight group.
+        fg = "NONE", -- The gui style to use for the fg highlight group.
+        bg = "BOLD", -- The gui style to use for the bg highlight group.
       },
       pattern = [[\b(KEYWORDS)(\(\w*\))?:]], -- ripgrep regex
     },
@@ -956,14 +916,14 @@ return {
     lazy = false,
     config = function()
       require("tabout").setup {
-        tabkey = "<Tab>",             -- key to trigger tabout, set to an empty string to disable
+        tabkey = "<Tab>", -- key to trigger tabout, set to an empty string to disable
         backwards_tabkey = "<S-Tab>", -- key to trigger backwards tabout, set to an empty string to disable
-        act_as_tab = true,            -- shift content if tab out is not possible
-        act_as_shift_tab = false,     -- reverse shift content if tab out is not possible (if your keyboard/terminal supports <S-Tab>)
-        default_tab = "<C-t>",        -- shift default action (only at the beginning of a line, otherwise <TAB> is used)
-        default_shift_tab = "<C-d>",  -- reverse shift default action,
-        enable_backwards = true,      -- well ...
-        completion = false,           -- if the tabkey is used in a completion pum
+        act_as_tab = true, -- shift content if tab out is not possible
+        act_as_shift_tab = false, -- reverse shift content if tab out is not possible (if your keyboard/terminal supports <S-Tab>)
+        default_tab = "<C-t>", -- shift default action (only at the beginning of a line, otherwise <TAB> is used)
+        default_shift_tab = "<C-d>", -- reverse shift default action,
+        enable_backwards = true, -- well ...
+        completion = false, -- if the tabkey is used in a completion pum
         tabouts = {
           { open = "'", close = "'" },
           { open = '"', close = '"' },
@@ -981,7 +941,7 @@ return {
       "L3MON4D3/LuaSnip",
       "hrsh7th/nvim-cmp",
     },
-    opt = true,              -- Set this to true if the plugin is optional
+    opt = true, -- Set this to true if the plugin is optional
     event = "InsertCharPre", -- Set the event to 'InsertCharPre' for better compatibility
     priority = 1000,
   },

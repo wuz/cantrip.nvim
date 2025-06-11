@@ -6,7 +6,6 @@ return {
       "nvim-lua/plenary.nvim",
       "echasnovski/mini.icons", -- not strictly required, but recommended
       "MunifTanjim/nui.nvim",
-      "3rd/image.nvim",
     },
     keys = {
       {
@@ -65,9 +64,9 @@ return {
           file = {
             { "harpoon_index" },
             { "icon" },
-            { "name", use_git_status_colors = true },
+            { "name",         use_git_status_colors = true },
             { "diagnostics" },
-            { "git_status", highlight = "NeoTreeDimText" },
+            { "git_status",   highlight = "NeoTreeDimText" },
           },
         },
         bind_to_cwd = false,

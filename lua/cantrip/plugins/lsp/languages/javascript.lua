@@ -15,11 +15,10 @@ return {
     opts = function(_, opts)
       if type(opts.ensure_installed) == "table" then
         vim.list_extend(opts.ensure_installed, {
+          "biome",
           "eslint-lsp@4.8.0",
           "typescript-language-server",
-          "prettierd",
           "vtsls",
-          -- "oxlint",
         })
       end
     end,
@@ -171,6 +170,11 @@ return {
             },
           },
         },
+        biome = {
+          settings = {
+            enable = true,
+          },
+        },
         eslint = {
           capabilities = {
             documentFormattingProvider = true,
@@ -221,14 +225,14 @@ return {
               local action, uri, range = unpack(command.arguments)
 
               local function move(newf)
-                client.request("workspace/executeCommand", {
+                client:request("workspace/executeCommand", {
                   command = command.command,
                   arguments = { action, uri, range, newf },
                 })
               end
 
               local fname = vim.uri_to_fname(uri)
-              client.request("workspace/executeCommand", {
+              client:request("workspace/executeCommand", {
                 command = "typescript.tsserverRequest",
                 arguments = {
                   "getMoveToRefactoringFileSuggestions",
@@ -267,7 +271,7 @@ return {
           end, "vtsls")
           -- copy typescript settings to javascript
           opts.settings.javascript =
-              vim.tbl_deep_extend("force", {}, opts.settings.typescript, opts.settings.javascript or {})
+            vim.tbl_deep_extend("force", {}, opts.settings.typescript, opts.settings.javascript or {})
         end,
         eslint = function()
           if not pcall(require, "vim.lsp._dynamic") then

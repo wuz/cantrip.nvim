@@ -14,7 +14,7 @@ function M.get_clients(opts)
     if opts and opts.method then
       ---@param client vim.lsp.Client
       ret = vim.tbl_filter(function(client)
-        return client.supports_method(opts.method, { bufnr = opts.bufnr })
+        return client:supports_method(opts.method, { bufnr = opts.bufnr })
       end, ret)
     end
   end
@@ -75,7 +75,7 @@ function M._check_methods(client, buffer)
   for method, clients in pairs(M._supports_method) do
     clients[client] = clients[client] or {}
     if not clients[client][buffer] then
-      if client.supports_method and client.supports_method(method, { bufnr = buffer }) then
+      if client:supports_method(method, { bufnr = buffer }) then
         clients[client][buffer] = true
         vim.api.nvim_exec_autocmds("User", {
           pattern = "LspSupportsMethod",
@@ -109,7 +109,7 @@ function M.on_supports_method(method, fn)
   return vim.api.nvim_create_autocmd("User", {
     pattern = "LspSupportsMethod",
     callback = function(args)
-      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
       local buffer = args.data.buffer ---@type number
       if client and method == args.data.method then
         return fn(client, buffer)
@@ -145,13 +145,13 @@ end
 M.action = setmetatable({}, {
   __index = function(_, action)
     return function()
-      vim.lsp.buf.code_action({
+      vim.lsp.buf.code_action {
         apply = true,
         context = {
           only = { action },
           diagnostics = {},
         },
-      })
+      }
     end
   end,
 })
@@ -167,10 +167,10 @@ function M.execute(opts)
     arguments = opts.arguments,
   }
   if opts.open then
-    require("trouble").open({
+    require("trouble").open {
       mode = "lsp_command",
       params = params,
-    })
+    }
   else
     return vim.lsp.buf_request(0, "workspace/executeCommand", params, opts.handler)
   end

@@ -22,23 +22,9 @@ return {
     end,
   },
   {
-    "simrat39/rust-tools.nvim",
-    opts = {
-      tools = {
-        runnables = {
-          use_telescope = true,
-        },
-        inlay_hints = {
-          auto = true,
-          show_parameter_hints = false,
-          parameter_hints_prefix = "",
-          other_hints_prefix = "",
-        },
-      },
-    },
-    config = function(_, opts)
-      require("rust-tools").setup(opts)
-    end,
+    "mrcjkb/rustaceanvim",
+    version = "^5", -- Recommended
+    lazy = false,   -- This plugin is already lazy
   },
   {
     "neovim/nvim-lspconfig",

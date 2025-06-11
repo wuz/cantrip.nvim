@@ -10,6 +10,31 @@ return {
     dependencies = {
       "rafamadriz/friendly-snippets",
       {
+        "chrisgrieser/nvim-scissors",
+        dependencies = "folke/snacks.nvim",
+        keys = {
+          {
+            "<leader>sne",
+            function()
+              require("scissors").editSnippet()
+            end,
+            desc = "Snippet: Edit",
+            mode = { "n" },
+          },
+          {
+            "<leader>sna",
+            function()
+              require("scissors").addNewSnippet()
+            end,
+            desc = "Snippet: Add",
+            mode = { "n", "x" },
+          },
+        },
+        opts = {
+          snippetDir = vim.fn.stdpath("config") .. "/snippets",
+        },
+      },
+      {
         "saghen/blink.compat",
         optional = true, -- make optional so it's only enabled if any extras need it
         opts = {},
@@ -147,10 +172,18 @@ return {
           enabled = vim.g.ai_cmp,
         },
       },
-
       -- Default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
+        providers = {
+          snippets = {
+            opts = {
+              search_paths = {
+                vim.fn.stdpath("config") .. "/snippets",
+              },
+            },
+          },
+        },
         min_keyword_length = function(ctx)
           -- only applies when typing a command, doesn't apply to arguments
           if ctx.mode == "cmdline" and string.find(ctx.line, " ") == nil then
@@ -160,7 +193,9 @@ return {
         end,
         compat = {},
         default = { "lsp", "path", "snippets", "buffer" },
-        cmdline = function()
+      },
+      cmdline = {
+        sources = function()
           local type = vim.fn.getcmdtype()
           -- Search forward and backward
           if type == "/" or type == "?" then

@@ -8,12 +8,12 @@ local c = vim.cmd
 local wo = vim.wo
 local expand = vim.fn.expand
 
-opt.hidden = true  -- remember buffer history
+opt.hidden = true -- remember buffer history
 
 opt.history = 1000 -- increase history from 20 to 1000
 
 -- Undo/Backups
-opt.undofile = true                                -- persistent undo
+opt.undofile = true -- persistent undo
 o.undodir = expand("$HOME/.local/share/nvim/undo") -- use global undo directory
 opt.ttyfast = true
 opt.relativenumber = true
@@ -51,7 +51,7 @@ opt.showmode = true
 opt.showtabline = 2
 
 -- Don't redraw all the time
--- opt.lazyredraw = true
+opt.lazyredraw = true
 
 -- highlight matching [{}]
 opt.showmatch = true
@@ -66,7 +66,8 @@ opt.timeoutlen = 300 -- Lower than default (1000) to quickly trigger which-key
 -- Global
 opt.mouse = "a"
 opt.inccommand = "nosplit"
-opt.cursorline = true
+o.cursorline = true
+opt.cursorlineopt = { "number" }
 opt.updatetime = 100
 wo.cursorcolumn = false
 wo.cursorline = true
@@ -76,30 +77,30 @@ opt.splitright = true
 
 -- Indent
 c("filetype indent on")
-opt.expandtab = true   -- tabs are spaces
-opt.softtabstop = 2    -- number of columns in insert mode
+opt.expandtab = true -- tabs are spaces
+opt.softtabstop = 2 -- number of columns in insert mode
 opt.tabstop = 2
 opt.smartindent = true -- indent files smartly
 opt.shiftwidth = 2
 
 -- Search
-opt.incsearch = true  -- search as characters are typed
-opt.hlsearch = true   -- highlight matches
+opt.incsearch = true -- search as characters are typed
+opt.hlsearch = true -- highlight matches
 opt.ignorecase = true -- ignore case of searches
-opt.gdefault = true   -- default to global search
-opt.smartcase = true  -- ignore ignorecase if uppercase letters
+opt.gdefault = true -- default to global search
+opt.smartcase = true -- ignore ignorecase if uppercase letters
 
 opt.textwidth = 80
 opt.wrapscan = true -- search wraps around end of file
-opt.wrap = false    -- Disable line wrap
+opt.wrap = false -- Disable line wrap
 
 -- Fix markdown indentation settings
 vim.g.markdown_recommended_style = 0
 
 -- Folding
-opt.foldlevel = 2
-opt.foldmethod = "marker"
-opt.foldmarker = "#--,--"
+o.foldcolumn = "1"
+o.foldenable = false
+o.foldlevel = 99
 
 -- WildMenu
 opt.wildmenu = true
@@ -133,14 +134,34 @@ opt.winminwidth = 5
 c("set termguicolors")
 opt.background = "dark"
 opt.syntax = "on"
-opt.guicursor = {
-  "n-sm:block",
-  "v:hor50",
-  "c-ci-cr-i-ve:ver10",
-  "o-r:hor10",
-  "a:Cursor/Cursor-blinkwait1-blinkon1-blinkoff1",
+-- opt.guicursor = {
+--   -- "n-sm:block",
+--   "v:hor50",
+--   "c-ci-cr-i-ve:ver10",
+--   "o-r:hor10",
+--   "a:Cursor/Cursor-blinkwait1-blinkon1-blinkoff1",
+-- }
+opt.fillchars = {
+  eob = " ",
+  diff = "╱",
+  fold = " ",
+  foldclose = ">",
+  foldopen = "∨",
+  foldsep = " ",
+  msgsep = "━",
+  horiz = "━",
+  horizup = "┻",
+  horizdown = "┳",
+  vert = "┃",
+  vertleft = "┫",
+  vertright = "┣",
+  verthoriz = "╋",
 }
-opt.fillchars = { vert = "┃" }
+
+opt.viewoptions = {
+  "cursor",
+  "folds",
+}
 
 c([[highlight VertSplit ctermbg=NONE]])
 

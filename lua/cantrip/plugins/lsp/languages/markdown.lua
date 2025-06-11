@@ -20,6 +20,15 @@ return {
   },
   { "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
   {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.icons" },
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
+    config = true,
+    ft = "markdown",
+  },
+  {
     "williamboman/mason.nvim",
     opts = function(_, opts)
       if type(opts.ensure_installed) == "table" then

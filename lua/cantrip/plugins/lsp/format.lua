@@ -12,7 +12,7 @@ function M.on_attach(client, buf)
   local event = "BufWritePre" -- or "BufWritePost"
   local async = event == "BufWritePost"
 
-  if client.supports_method("textDocument/formatting") then
+  if client:supports_method("textDocument/formatting") then
     vim.api.nvim_create_autocmd(event, {
       group = group,
       buffer = buf,

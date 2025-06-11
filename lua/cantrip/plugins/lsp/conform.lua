@@ -19,7 +19,7 @@ return {
       },
     },
     opts = function()
-      local js_format = { "prettierd", lsp_format = "prefer" }
+      local js_format = { "biome", lsp_format = "first" }
       ---@class ConformOpts
       local opts = {
         default_format_opts = {
@@ -38,7 +38,6 @@ return {
           javascriptreact = js_format,
           typescript = js_format,
           typescriptreact = js_format,
-          graphql = { "prettierd" },
           nix = { "nixfmt" },
           yaml = { "yamlfmt", "actionlint" },
           markdown = { "markdownlint-cli2", lsp_format = "first" },
