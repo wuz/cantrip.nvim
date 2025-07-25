@@ -14,7 +14,7 @@ end
 
 return {
   -- Plugin manager
-  { "folke/lazy.nvim", version = "*" },
+  { "folke/lazy.nvim", version = false },
   -- Load cantrip as a plugin
   {
     "wuz/cantrip.nvim",
@@ -23,12 +23,21 @@ return {
     version = "*",
     config = true,
   },
-  -- Disable relative numbers when they don't make sense
-  { "nkakouros-original/numbers.nvim", config = true },
-  -- Make more things repeatable
-  { "tpope/vim-repeat" },
   -- Lua utils
   { "nvim-lua/plenary.nvim" },
+  {
+    "folke/lazydev.nvim",
+    ft = "lua",
+    cmd = "LazyDev",
+    opts = {
+      library = {
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+        { path = "cantrip.nvim", words = { "Cantrip" } },
+        { path = "snacks.nvim", words = { "Snacks" } },
+        { path = "lazy.nvim", words = { "LazyVim" } },
+      },
+    },
+  },
   -- UI Utilities
   { "MunifTanjim/nui.nvim" },
   -- Smoother scrolling
@@ -38,6 +47,8 @@ return {
     "folke/snacks.nvim",
     ---@type snacks.Config
     opts = {
+      bigfile = { enabled = true },
+      quickfile = { enabled = true },
       ---@class snacks.dashboard.Config
       ---@field enabled? boolean
       ---@field sections snacks.dashboard.Section
@@ -119,15 +130,6 @@ return {
     },
   },
   {
-    "mcauley-penney/visual-whitespace.nvim",
-    opts = {
-      excluded = {
-        filetypes = { "snacks_dashboard", "prompt" },
-      },
-    },
-    config = true,
-  },
-  {
     "SmiteshP/nvim-navic",
     dependencies = {
       "neovim/nvim-lspconfig",
@@ -143,39 +145,13 @@ return {
     config = true,
   },
   {
-    "code-biscuits/nvim-biscuits",
-    opts = {
-      show_on_start = true,
-      cursor_line_only = true,
-      default_config = {
-        prefix_string = "» ",
-      },
-    },
-    config = function(_, opts)
-      vim.cmd([[highlight! link BiscuitColor Comment]])
-      require("nvim-biscuits").setup(opts)
-    end,
-    dependencies = {
-      "nvim-treesitter",
-    },
-  },
-  {
     "nvim-treesitter/nvim-treesitter",
-    version = false, -- last release is way too old and doesn't work on Windows
+    version = false,
     build = ":TSUpdate",
     event = { "VeryLazy" },
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     opts = require("cantrip.config.treesitter").opts,
-    init = function(plugin)
-      -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
-      -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
-      -- no longer trigger the **nvim-treeitter** module to be loaded in time.
-      -- Luckily, the only thins that those plugins need are the custom queries, which we make available
-      -- during startup.
-      -- CODE FROM LazyVim (thanks folke!) https://github.com/LazyVim/LazyVim/commit/1e1b68d633d4bd4faa912ba5f49ab6b8601dc0c9
-      require("lazy.core.loader").add_to_rtp(plugin)
-      pcall(require, "nvim-treesitter.query_predicates")
-    end,
+    init = require("cantrip.config.treesitter").init,
     config = require("cantrip.config.treesitter").config,
   },
   {
@@ -185,9 +161,17 @@ return {
     config = true,
   },
   { "nvim-treesitter/nvim-treesitter-refactor", dependencies = { "nvim-treesitter" }, lazy = true },
-  { "JoosepAlviste/nvim-ts-context-commentstring", dependencies = { "nvim-treesitter" }, lazy = true },
-  { "RRethy/nvim-treesitter-textsubjects", dependencies = { "nvim-treesitter" }, lazy = true },
-  { "nvim-treesitter/nvim-treesitter-context", dependencies = { "nvim-treesitter" }, lazy = true },
+  {
+    "windwp/nvim-ts-autotag",
+    event = "VeryLazy",
+    opts = {},
+  },
+  {
+    "folke/ts-comments.nvim",
+    opts = {},
+    event = "VeryLazy",
+    enabled = vim.fn.has("nvim-0.10.0") == 1,
+  },
   { "nvim-treesitter/nvim-treesitter-textobjects", dependencies = { "nvim-treesitter" }, lazy = true },
   {
     "Wansmer/treesj",
@@ -212,8 +196,6 @@ return {
     },
     config = true,
   },
-  -- Toggle comments
-  { "echasnovski/mini.comment", version = false, config = true },
   -- Simple tabline for viewing open buffers
   {
     "echasnovski/mini.tabline",
@@ -341,35 +323,43 @@ return {
     "folke/trouble.nvim",
     dependencies = { "echasnovski/mini.icons" },
     keys = {
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Trouble)" },
+      { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics (Trouble)" },
+      { "<leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols (Trouble)" },
       {
-        "<leader>xx",
+        "<leader>cS",
+        "<cmd>Trouble lsp toggle<cr>",
+        desc = "LSP references/definitions/... (Trouble)",
+      },
+      { "<leader>xL", "<cmd>Trouble loclist toggle<cr>", desc = "Location List (Trouble)" },
+      { "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix List (Trouble)" },
+      {
+        "[q",
         function()
-          require("trouble").toggle()
+          if require("trouble").is_open() then
+            require("trouble").prev { skip_groups = true, jump = true }
+          else
+            local ok, err = pcall(vim.cmd.cprev)
+            if not ok then
+              vim.notify(err, vim.log.levels.ERROR)
+            end
+          end
         end,
+        desc = "Previous Trouble/Quickfix Item",
       },
       {
-        "<leader>xd",
+        "]q",
         function()
-          require("trouble").toggle("diagnostics")
+          if require("trouble").is_open() then
+            require("trouble").next { skip_groups = true, jump = true }
+          else
+            local ok, err = pcall(vim.cmd.cnext)
+            if not ok then
+              vim.notify(err, vim.log.levels.ERROR)
+            end
+          end
         end,
-      },
-      {
-        "<leader>xq",
-        function()
-          require("trouble").toggle("quickfix")
-        end,
-      },
-      {
-        "<leader>xl",
-        function()
-          require("trouble").toggle("loclist")
-        end,
-      },
-      {
-        "gR",
-        function()
-          require("trouble").toggle("lsp_references")
-        end,
+        desc = "Next Trouble/Quickfix Item",
       },
     },
     init = function()
@@ -385,51 +375,31 @@ return {
     opts = {
       modes = {
         diagnostics = {},
+        lsp = {
+          win = { position = "right" },
+        },
       },
     },
   },
-
   {
     "nvim-neotest/neotest",
+    lazy = false,
     dependencies = {
+      "nvim-lua/plenary.nvim",
       "nvim-neotest/nvim-nio",
-      "olimorris/neotest-rspec",
-      "haydenmeade/neotest-jest",
-      "nvim-neotest/neotest-vim-test",
-      "marilari88/neotest-vitest",
+      "nvim-treesitter/nvim-treesitter",
+      "antoinemadec/FixCursorHold.nvim",
     },
     keys = function()
       local neotest = require("neotest")
       ---@type LazyKeys[]
-      local ret = {}
-      ret[#ret + 1] = {
-        "<leader>tn",
-        function()
-          neotest.run.run {
-            vim.fn.expand("%"),
-            vitestCommand = "npm run vitest --watch",
-          }
-        end,
-        desc = "Test File",
-      }
-      ret[#ret + 1] = {
-        "<leader>tf",
-        function()
-          neotest.run.run { strategy = "dap" }
-        end,
-        desc = "Test File (DAP)",
-      }
-      return ret
-    end,
-    opts = function()
       return {
-        adapters = {
-          ["neotest-vitest"] = {},
-          ["neotest-jest"] = {},
-          ["neotest-rspec"] = {},
-          ["neotest-vim-test"] = {
-            ignore_filetypes = { "python", "javascript", "typescript" },
-          },
+        {
+          "<leader>tf",
+          function()
+            neotest.run.run { strategy = "dap" }
+          end,
+          desc = "Test File (DAP)",
         },
       }
     end,
@@ -463,41 +433,6 @@ return {
       dap.listeners.before.event_exited["dapui_config"] = function()
         dapui.close {}
       end
-      dap.adapters["pwa-node"] = {
-        type = "server",
-        host = "localhost",
-        port = "${port}",
-      }
-      local dap = require("dap")
-      dap.adapters["pwa-node"] = {
-        type = "server",
-        host = "localhost",
-        port = "${port}",
-        executable = {
-          command = "node",
-          args = {
-            require("mason-registry").get_package("js-debug-adapter"):get_install_path()
-              .. "/js-debug/src/dapDebugServer.js",
-            "${port}",
-          },
-        },
-      }
-      dap.configurations.javascript = {
-        {
-          type = "pwa-node",
-          request = "launch",
-          name = "Launch file",
-          program = "${file}",
-          cwd = "${workspaceFolder}",
-        },
-        {
-          type = "pwa-node",
-          request = "attach",
-          name = "Attach",
-          processId = require("dap.utils").pick_process,
-          cwd = "${workspaceFolder}",
-        },
-      }
     end,
   },
   {
@@ -868,19 +803,6 @@ return {
     },
   },
 
-  -- show lightbulb when line has code actions
-  {
-    "kosayoda/nvim-lightbulb",
-    init = function()
-      vim.cmd([[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]])
-    end,
-    opt = {
-      sign = {
-        enabled = true,
-      },
-    },
-  },
-
   {
     "folke/todo-comments.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -945,9 +867,24 @@ return {
     event = "InsertCharPre", -- Set the event to 'InsertCharPre' for better compatibility
     priority = 1000,
   },
+  -- ====== UTIL ====== --
   -- highlight selected range from commandline
   {
     "winston0410/range-highlight.nvim",
     dependencies = { "winston0410/cmd-parser.nvim" },
+  },
+  -- Search for nvim plugins
+  {
+    "alex-popov-tech/store.nvim",
+    dependencies = {
+      "OXY2DEV/markview.nvim", -- optional, for pretty readme preview / help window
+    },
+    cmd = "Store",
+    keys = {
+      { "<leader>s", "<cmd>Store<cr>", desc = "Open Plugin Store" },
+    },
+    opts = {
+      -- optional configuration here
+    },
   },
 }

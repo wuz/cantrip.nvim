@@ -11,16 +11,15 @@ return {
   },
   {
     "williamboman/mason.nvim",
-    build = ":MasonUpdate",
     opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, {
-          "biome",
-          "eslint-lsp@4.8.0",
-          "typescript-language-server",
-          "vtsls",
-        })
-      end
+      opts.ensure_installed = opts.ensure_installed or {}
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, {
+        "js-debug-adapter",
+        "biome",
+        "eslint-lsp@4.8.0",
+        "vtsls",
+      })
     end,
   },
   {
@@ -38,14 +37,64 @@ return {
     end,
   },
   {
-    "mxsdev/nvim-dap-vscode-js",
-    dependencies = { "mfussenegger/nvim-dap" },
-    opts = {
-      debugger_cmd = { "js-debug-adapter" },
-      adapters = { "pwa-node" },
-    },
-    config = function(_, opts)
-      require("dap-vscode-js").setup(opts)
+    "mfussenegger/nvim-dap",
+    optional = true,
+    opts = function()
+      local dap = require("dap")
+      if not dap.adapters["pwa-node"] then
+        require("dap").adapters["pwa-node"] = {
+          type = "server",
+          host = "localhost",
+          port = "${port}",
+          executable = {
+            command = "node",
+            args = {
+              vim.fn.expand("$MASON/packages/js-debug-adapter") .. "/js-debug/src/dapDebugServer.js",
+              "${port}",
+            },
+          },
+        }
+      end
+      if not dap.adapters["node"] then
+        dap.adapters["node"] = function(cb, config)
+          if config.type == "node" then
+            config.type = "pwa-node"
+          end
+          local nativeAdapter = dap.adapters["pwa-node"]
+          if type(nativeAdapter) == "function" then
+            nativeAdapter(cb, config)
+          else
+            cb(nativeAdapter)
+          end
+        end
+      end
+
+      local js_filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact" }
+
+      local vscode = require("dap.ext.vscode")
+      vscode.type_to_filetypes["node"] = js_filetypes
+      vscode.type_to_filetypes["pwa-node"] = js_filetypes
+
+      for _, language in ipairs(js_filetypes) do
+        if not dap.configurations[language] then
+          dap.configurations[language] = {
+            {
+              type = "pwa-node",
+              request = "launch",
+              name = "Launch file",
+              program = "${file}",
+              cwd = "${workspaceFolder}",
+            },
+            {
+              type = "pwa-node",
+              request = "attach",
+              name = "Attach",
+              processId = require("dap.utils").pick_process,
+              cwd = "${workspaceFolder}",
+            },
+          }
+        end
+      end
     end,
   },
   {
@@ -60,6 +109,22 @@ return {
         ["neotest-jest"] = {},
       },
     },
+    keys = function()
+      local neotest = require("neotest")
+      ---@type LazyKeys[]
+      return {
+        {
+          "<leader>tn",
+          function()
+            neotest.run.run {
+              vim.fn.expand("%"),
+              vitestCommand = "npm run vitest --watch",
+            }
+          end,
+          desc = "Test File",
+        },
+      }
+    end,
   },
   {
     "neovim/nvim-lspconfig",
@@ -71,15 +136,6 @@ return {
       -- LSP Server Settings
       ---@type lspconfig.options
       servers = {
-        ts_ls = {
-          enabled = false,
-        },
-        -- rust_analyzer = {
-        --   -- enable clippy on save
-        --   checkOnSave = {
-        --     command = "clippy",
-        --   },
-        -- },
         vtsls = {
           -- explicitly add default filetypes, so that we can extend
           -- them in related extras
@@ -282,6 +338,23 @@ return {
             })
           end
         end,
+      },
+    },
+  },
+  -- Filetype icons
+  {
+    "echasnovski/mini.icons",
+    opts = {
+      file = {
+        [".eslintrc.js"] = { glyph = "󰱺", hl = "MiniIconsYellow" },
+        [".node-version"] = { glyph = "", hl = "MiniIconsGreen" },
+        [".prettierrc"] = { glyph = "", hl = "MiniIconsPurple" },
+        [".yarnrc.yml"] = { glyph = "", hl = "MiniIconsBlue" },
+        ["eslint.config.js"] = { glyph = "󰱺", hl = "MiniIconsYellow" },
+        ["package.json"] = { glyph = "", hl = "MiniIconsGreen" },
+        ["tsconfig.json"] = { glyph = "", hl = "MiniIconsAzure" },
+        ["tsconfig.build.json"] = { glyph = "", hl = "MiniIconsAzure" },
+        ["yarn.lock"] = { glyph = "", hl = "MiniIconsBlue" },
       },
     },
   },

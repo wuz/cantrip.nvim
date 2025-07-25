@@ -4,6 +4,8 @@ return {
     opts = function(_, opts)
       local navic = require("nvim-navic")
       local devicons = require("mini.icons")
+      local lackluster = require("lackluster")
+      local color = lackluster.color -- blue, green, red, orange, black, lack, luster, gray1-9
       return vim.tbl_deep_extend("force", opts, {
         window = {
           placement = {
@@ -66,14 +68,14 @@ return {
 
             for id, item in ipairs(marks) do
               if item.value == current_file_path then
-                table.insert(label, { id .. " ", guifg = "#FFFFFF", gui = "bold" })
+                table.insert(label, { id .. " ", guifg = color.luster, gui = "bold" })
               else
-                table.insert(label, { id .. " ", guifg = "#434852" })
+                table.insert(label, { id .. " ", guifg = color.gray5 })
               end
             end
 
             if #label > 0 then
-              table.insert(label, 1, { "󰛢 ", guifg = "#61AfEf" })
+              table.insert(label, 1, { "󰛢 ", guifg = color.blue })
               table.insert(label, { "| " })
             end
             return label
@@ -106,7 +108,7 @@ return {
           local function get_file_name()
             local label = {}
             table.insert(label, { (ft_icon or "") .. " ", group = ft_color })
-            table.insert(label, { vim.bo[props.buf].modified and " " or "", guifg = "#d19a66" })
+            table.insert(label, { vim.bo[props.buf].modified and " " or "", guifg = color.orange })
             table.insert(label, { filename, gui = vim.bo[props.buf].modified and "bold,italic" or "bold" })
             if not props.focused then
               label["group"] = "BufferInactive"

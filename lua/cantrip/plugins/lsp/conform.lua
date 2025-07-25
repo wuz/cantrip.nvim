@@ -38,6 +38,8 @@ return {
           javascriptreact = js_format,
           typescript = js_format,
           typescriptreact = js_format,
+          css = { "biome", lsp_format = "first" },
+          kdl = { "kdlfmt" },
           nix = { "nixfmt" },
           yaml = { "yamlfmt", "actionlint" },
           markdown = { "markdownlint-cli2", lsp_format = "first" },

@@ -38,6 +38,11 @@ return {
       servers = {
         cssls = {},
         css_variables = {},
+        biome = {
+          settings = {
+            enable = true,
+          },
+        },
       },
     },
   },
