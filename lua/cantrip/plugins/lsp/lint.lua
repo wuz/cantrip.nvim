@@ -11,6 +11,7 @@ return {
         -- typescript = { "oxlint" },
         -- typescriptreact = { "oxlint" },
         make = { "checkmake" },
+        markdown = { "proselint", "write-good" },
       },
       linters = {
         selene = {

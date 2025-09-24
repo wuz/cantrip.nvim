@@ -15,6 +15,8 @@ return {
   },
   {
     "davidmh/mdx.nvim",
+    lazy = true,
+    ft = "mdx",
     config = true,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
@@ -24,7 +26,21 @@ return {
     dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.icons" },
     ---@module 'render-markdown'
     ---@type render.md.UserConfig
-    opts = {},
+    opts = {
+      completions = { lsp = { enabled = true }, blink = { enabled = true } },
+      code = {
+        sign = false,
+        width = "block",
+        right_pad = 1,
+      },
+      heading = {
+        sign = false,
+        icons = {},
+      },
+      checkbox = {
+        enabled = false,
+      },
+    },
     config = true,
     ft = "markdown",
   },
@@ -36,6 +52,9 @@ return {
           "markdownlint-cli2",
           "cbfmt",
           "marksman",
+          "mdslw",
+          "proselint",
+          "vale-ls",
         })
       end
     end,

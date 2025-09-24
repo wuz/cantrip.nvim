@@ -23,40 +23,9 @@ return {
       enable_autosnippets = true,
     },
   },
-
-  -- nvim-cmp + luasnp
-  {
-    "hrsh7th/nvim-cmp",
-    optional = true,
-    dependencies = { "saadparwaiz1/cmp_luasnip" },
-    opts = function(_, opts)
-      opts.snippet = {
-        expand = function(args)
-          require("luasnip").lsp_expand(args.body)
-        end,
-      }
-      table.insert(opts.sources, { name = "luasnip" })
-    end,
-    -- stylua: ignore
-    keys = {
-      {
-        "<tab>",
-        function()
-          return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
-        end,
-        expr = true,
-        silent = true,
-        mode = "i",
-      },
-      { "<tab>",   function() require("luasnip").jump(1) end,  mode = "s" },
-      { "<s-tab>", function() require("luasnip").jump(-1) end, mode = { "i", "s" } },
-    },
-  },
-
   -- blink.cmp + luasnip
   {
     "saghen/blink.cmp",
-    optional = true,
     opts = {
       snippets = {
         preset = "luasnip",
@@ -66,7 +35,6 @@ return {
 
   {
     "saghen/blink.cmp",
-    optional = true,
     opts = function(_, opts)
       opts.sources.default = vim.tbl_filter(function(p)
         return p ~= "snippets"

@@ -14,9 +14,9 @@ return {
     opts = {
       library = {
         "cantrip.nvim",
-        { path = "LazyVim",            words = { "LazyVim" } },
+        { path = "LazyVim", words = { "LazyVim" } },
         { path = "luvit-meta/library", words = { "vim%.uv" } },
-        { path = "wezterm-types",      mods = { "wezterm" } },
+        { path = "wezterm-types", mods = { "wezterm" } },
       },
     },
   },
@@ -60,7 +60,7 @@ return {
     opts = function(_, opts)
       if type(opts.ensure_installed) == "table" then
         vim.list_extend(opts.ensure_installed, {
-          "lua-languange-server",
+          "lua-language-server",
           "selene",
           "stylua",
         })

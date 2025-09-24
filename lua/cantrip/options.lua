@@ -6,20 +6,19 @@ local opt = vim.opt
 local o = vim.o
 local c = vim.cmd
 local wo = vim.wo
-local expand = vim.fn.expand
 
-opt.hidden = true -- remember buffer history
-
+opt.hidden = true  -- remember buffer history
 opt.history = 1000 -- increase history from 20 to 1000
 
 -- Undo/Backups
-opt.undofile = true -- persistent undo
-o.undodir = expand("$HOME/.local/share/nvim/undo") -- use global undo directory
+opt.undofile = true                                -- persistent undo
+opt.undodir = os.getenv("HOME") .. "/.vim/undodir" -- Directory for undo files
+opt.undofile = true                                -- Enable persistent undo
 opt.ttyfast = true
-opt.relativenumber = true
-
--- show line numbers
-opt.nu = true
+opt.relativenumber = true                          -- use relative numbers
+opt.number = true                                  -- show line numbers
+opt.numberwidth = 2
+opt.scrolloff = 8                                  -- show 8 lines above/below cursor
 
 -- fix backspace behavior
 opt.backspace = "indent,eol,start"
@@ -40,23 +39,20 @@ opt.visualbell = false
 opt.ofu = "syntaxcomplete#Complete"
 
 opt.cmdheight = 2
-opt.shortmess:append { c = true }
+opt.shortmess:append({ c = true })
 
 opt.signcolumn = "yes"
 
 -- Show the current mode.
 opt.showmode = true
 
--- Always show tab bar.
-opt.showtabline = 2
+opt.showtabline = 2 -- Always show tab bar.
 
 -- Don't redraw all the time
 opt.lazyredraw = true
 
 -- highlight matching [{}]
 opt.showmatch = true
-
--- autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 opt.timeout = true
 opt.ttimeout = true
@@ -74,25 +70,32 @@ wo.cursorline = true
 opt.synmaxcol = 300
 opt.splitbelow = true
 opt.splitright = true
+opt.completeopt = { "menuone", "popup", "noinsert" } -- Options for completion menu
+opt.winborder = "rounded"
 
 -- Indent
-c("filetype indent on")
+vim.cmd.filetype("plugin indent on") -- Enable filetype detection, plugins, and indentation
+opt.autoindent = true
 opt.expandtab = true -- tabs are spaces
 opt.softtabstop = 2 -- number of columns in insert mode
 opt.tabstop = 2
 opt.smartindent = true -- indent files smartly
 opt.shiftwidth = 2
+opt.listchars = "tab: ,multispace:|   ,eol:󰌑" -- Characters to show for tabs, spaces, and end of line
+opt.list = true
 
 -- Search
-opt.incsearch = true -- search as characters are typed
-opt.hlsearch = true -- highlight matches
+opt.incsearch = true  -- search as characters are typed
+opt.hlsearch = true   -- highlight matches
 opt.ignorecase = true -- ignore case of searches
-opt.gdefault = true -- default to global search
-opt.smartcase = true -- ignore ignorecase if uppercase letters
+opt.gdefault = true   -- default to global search
+opt.smartcase = true  -- ignore ignorecase if uppercase letters
+
+opt.swapfile = false
 
 opt.textwidth = 80
 opt.wrapscan = true -- search wraps around end of file
-opt.wrap = false -- Disable line wrap
+opt.wrap = false    -- Disable line wrap
 
 -- Fix markdown indentation settings
 vim.g.markdown_recommended_style = 0
@@ -105,67 +108,69 @@ o.foldlevel = 99
 -- WildMenu
 opt.wildmenu = true
 opt.wildignore = vim.tbl_deep_extend("force", opt.wildignore, {
-  "*.jpg",
-  "*.jpeg",
-  "*.gif",
-  "*.png",
-  "*.gif",
-  "*.psd",
-  "*.o",
-  "*.obj",
-  "*.min.js",
-  "*/smarty/*",
-  "*/vendor/*",
-  "*/node_modules/*",
-  "*/.git/*",
-  "*/.hg/*",
-  "*/.svn/*",
-  "*/.sass-cache/*",
-  "*/log/*",
-  "*/tmp/*",
-  "*/build/*",
-  "*/ckeditor/*",
+	"*.jpg",
+	"*.jpeg",
+	"*.gif",
+	"*.png",
+	"*.gif",
+	"*.psd",
+	"*.o",
+	"*.obj",
+	"*.min.js",
+	"*/smarty/*",
+	"*/vendor/*",
+	"*/node_modules/*",
+	"*/.git/*",
+	"*/.hg/*",
+	"*/.svn/*",
+	"*/.sass-cache/*",
+	"*/log/*",
+	"*/tmp/*",
+	"*/build/*",
+	"*/ckeditor/*",
 })
 opt.wildmode = "longest:full,full"
 opt.winminheight = 0
 opt.winminwidth = 5
 
 -- Appearance
-c("set termguicolors")
+opt.termguicolors = true
 opt.background = "dark"
 opt.syntax = "on"
--- opt.guicursor = {
---   -- "n-sm:block",
---   "v:hor50",
---   "c-ci-cr-i-ve:ver10",
---   "o-r:hor10",
---   "a:Cursor/Cursor-blinkwait1-blinkon1-blinkoff1",
--- }
+opt.colorcolumn = "80"   -- Highlight column 80
+opt.signcolumn = "yes:1" -- Always show sign column
+opt.guicursor = {
+	-- "n-sm:block",
+	"v:hor50",
+	"c-ci-cr-i-ve:ver10",
+	"o-r:hor10",
+	"a:Cursor/Cursor-blinkwait1-blinkon1-blinkoff1",
+}
 opt.fillchars = {
-  eob = " ",
-  diff = "╱",
-  fold = " ",
-  foldclose = ">",
-  foldopen = "∨",
-  foldsep = " ",
-  msgsep = "━",
-  horiz = "━",
-  horizup = "┻",
-  horizdown = "┳",
-  vert = "┃",
-  vertleft = "┫",
-  vertright = "┣",
-  verthoriz = "╋",
+	eob = " ",
+	diff = "╱",
+	fold = " ",
+	foldclose = ">",
+	foldopen = "∨",
+	foldsep = " ",
+	msgsep = "━",
+	horiz = "━",
+	horizup = "┻",
+	horizdown = "┳",
+	vert = "┃",
+	vertleft = "┫",
+	vertright = "┣",
+	verthoriz = "╋",
 }
 
 opt.viewoptions = {
-  "cursor",
-  "folds",
+	"cursor",
+	"folds",
 }
 
 c([[highlight VertSplit ctermbg=NONE]])
 
 if vim.fn.has("nvim-0.9.0") == 1 then
-  opt.splitkeep = "screen"
-  opt.shortmess:append { C = true }
+	opt.splitkeep = "screen"
+	opt.shortmess:append({ C = true })
 end

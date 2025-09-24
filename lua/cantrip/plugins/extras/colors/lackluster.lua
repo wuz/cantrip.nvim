@@ -1,6 +1,6 @@
 return {
   {
-    "slugbyte/lackluster.nvim",
+    "wuz/lackluster.nvim",
     lazy = false,
     priority = 1000,
     opts = function(opts)

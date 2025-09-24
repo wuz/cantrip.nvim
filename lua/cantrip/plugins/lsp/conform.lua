@@ -5,26 +5,26 @@ return {
       "williamboman/mason.nvim",
     },
     lazy = true,
-
     event = { "BufWritePre" },
     cmd = { "ConformInfo" },
     keys = {
       {
-        "<leader>F",
+        "<leader>cF",
         function()
-          require("conform").format { formatters = { "injected" }, timeout_ms = 3000 }
+          require("conform").format({ formatters = { "injected" }, timeout_ms = 3000 })
         end,
         mode = { "n", "v" },
         desc = "Format Injected Langs",
       },
     },
     opts = function()
-      local js_format = { "biome", lsp_format = "first" }
       ---@class ConformOpts
       local opts = {
         default_format_opts = {
           timeout_ms = 3000,
-          lsp_format = "fallback", -- not recommended to change
+          async = false,
+          quiet = false,
+          lsp_format = "fallback",
         },
         format_on_save = {
           timeout_ms = 3000,
@@ -34,19 +34,14 @@ return {
         formatters_by_ft = {
           lua = { "stylua", "selene" },
           sh = { "shfmt" },
-          javascript = js_format,
-          javascriptreact = js_format,
-          typescript = js_format,
-          typescriptreact = js_format,
-          css = { "biome", lsp_format = "first" },
           kdl = { "kdlfmt" },
-          nix = { "nixfmt" },
           yaml = { "yamlfmt", "actionlint" },
-          markdown = { "markdownlint-cli2", lsp_format = "first" },
+          markdown = { "markdownlint-cli2", "mdslw", "cbfmt", lsp_format = "first" },
         },
         ---@type table<string, conform.FormatterConfigOverride|fun(bufnr: integer): nil|conform.FormatterConfigOverride>
         formatters = {
           injected = { options = { ignore_errors = true } },
+          mdslw = { prepend_args = { "--stdin-filepath", "$FILENAME" } },
         },
       }
       return opts

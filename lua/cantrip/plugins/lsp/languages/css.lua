@@ -33,6 +33,13 @@ return {
     config = true,
   },
   {
+    "stevearc/conform.nvim",
+    opts = function(_, opts)
+      opts.formatters_by_ft = opts.formatters_by_ft or {}
+      opts.formatters_by_ft.css = { "biome", lsp_format = "first" }
+    end,
+  },
+  {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {

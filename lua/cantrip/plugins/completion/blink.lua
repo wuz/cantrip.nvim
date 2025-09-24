@@ -1,17 +1,25 @@
+local Cantrip = require("cantrip.utils")
+
 return {
   {
-    "hrsh7th/nvim-cmp",
-    optional = true,
-    enabled = false,
-  },
-  {
     "saghen/blink.cmp",
-    -- optional: provides snippets for the snippet source
     dependencies = {
       "rafamadriz/friendly-snippets",
       {
         "chrisgrieser/nvim-scissors",
-        dependencies = "folke/snacks.nvim",
+        dependencies = {
+          "folke/snacks.nvim",
+          {
+            "folke/which-key.nvim",
+            optional = true,
+            opts_extend = { "spec" },
+            opts = {
+              spec = {
+                { "<leader>sn", group = "Scissors" },
+              },
+            },
+          },
+        },
         keys = {
           {
             "<leader>sne",
@@ -38,12 +46,13 @@ return {
         "saghen/blink.compat",
         optional = true, -- make optional so it's only enabled if any extras need it
         opts = {},
-        version = "*",
+        lazy = true,
+        version = "2.*",
       },
     },
     event = "InsertEnter",
     -- use a release tag to download pre-built binaries
-    version = "*",
+    version = "1.*",
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
     opts = {
@@ -211,7 +220,47 @@ return {
     },
 
     config = function(_, opts)
+      -- setup compat sources
+      local enabled = opts.sources.default
+      for _, source in ipairs(opts.sources.compat or {}) do
+        opts.sources.providers[source] = vim.tbl_deep_extend(
+          "force",
+          { name = source, module = "blink.compat.source" },
+          opts.sources.providers[source] or {}
+        )
+        if type(enabled) == "table" and not vim.tbl_contains(enabled, source) then
+          table.insert(enabled, source)
+        end
+      end
       opts.sources.compat = nil
+      -- check if we need to override symbol kinds
+      for _, provider in pairs(opts.sources.providers or {}) do
+        ---@cast provider blink.cmp.SourceProviderConfig|{kind?:string}
+        if provider.kind then
+          local CompletionItemKind = require("blink.cmp.types").CompletionItemKind
+          local kind_idx = #CompletionItemKind + 1
+
+          CompletionItemKind[kind_idx] = provider.kind
+          ---@diagnostic disable-next-line: no-unknown
+          CompletionItemKind[provider.kind] = kind_idx
+
+          ---@type fun(ctx: blink.cmp.Context, items: blink.cmp.CompletionItem[]): blink.cmp.CompletionItem[]
+          local transform_items = provider.transform_items
+          ---@param ctx blink.cmp.Context
+          ---@param items blink.cmp.CompletionItem[]
+          provider.transform_items = function(ctx, items)
+            items = transform_items and transform_items(ctx, items) or items
+            for _, item in ipairs(items) do
+              item.kind = kind_idx or item.kind
+              item.kind_icon = Cantrip.ui.kind_iconss[item.kind_name] or item.kind_icon or nil
+            end
+            return items
+          end
+
+          -- Unset custom prop to pass blink.cmp validation
+          provider.kind = nil
+        end
+      end
       require("blink.cmp").setup(opts)
     end,
     opts_extend = {
@@ -220,15 +269,13 @@ return {
       "sources.default",
     },
   },
-  -- {
-  --   "saghen/blink.cmp",
-  --   opts = function(_, opts)
-  --     opts.appearance = opts.appearance or {}
-  --     opts.appearance.kind_icons = vim.tbl_extend("keep", {
-  --       Color = "██", -- Use block instead of icon for color items to make swatches more usable
-  --     }, {})
-  --   end,
-  -- },
+  {
+    "saghen/blink.cmp",
+    opts = function(_, opts)
+      opts.appearance = opts.appearance or {}
+      opts.appearance.kind_icons = vim.tbl_extend("keep", Cantrip.icons.ui.kind_icons, {})
+    end,
+  },
 
   {
     "saghen/blink.cmp",

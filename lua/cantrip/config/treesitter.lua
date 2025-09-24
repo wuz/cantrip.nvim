@@ -11,7 +11,7 @@ local opts = {
     end,
   },
   indent = { enable = true },
-  autopairs = { enable = true },
+  -- autopairs = { enable = true },
   tree_docs = {
     enable = true,
   },
@@ -124,7 +124,7 @@ local opts = {
 local function config(_, opts)
   require("nvim-treesitter.configs").setup(opts)
   require("nvim-treesitter.install").prefer_git = true
-  require("ts_context_commentstring").setup {}
+  require("ts_context_commentstring").setup({})
   vim.g.skip_ts_context_commentstring_module = true
   local parsers = require("nvim-treesitter.parsers").get_parser_configs()
   for _, p in pairs(parsers) do

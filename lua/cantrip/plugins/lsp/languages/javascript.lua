@@ -98,15 +98,38 @@ return {
     end,
   },
   {
+    "haydenmeade/neotest-jest",
+    lazy = true,
+    ft = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
+  },
+  {
+    "marilari88/neotest-vitest",
+    lazy = true,
+    ft = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
+  },
+  {
+    "thenbe/neotest-playwright",
+    lazy = true,
+    ft = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
+  },
+  {
     "nvim-neotest/neotest",
+    lazy = true,
+    ft = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
     dependencies = {
       "haydenmeade/neotest-jest",
       "marilari88/neotest-vitest",
+      "thenbe/neotest-playwright",
     },
     opts = {
       adapters = {
-        ["neotest-vitest"] = {},
+        ["neotest-vitest"] = {
+          filter_dir = function(name)
+            return name ~= "node_modules"
+          end,
+        },
         ["neotest-jest"] = {},
+        ["neotest-playwright"] = {},
       },
     },
     keys = function()
@@ -116,10 +139,7 @@ return {
         {
           "<leader>tn",
           function()
-            neotest.run.run {
-              vim.fn.expand("%"),
-              vitestCommand = "npm run vitest --watch",
-            }
+            neotest.run.run()
           end,
           desc = "Test File",
         },
@@ -340,6 +360,17 @@ return {
         end,
       },
     },
+  },
+  {
+    "stevearc/conform.nvim",
+    opts = function(_, opts)
+      local js_format = { "biome", lsp_format = "first" }
+      opts.formatters_by_ft = opts.formatters_by_ft or {}
+      opts.formatters_by_ft.javascript = js_format
+      opts.formatters_by_ft.javascriptreact = js_format
+      opts.formatters_by_ft.typescript = js_format
+      opts.formatters_by_ft.typescriptreact = js_format
+    end,
   },
   -- Filetype icons
   {

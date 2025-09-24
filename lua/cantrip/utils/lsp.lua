@@ -28,6 +28,7 @@ function M.on_attach(on_attach, name)
     callback = function(args)
       local buffer = args.buf ---@type number
       local client = vim.lsp.get_client_by_id(args.data.client_id)
+
       if client and (not name or client.name == name) then
         return on_attach(client, buffer)
       end
@@ -145,16 +146,29 @@ end
 M.action = setmetatable({}, {
   __index = function(_, action)
     return function()
-      vim.lsp.buf.code_action {
+      vim.lsp.buf.code_action({
         apply = true,
         context = {
           only = { action },
           diagnostics = {},
         },
-      }
+      })
     end
   end,
 })
+
+function M.diagnostics_available()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  local diagnostics = vim.lsp.protocol.Methods.textDocument_publishDiagnostics
+
+  for _, cfg in pairs(clients) do
+    if cfg:supports_method(diagnostics) then
+      return true
+    end
+  end
+
+  return false
+end
 
 ---@class LspCommand: lsp.ExecuteCommandParams
 ---@field open? boolean
@@ -167,10 +181,10 @@ function M.execute(opts)
     arguments = opts.arguments,
   }
   if opts.open then
-    require("trouble").open {
+    require("trouble").open({
       mode = "lsp_command",
       params = params,
-    }
+    })
   else
     return vim.lsp.buf_request(0, "workspace/executeCommand", params, opts.handler)
   end

@@ -10,10 +10,9 @@ return {
         window = {
           placement = {
             vertical = "bottom",
-            horizontal = "center",
+            horizontal = "right",
           },
-          padding = 1,
-          margin = { vertical = 2, horizontal = 2 },
+          padding = 2,
         },
         hide = {
           cursorline = true,
@@ -61,8 +60,8 @@ return {
           end
 
           local function get_harpoon_items()
-            local harpoon = require("harpoon")
-            local marks = harpoon:list().items
+            local miniharp = require("miniharp")
+            local marks = miniharp.list()
             local current_file_path = vim.fn.expand("%:p:.")
             local label = {}
 
@@ -135,8 +134,6 @@ return {
               })
             end
           end
-          table.insert(res, " ")
-          table.insert(res, " ")
           return res
         end,
       })

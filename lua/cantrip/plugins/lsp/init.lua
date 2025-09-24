@@ -1,7 +1,7 @@
 local Cantrip = require("cantrip.utils")
 
 return {
-  { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
+  { "folke/neoconf.nvim",                  cmd = "Neoconf", config = true },
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
@@ -9,12 +9,12 @@ return {
       "williamboman/mason.nvim",
       { "mason-org/mason-lspconfig.nvim", config = function() end },
       "j-hui/fidget.nvim",
-      "saecki/live-rename.nvim",
-      { "onsails/lspkind-nvim" },
-      -- -- extra lsp tools
-      { "tami5/lspsaga.nvim", dependencies = "nvim-lspconfig" },
-      { "nvim-lua/lsp-status.nvim", dependencies = "nvim-lspconfig" },
-      { "ray-x/lsp_signature.nvim", dependencies = "nvim-lspconfig" },
+      {
+        "smjonas/inc-rename.nvim",
+        cmd = "IncRename",
+        opts = {},
+      },
+      { "nvim-lua/lsp-status.nvim",       dependencies = "nvim-lspconfig" },
       {
         "hedyhli/outline.nvim",
         lazy = true,
@@ -45,10 +45,10 @@ return {
         },
       },
       inlay_hints = {
-        enabled = false,
+        enabled = true,
       },
       codelens = {
-        enabled = false,
+        enabled = true,
       },
       capabilities = {
         workspace = {
@@ -80,47 +80,21 @@ return {
         end
       end
 
-      if vim.fn.has("nvim-0.10") == 1 then
-        -- inlay hints
-        if opts.inlay_hints.enabled and client:supports_method("textDocument/inlayHint") then
-          vim.lsp.handlers["textDocument/inlayHint"] = function(client, buffer)
-            if
-              vim.api.nvim_buf_is_valid(buffer)
-              and vim.bo[buffer].buftype == ""
-              and not vim.tbl_contains(opts.inlay_hints.exclude, vim.bo[buffer].filetype)
-            then
-              vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
-            end
-          end
-        end
-      end
-
-      -- code lens
-      if opts.codelens.enabled and vim.lsp.codelens and client:supports_method("textDocument/codeLens") then
-        vim.lsp.handlers["textDocument/codeLens"] = function(client, buffer)
-          vim.lsp.codelens.refresh()
-          vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-            buffer = buffer,
-            callback = vim.lsp.codelens.refresh,
-          })
-        end
-      end
-
       if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
         opts.diagnostics.virtual_text.prefix = vim.fn.has("nvim-0.10.0") == 0 and "●"
-          or function(diagnostic)
-            local icons = {
-              Error = " ",
-              Warn = " ",
-              Hint = " ",
-              Info = " ",
-            }
-            for d, icon in pairs(icons) do
-              if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
-                return icon
+            or function(diagnostic)
+              local icons = {
+                Error = " ",
+                Warn = " ",
+                Hint = " ",
+                Info = " ",
+              }
+              for d, icon in pairs(icons) do
+                if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
+                  return icon
+                end
               end
             end
-          end
       end
 
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
@@ -139,6 +113,31 @@ return {
 
       Cantrip.lsp.on_attach(function(client, buffer)
         fidget.notify("Attached to " .. client.name)
+        if vim.fn.has("nvim-0.10") == 1 then
+          -- inlay hints
+          if opts.inlay_hints.enabled and client:supports_method("textDocument/inlayHint") then
+            vim.lsp.handlers["textDocument/inlayHint"] = function(client, buffer)
+              if
+                  vim.api.nvim_buf_is_valid(buffer)
+                  and vim.bo[buffer].buftype == ""
+                  and not vim.tbl_contains(opts.inlay_hints.exclude, vim.bo[buffer].filetype)
+              then
+                vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
+              end
+            end
+          end
+        end
+
+        -- code lens
+        if opts.codelens.enabled and vim.lsp.codelens and client:supports_method("textDocument/codeLens") then
+          vim.lsp.handlers["textDocument/codeLens"] = function(client, buffer)
+            vim.lsp.codelens.refresh()
+            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+              buffer = buffer,
+              callback = vim.lsp.codelens.refresh,
+            })
+          end
+        end
         require("cantrip.plugins.lsp.format").on_attach(client, buffer)
         require("cantrip.plugins.lsp.keymaps").on_attach(client, buffer)
       end)
@@ -167,7 +166,7 @@ return {
             return
           end
         end
-        require("lspconfig")[server].setup(server_opts)
+        vim.lsp.config(server, server_opts)
       end
 
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
@@ -190,7 +189,7 @@ return {
       end
 
       if have_mason then
-        mlsp.setup { ensure_installed = ensure_installed, handlers = { setup } }
+        mlsp.setup({ ensure_installed = ensure_installed, handlers = { setup } })
       end
 
       vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
@@ -229,7 +228,14 @@ return {
     },
     event = "LspAttach",
     opts = {
-      picker = "buffer",
+      picker = {
+        "buffer",
+        opts = {
+          hotkeys = true,
+          hotkeys_mode = "text_diff_based",
+          auto_preview = true,
+        },
+      },
     },
   },
 }

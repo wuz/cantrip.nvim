@@ -8,15 +8,30 @@ return {
           filetypes_exclude = { "markdown" },
           -- add additional filetypes to the default_config
           filetypes_include = {},
+          root_dir = function(fname)
+            -- Check for tailwind.config.js or tailwind.config.ts
+            return require("lspconfig.util").root_pattern("tailwind.config.js", "tailwind.config.ts")(fname)
+          end,
           -- to fully override the default_config, change the below
           -- filetypes = {}
           settings = {
             tailwindCSS = {
               experimental = {
                 classRegex = {
-                  { "cva\\(([^)]*)\\)",  "[\"'`]([^\"'`]*).*?[\"'`]" },
-                  { "cx\\(([^)]*)\\)",   "(?:'|\"|`)([^']*)(?:'|\"|`)" },
-                  { "clsx\\(([^)]*)\\)", "(?:'|\"|`)([^'\"]*)(?:'|\"|`)" },
+                  { "cva\\(([^)]*)\\)",                    "[\"'`]([^\"'`]*).*?[\"'`]" },
+                  { "cx\\(([^)]*)\\)",                     "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+                  { "clsx\\(((?:[^()]|\\([^()]*\\))*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+                  { "classnames\\(([^)]*)\\)",             "[\"'`]([^\"'`]*)[\"'`]" },
+                  { "cva\\(([^;]*)[\\);]",                 "[`'\"`]([^'\"`;]*)[`'\"`]" },
+                  { "twJoin\\(([^)]*)\\)",                 "[\"'`]([^\"'`]*)[\"'`]" },
+                  { "(?:twMerge|twJoin)\\(([^;]*)[\\);]",  "[`'\"`]([^'\"`;]*)[`'\"`]" },
+                  {
+                    "tv\\(([^)]*)\\)",
+                    "{?\\s?[\\w].*:\\s*?[\"'`]([^\"'`]*).*?,?\\s?}?",
+                  },
+                  { "\\b\\w*Style\\b\\s*=\\s*[\"'`]([^\"'`]*)[\"'`]" },
+                  { "\\b\\w*ClassName\\b\\s*=\\s*[\"'`]([^\"'`]*)[\"'`]" },
+                  { "\\b\\w*ClassNames\\b\\s*=\\s*[\"'`]([^\"'`]*)[\"'`]" },
                 },
               },
             },
@@ -63,5 +78,50 @@ return {
         })
       end
     end,
+  },
+  {
+    -- Optional plugin for tailwind color preview
+    "roobert/tailwindcss-colorizer-cmp.nvim",
+    -- Explicitly load after blink.cmp is loaded
+    dependencies = { "saghen/blink.cmp" },
+    cond = function()
+      -- Only load if blink.cmp is available
+      return pcall(require, "blink.cmp")
+    end,
+    ft = {
+      "html",
+      "javascript",
+      "typescript",
+      "javascriptreact",
+      "typescriptreact",
+    },
+    config = function()
+      require("tailwindcss-colorizer-cmp").setup {
+        color_square_width = 2,
+      }
+    end,
+  },
+  -- blink.cmp + tailwind colorizer
+  {
+    "saghen/blink.cmp",
+    dependencies = {
+      "roobert/tailwindcss-colorizer-cmp.nvim",
+      "saghen/blink.compat",
+    },
+    optional = true,
+    opts = {
+      sources = {
+        providers = {
+          tailwindcmp = {
+            name = "tailwindcss-colorizer-cmp",
+            score_offset = -3,
+            async = true,
+          },
+        },
+        compat = {
+          "tailwindcmp",
+        },
+      },
+    },
   },
 }

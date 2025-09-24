@@ -18,6 +18,13 @@ return {
   --   end,
   -- },
   {
+    "stevearc/conform.nvim",
+    opts = function(_, opts)
+      opts.formatters_by_ft = opts.formatters_by_ft or {}
+      opts.formatters_by_ft.nix = { "nixfmt" }
+    end,
+  },
+  {
     "neovim/nvim-lspconfig",
     dependencies = { "LnL7/vim-nix" },
     opts = {
