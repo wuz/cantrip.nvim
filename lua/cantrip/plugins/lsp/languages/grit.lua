@@ -1,31 +1,30 @@
+local Cantrip = require("cantrip.utils")
+
 return {
 
   {
     "nvim-treesitter/nvim-treesitter",
-    config = function()
-      require("nvim-treesitter.parsers").get_parser_configs().gritql = {
+    opts = function(_, opts)
+      Cantrip.treesitter.register_language({
+        language = "gritql",
+        filetypes = {
+          grit = "gritql",
+        },
         install_info = {
           url = "https://github.com/getgrit/tree-sitter-gritql",
           files = { "src/parser.c", "src/scanner.c" },
           branch = "main",
         },
-        filetype = "gritql",
-      }
-      require("nvim-treesitter.configs").setup {
-        highlight = { enable = true },
-        ensure_installed = {
-          "gritql",
-        },
-      }
-      vim.filetype.add {
-        extension = {
-          grit = "gritql",
-        },
+      })
+
+      return {
+        ensure_installed = { "gritql" },
       }
     end,
+    -- config = function()
+    -- end,
     dependencies = {
       { "getgrit/tree-sitter-gritql" },
     },
-    build = ":TSUpdate",
   },
 }

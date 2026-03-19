@@ -1,6 +1,108 @@
 return {
-  { "akinsho/git-conflict.nvim", version = "*", config = true },
-  { "sindrets/diffview.nvim", config = true },
+  { "tronikelis/conflict-marker.nvim", config = true },
+  {
+    "saghen/blink.cmp",
+    dependencies = {
+      {
+        "Kaiser-Yang/blink-cmp-git",
+      },
+    },
+    opts = {
+      sources = {
+        -- add 'git' to the list
+        default = { "git" },
+        providers = {
+          git = {
+            module = "blink-cmp-git",
+            name = "Git",
+            opts = {
+              -- options for the blink-cmp-git
+            },
+          },
+        },
+      },
+    },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = { ensure_installed = { "git_config", "gitcommit", "git_rebase", "gitignore", "gitattributes" } },
+  },
+  {
+    "sindrets/diffview.nvim",
+    opts = function()
+      local actions = require("diffview.actions")
+      return {
+        enhanced_diff_hl = true,
+        file_panel = {
+          listing_style = "list",
+        },
+        view = {
+          default = {
+            layout = "diff2_horizontal",
+          },
+          merge_tool = {
+            layout = "diff1_plain",
+          },
+        },
+        default_args = {
+          DiffviewOpen = { "--imply-local" },
+        },
+        hooks = {
+          diff_buf_win_enter = function(bufnr, winid, ctx)
+            if ctx.layout_name:match("^diff2") then
+              if ctx.symbol == "a" then
+                vim.opt_local.winhl = table.concat({
+                  "DiffAdd:DiffviewDiffAddAsDelete",
+                  "DiffDelete:DiffviewDiffDelete",
+                }, ",")
+              elseif ctx.symbol == "b" then
+                vim.opt_local.winhl = table.concat({
+                  "DiffDelete:DiffviewDiffDelete",
+                }, ",")
+              end
+            end
+            vim.wo[winid].culopt = "number"
+          end,
+        },
+        keymaps = {
+          file_history_panel = {
+            ["q"] = actions.close,
+          },
+          view = {
+            -- instead of cycle through another buffer, move around window
+            ["<tab>"] = "<Cmd>wincmd w<CR>",
+            -- instead of closing one buffer, do `DiffviewClose`
+            ["q"] = actions.close,
+          },
+          file_panel = {
+            -- just select them when moving
+            ["j"] = actions.select_next_entry,
+            ["k"] = actions.select_prev_entry,
+            ["<down>"] = actions.select_next_entry,
+            ["<up>"] = actions.select_prev_entry,
+            -- all of them to just go to the diff2 (right panel) so you can edit right at the Diffview tab
+            ["gf"] = actions.focus_entry,
+            ["<tab>"] = actions.focus_entry,
+            ["<cr>"] = actions.focus_entry,
+            ["e"] = actions.focus_entry,
+            ["h"] = actions.toggle_flatten_dirs,
+            ["l"] = actions.focus_entry,
+            -- instead of closing one buffer, do `DiffviewClose`
+            ["q"] = ":tabc<cr>",
+          },
+        },
+      }
+    end,
+    config = function(_, opts)
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "DiffviewViewLeave",
+        callback = function()
+          vim.cmd(":DiffviewClose")
+        end,
+      })
+      require("diffview").setup(opts)
+    end,
+  },
   {
     "nvim-treesitter/nvim-treesitter",
     opts = { ensure_installed = { "git_config", "gitcommit", "git_rebase", "gitignore", "gitattributes" } },
@@ -92,7 +194,7 @@ return {
             end,
           },
           mode = { "n", "x" },
-          body = "<leader>G",
+          body = "<leader>gG",
           heads = {
             {
               "J",
@@ -139,7 +241,7 @@ return {
         })
       end,
     },
-    config = function() end,
+    config = true,
   },
   {
     "gitsigns.nvim",
@@ -153,10 +255,9 @@ return {
         set = function(state)
           require("gitsigns").toggle_signs(state)
         end,
-      }):map("<leader>uG")
+      }):map("<leader>gU")
     end,
   },
-  { "f-person/git-blame.nvim", cmd = { "GitBlameToggle", "GitBlameEnable" } },
   -- better git commit editing
   {
     "rhysd/committia.vim",

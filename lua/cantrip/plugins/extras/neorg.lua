@@ -3,7 +3,7 @@ return {
     "nvim-neorg/neorg",
     build = ":Neorg sync-parsers",
     opts = function()
-      local config = require("cantrip").getConfig()
+      local config = require("cantrip").get_config()
       return {
         load = {
           ["core.defaults"] = {},

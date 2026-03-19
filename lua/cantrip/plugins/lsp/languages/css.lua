@@ -1,24 +1,23 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, { "css", "scss" })
-      end
-    end,
+    opts = {
+      ensure_installed = {
+        "css",
+        "scss",
+      },
+    },
   },
   {
-    "williamboman/mason.nvim",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, {
-          "biome",
-          "stylelint",
-          "css-lsp",
-          "css-variables-language-server",
-        })
-      end
-    end,
+    "mason-org/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "biome",
+        "stylelint",
+        "css-lsp",
+        "css-variables-language-server",
+      },
+    },
   },
   {
     "max397574/colortils.nvim",
@@ -34,10 +33,11 @@ return {
   },
   {
     "stevearc/conform.nvim",
-    opts = function(_, opts)
-      opts.formatters_by_ft = opts.formatters_by_ft or {}
-      opts.formatters_by_ft.css = { "biome", lsp_format = "first" }
-    end,
+    opts = {
+      formatters_by_ft= {
+        css = { "biome", lsp_format = "first" }
+      }
+    }
   },
   {
     "neovim/nvim-lspconfig",

@@ -4,7 +4,6 @@ vim.uv = vim.uv or vim.loop
 
 local Boolean = require("cantrip.utils.boolean")
 local autocmd = require("cantrip.utils.autocmd")
-local cantrip_ui = require("cantrip.ui")
 
 local M = {}
 
@@ -33,7 +32,7 @@ M._normalize = function(config)
   return config
 end
 
-M.getConfig = function()
+M.get_config = function()
   return M._config
 end
 
@@ -67,17 +66,17 @@ M.lazy_file = function()
     vim.api.nvim_exec_autocmds("User", { pattern = "LazyFile", modeline = false })
     for _, event in ipairs(events) do
       if vim.api.nvim_buf_is_valid(event.buf) then
-        Event.trigger {
+        Event.trigger({
           event = event.event,
           exclude = skips[event.event],
           data = event.data,
           buf = event.buf,
-        }
+        })
         if vim.bo[event.buf].filetype then
-          Event.trigger {
+          Event.trigger({
             event = "FileType",
             buf = event.buf,
-          }
+          })
         end
       end
     end
@@ -96,14 +95,6 @@ M.lazy_file = function()
       load()
     end,
   })
-end
-
-function M.get_raw_config(server)
-  local ok, ret = pcall(require, "lspconfig.configs." .. server)
-  if ok then
-    return ret
-  end
-  return require("lspconfig.server_configurations." .. server)
 end
 
 M.setup = function(config)

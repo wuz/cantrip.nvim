@@ -1,70 +1,80 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, { "lua" })
-      end
-    end,
+    opts = {
+      ensure_installed = {
+        "lua",
+      },
+    },
   },
   {
     "folke/lazydev.nvim",
-    dependencies = { "justinsgithub/wezterm-types" },
     ft = "lua", -- only load on lua files
     opts = {
       library = {
-        "cantrip.nvim",
-        { path = "LazyVim", words = { "LazyVim" } },
+        { path = "Cantrip", words = { "Cantrip" } },
         { path = "luvit-meta/library", words = { "vim%.uv" } },
-        { path = "wezterm-types", mods = { "wezterm" } },
       },
     },
   },
   { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
-  -- {                                        -- optional completion source for require statements and module annotations
-  --   "hrsh7th/nvim-cmp",
-  --   opts = function(_, opts)
-  --     opts.sources = opts.sources or {}
-  --     table.insert(opts.sources, {
-  --       name = "lazydev",
-  --       group_index = 0, -- set group index to 0 to skip loading LuaLS completions
-  --     })
-  --   end,
-  -- },
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
         lua_ls = {
-          ---@type LazyKeysSpec[]
+          -- mason = false, -- set to false if you don't want this server to be installed with mason
+          -- Use this to add any additional keymaps
+          -- for specific lsp servers
+          -- ---@type LazyKeysSpec[]
           -- keys = {},
           settings = {
             Lua = {
-              diagnostics = {
-                globals = { "vim" },
-              },
               workspace = {
                 checkThirdParty = false,
               },
+              codeLens = {
+                enable = true,
+              },
               completion = {
                 callSnippet = "Replace",
+              },
+              doc = {
+                privateName = { "^_" },
+              },
+              hint = {
+                enable = true,
+                setType = false,
+                paramType = true,
+                paramName = "Disable",
+                semicolon = "Disable",
+                arrayIndex = "Disable",
               },
             },
           },
         },
       },
+      setup = {},
     },
   },
   {
-    "williamboman/mason.nvim",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, {
-          "lua-language-server",
-          "selene",
-          "stylua",
-        })
-      end
-    end,
+    "mason-org/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "lua-language-server",
+        "selene",
+        "stylua",
+      },
+    },
+  },
+    {
+    "stevearc/conform.nvim",
+    ---@class ConformOpts
+    opts = {
+      ---@type table<string, conform.FormatterUnit[]>
+      formatters_by_ft = {
+        lua = { "stylua", "selene" },
+      },
+    },
   },
 }

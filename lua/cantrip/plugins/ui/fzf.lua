@@ -1,3 +1,4 @@
+local Cantrip = require("cantrip.utils")
 local function symbols_filter(entry, ctx)
   if ctx.symbols_filter == nil then
     ctx.symbols_filter = false
@@ -8,7 +9,11 @@ local function symbols_filter(entry, ctx)
   return vim.tbl_contains(ctx.symbols_filter, entry.kind)
 end
 
-local function opts()
+return {
+  {
+    "ibhagwan/fzf-lua",
+    cmd = "FzfLua",
+    opts = function(_, opts)
   local fzf = require("fzf-lua")
   local config = fzf.config
   local actions = fzf.actions
@@ -22,14 +27,16 @@ local function opts()
   config.defaults.keymap.fzf["ctrl-b"] = "preview-page-up"
   config.defaults.keymap.builtin["<c-f>"] = "preview-page-down"
   config.defaults.keymap.builtin["<c-b>"] = "preview-page-up"
-  config.defaults.actions.files["ctrl-t"] = require("trouble.sources.fzf").actions.open
+  if Cantrip.has("trouble") then
+    config.defaults.actions.files["ctrl-t"] = require("trouble.sources.fzf").actions.open
+  end
 
   local img_previewer ---@type string[]?
-  for _, v in ipairs {
+  for _, v in ipairs({
     { cmd = "ueberzug", args = {} },
     { cmd = "chafa", args = { "{file}", "--format=symbols" } },
     { cmd = "viu", args = { "-b" } },
-  } do
+  }) do
     if vim.fn.executable(v.cmd) == 1 then
       img_previewer = vim.list_extend({ v.cmd }, v.args)
       break
@@ -81,7 +88,7 @@ local function opts()
           -- height is number of items minus 15 lines for the preview, with a max of 80% screen height
           height = math.floor(math.min(vim.o.lines * 0.8 - 16, #items + 2) + 0.5) + 16,
           width = 0.5,
-          preview = not vim.tbl_isempty(vim.lsp.get_clients { bufnr = 0, name = "vtsls" }) and {
+          preview = not vim.tbl_isempty(vim.lsp.get_clients({ bufnr = 0, name = "vtsls" })) and {
             layout = "vertical",
             vertical = "down:15,border-top",
             hidden = "hidden",
@@ -146,17 +153,29 @@ local function opts()
       },
     },
   }
-end
-
-return {
-  {
-    "ibhagwan/fzf-lua",
-    cmd = "FzfLua",
-    opts = opts,
-    init = function()
+end,
+config = function(_, opts)
+    if opts[1] == "default-title" then
+      -- use the same prompt for all pickers for profile `default-title` and
+      -- profiles that use `default-title` as base profile
+      local function fix(t)
+        t.prompt = t.prompt ~= nil and " " or nil
+        for _, v in pairs(t) do
+          if type(v) == "table" then
+            fix(v)
+          end
+        end
+        return t
+      end
+      opts = vim.tbl_deep_extend("force", fix(require("fzf-lua.profiles.default-title")), opts)
+      opts[1] = nil
+    end
+    require("fzf-lua").setup(opts)
+  end,
+    init = function(_, opts)
       vim.ui.select = function(...)
-        require("lazy").load { plugins = { "fzf-lua" } }
-        require("fzf-lua").register_ui_select()
+        require("lazy").load({ plugins = { "fzf-lua" } })
+        require("fzf-lua").register_ui_select(opts.ui_select or nil)
         return vim.ui.select(...)
       end
     end,
@@ -215,23 +234,23 @@ return {
       { "<leader>sl", "<cmd>FzfLua loclist<cr>", desc = "Location List" },
       { "<leader>sM", "<cmd>FzfLua man_pages<cr>", desc = "Man Pages" },
       { "<leader>sm", "<cmd>FzfLua marks<cr>", desc = "Jump to Mark" },
-      { "<leader><leader>", "<cmd>FzfLua resume<cr>", desc = "Resume" },
+      { "<leader>?", "<cmd>FzfLua resume<cr>", desc = "Resume" },
       { "<leader>sq", "<cmd>FzfLua quickfix<cr>", desc = "Quickfix List" },
       {
         "<leader>ss",
         function()
-          require("fzf-lua").lsp_document_symbols {
+          require("fzf-lua").lsp_document_symbols({
             regex_filter = symbols_filter,
-          }
+          })
         end,
         desc = "Goto Symbol",
       },
       {
         "<leader>sS",
         function()
-          require("fzf-lua").lsp_live_workspace_symbols {
+          require("fzf-lua").lsp_live_workspace_symbols({
             regex_filter = symbols_filter,
-          }
+          })
         end,
         desc = "Goto Symbol (Workspace)",
       },
@@ -248,17 +267,20 @@ return {
     },
   },
 
-  {
-    "neovim/nvim-lspconfig",
-    opts = function()
-      local Keys = require("cantrip.plugins.lsp.keymaps").get()
-      -- stylua: ignore
-      vim.list_extend(Keys, {
-        { "gd", "<cmd>FzfLua lsp_definitions     jump1=true ignore_current_line=true<cr>", desc = "Goto Definition",       has = "definition" },
-        { "gr", "<cmd>FzfLua lsp_references      jump1=true ignore_current_line=true<cr>", desc = "References",            nowait = true },
-        { "gI", "<cmd>FzfLua lsp_implementations jump1=true ignore_current_line=true<cr>", desc = "Goto Implementation" },
-        { "gy", "<cmd>FzfLua lsp_typedefs        jump1=true ignore_current_line=true<cr>", desc = "Goto T[y]pe Definition" },
-      })
-    end,
-  },
+  -- {
+  --   "neovim/nvim-lspconfig",
+  --   opts = {
+  --   servers = {
+  --     -- stylua: ignore
+  --     ["*"] = {
+  --       keys = {
+  --       { "gd", "<cmd>FzfLua lsp_definitions     jump1=true ignore_current_line=true<cr>", desc = "Goto Definition",       has = "definition" },
+  --       { "gr", "<cmd>FzfLua lsp_references      jump1=true ignore_current_line=true<cr>", desc = "References",            nowait = true },
+  --       { "gI", "<cmd>FzfLua lsp_implementations jump1=true ignore_current_line=true<cr>", desc = "Goto Implementation" },
+  --       { "gy", "<cmd>FzfLua lsp_typedefs        jump1=true ignore_current_line=true<cr>", desc = "Goto T[y]pe Definition" },
+  --       }
+  --     },
+  --   },
+  -- },
+  -- },
 }

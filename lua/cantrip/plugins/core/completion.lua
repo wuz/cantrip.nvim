@@ -1,47 +1,57 @@
 local Cantrip = require("cantrip.utils")
 
+local function format_item(ctx)
+  local source_name = ctx.source_id or ctx.source_name
+
+  local kind_icon = ctx.kind_icon
+  local maxwidth = 50
+
+  if vim.tbl_contains({ "Path" }, source_name) then
+    local mini_icon, _ = require("mini.icons").get_icon(ctx.item.data.type, ctx.label)
+    if mini_icon then
+      kind_icon = mini_icon
+    end
+  end
+
+  if Cantrip.has("lspkind") then
+    local lspkind_icon = require("lspkind").symbolic(ctx.kind, { mode = "symbol" })
+    if lspkind_icon then
+      kind_icon = lspkind_icon
+    end
+  end
+
+  -- Handle label truncation
+  local label = ctx.label
+  local truncated_label = vim.fn.strcharpart(label, 0, maxwidth)
+  if truncated_label ~= label then
+    -- item.label = truncated_label .. "..."
+    ctx.label = truncated_label .. "..."
+  end
+
+  -- Apply tailwindcss-colorizer-cmp if available
+  local formatted_item = vim.deepcopy(ctx)
+  if Cantrip.has("tailwindcss-colorizer-cmp") then
+    local colorized = require("tailwindcss-colorizer-cmp").formatter(formatted_item)
+    if colorized.hl_group then
+      formatted_item = colorized
+    end
+  end
+
+  return {
+    label = formatted_item.label or label,
+    kind_icon = kind_icon,
+    menu = menu,
+    source = source_name,
+    -- Pass through any colorizer highlight groups
+    hl_group = formatted_item.hl_group,
+  }
+end
+
 return {
   {
     "saghen/blink.cmp",
     dependencies = {
       "rafamadriz/friendly-snippets",
-      {
-        "chrisgrieser/nvim-scissors",
-        dependencies = {
-          "folke/snacks.nvim",
-          {
-            "folke/which-key.nvim",
-            optional = true,
-            opts_extend = { "spec" },
-            opts = {
-              spec = {
-                { "<leader>sn", group = "Scissors" },
-              },
-            },
-          },
-        },
-        keys = {
-          {
-            "<leader>sne",
-            function()
-              require("scissors").editSnippet()
-            end,
-            desc = "Snippet: Edit",
-            mode = { "n" },
-          },
-          {
-            "<leader>sna",
-            function()
-              require("scissors").addNewSnippet()
-            end,
-            desc = "Snippet: Add",
-            mode = { "n", "x" },
-          },
-        },
-        opts = {
-          snippetDir = vim.fn.stdpath("config") .. "/snippets",
-        },
-      },
       {
         "saghen/blink.compat",
         optional = true, -- make optional so it's only enabled if any extras need it
@@ -64,52 +74,52 @@ return {
         preset = "enter",
         ["<A-1>"] = {
           function(cmp)
-            cmp.accept { index = 1 }
+            cmp.accept({ index = 1 })
           end,
         },
         ["<A-2>"] = {
           function(cmp)
-            cmp.accept { index = 2 }
+            cmp.accept({ index = 2 })
           end,
         },
         ["<A-3>"] = {
           function(cmp)
-            cmp.accept { index = 3 }
+            cmp.accept({ index = 3 })
           end,
         },
         ["<A-4>"] = {
           function(cmp)
-            cmp.accept { index = 4 }
+            cmp.accept({ index = 4 })
           end,
         },
         ["<A-5>"] = {
           function(cmp)
-            cmp.accept { index = 5 }
+            cmp.accept({ index = 5 })
           end,
         },
         ["<A-6>"] = {
           function(cmp)
-            cmp.accept { index = 6 }
+            cmp.accept({ index = 6 })
           end,
         },
         ["<A-7>"] = {
           function(cmp)
-            cmp.accept { index = 7 }
+            cmp.accept({ index = 7 })
           end,
         },
         ["<A-8>"] = {
           function(cmp)
-            cmp.accept { index = 8 }
+            cmp.accept({ index = 8 })
           end,
         },
         ["<A-9>"] = {
           function(cmp)
-            cmp.accept { index = 9 }
+            cmp.accept({ index = 9 })
           end,
         },
         ["<A-0>"] = {
           function(cmp)
-            cmp.accept { index = 10 }
+            cmp.accept({ index = 10 })
           end,
         },
       },
@@ -139,7 +149,7 @@ return {
           selection = {
             auto_insert = true,
             preselect = function(ctx)
-              return ctx.mode ~= "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
+              return ctx.mode ~= "cmdline" and not require("blink.cmp").snippet_active({ direction = 1 })
             end,
           },
         },
@@ -156,15 +166,61 @@ return {
                 highlight = "BlinkCmpItemIdx", -- optional, only if you want to change its color
               },
               kind_icon = {
-                ellipsis = false,
                 text = function(ctx)
-                  local kind_icon, _, _ = require("mini.icons").get("lsp", ctx.kind)
-                  return kind_icon
+                  local formatted = format_item(ctx)
+                  return " " .. formatted.kind_icon .. ctx.icon_gap
                 end,
-                -- Optionally, you may also use the highlights from mini.icons
+              },
+              label = {
+                width = { fill = true, max = 60 },
+                text = function(ctx)
+                  local formatted = format_item(ctx)
+                  return formatted.label
+                end,
                 highlight = function(ctx)
-                  local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
-                  return hl
+                  local highlights = {}
+
+                  -- Try tailwindcss-colorizer-cmp for additional highlighting
+                  if Cantrip.has("tailwindcss-colorizer-cmp") then
+                    local formatted = require("tailwindcss-colorizer-cmp").formatter(formatted_item)
+                    if formatted.hl_group then
+                      table.insert(highlights, { 0, #(ctx.label or ""), group = formatted.hl_group })
+                    end
+                  end
+
+                  -- Handle matched indices for fuzzy highlighting
+                  if ctx.matched_indices and #ctx.matched_indices > 0 then
+                    for _, idx in ipairs(ctx.matched_indices) do
+                      table.insert(highlights, { idx, idx + 1, group = "BlinkCmpLabelMatch" })
+                    end
+                  end
+
+                  -- Handle deprecated items
+                  if ctx.deprecated then
+                    table.insert(highlights, { 0, #(ctx.label or ""), group = "BlinkCmpLabelDeprecated" })
+                  end
+
+                  return highlights
+                end,
+              },
+
+              label_description = {
+                width = { max = 30 },
+                text = function(ctx)
+                  return ctx.label_description
+                end,
+                highlight = "BlinkCmpLabelDescription",
+              },
+              kind = {
+                -- Optional, use highlights from mini.icons
+                highlight = function(ctx)
+                  if vim.tbl_contains({ "Path" }, ctx.source_name) then
+                    local mini_icon, mini_hl = require("mini.icons").get_icon(ctx.item.data.type, ctx.label)
+                    if mini_icon then
+                      return mini_hl
+                    end
+                  end
+                  return ctx.kind_hl
                 end,
               },
             },
@@ -270,11 +326,73 @@ return {
     },
   },
   {
+    "chrisgrieser/nvim-scissors",
+    dependencies = {
+      "saghen/blink.cmp",
+      "folke/snacks.nvim",
+      {
+        "folke/which-key.nvim",
+        optional = true,
+        opts_extend = { "spec" },
+        opts = {
+          spec = {
+            { "<leader>sn", group = "Scissors" },
+          },
+        },
+      },
+    },
+    keys = {
+      {
+        "<leader>sne",
+        function()
+          require("scissors").editSnippet()
+        end,
+        desc = "Snippet: Edit",
+        mode = { "n" },
+      },
+      {
+        "<leader>sna",
+        function()
+          require("scissors").addNewSnippet()
+        end,
+        desc = "Snippet: Add",
+        mode = { "n", "x" },
+      },
+    },
+    opts = {
+      snippetDir = vim.fn.stdpath("config") .. "/snippets",
+    },
+  },
+  {
     "saghen/blink.cmp",
     opts = function(_, opts)
       opts.appearance = opts.appearance or {}
       opts.appearance.kind_icons = vim.tbl_extend("keep", Cantrip.icons.ui.kind_icons, {})
     end,
+  },
+
+  -- blink.cmp + tailwind colorizer
+  {
+    "roobert/tailwindcss-colorizer-cmp.nvim",
+    dependencies = {
+      "saghen/blink.cmp",
+      "saghen/blink.compat",
+    },
+    optional = true,
+    opts = {
+      sources = {
+        providers = {
+          tailwindcmp = {
+            name = "tailwindcss-colorizer-cmp",
+            score_offset = -3,
+            async = true,
+          },
+        },
+        compat = {
+          "tailwindcmp",
+        },
+      },
+    },
   },
 
   {

@@ -1,21 +1,20 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, { "vim", "vimdoc" })
-      end
-    end,
+    opts = {
+      ensure_installed = {
+        "vim",
+        "vimdoc",
+      },
+    },
   },
   {
-    "williamboman/mason.nvim",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, {
-          "vim-language-server",
-        })
-      end
-    end,
+    "mason-org/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "vim-language-server",
+      },
+    },
   },
   {
     "neovim/nvim-lspconfig",

@@ -12,6 +12,9 @@ return {
             vertical = "bottom",
             horizontal = "right",
           },
+          margin = {
+            horizontal = 2,
+          },
           padding = 2,
         },
         hide = {

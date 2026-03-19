@@ -8,23 +8,24 @@ return {
           filetypes_exclude = { "markdown" },
           -- add additional filetypes to the default_config
           filetypes_include = {},
-          root_dir = function(fname)
-            -- Check for tailwind.config.js or tailwind.config.ts
-            return require("lspconfig.util").root_pattern("tailwind.config.js", "tailwind.config.ts")(fname)
-          end,
           -- to fully override the default_config, change the below
           -- filetypes = {}
           settings = {
             tailwindCSS = {
+              includeLanguages = {
+                elixir = "html-eex",
+                eelixir = "html-eex",
+                heex = "html-eex",
+              },
               experimental = {
                 classRegex = {
-                  { "cva\\(([^)]*)\\)",                    "[\"'`]([^\"'`]*).*?[\"'`]" },
-                  { "cx\\(([^)]*)\\)",                     "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+                  { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+                  { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
                   { "clsx\\(((?:[^()]|\\([^()]*\\))*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
-                  { "classnames\\(([^)]*)\\)",             "[\"'`]([^\"'`]*)[\"'`]" },
-                  { "cva\\(([^;]*)[\\);]",                 "[`'\"`]([^'\"`;]*)[`'\"`]" },
-                  { "twJoin\\(([^)]*)\\)",                 "[\"'`]([^\"'`]*)[\"'`]" },
-                  { "(?:twMerge|twJoin)\\(([^;]*)[\\);]",  "[`'\"`]([^'\"`;]*)[`'\"`]" },
+                  { "classnames\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]" },
+                  { "cva\\(([^;]*)[\\);]", "[`'\"`]([^'\"`;]*)[`'\"`]" },
+                  { "twJoin\\(([^)]*)\\)", "[\"'`]([^\"'`]*)[\"'`]" },
+                  { "(?:twMerge|twJoin)\\(([^;]*)[\\);]", "[`'\"`]([^'\"`;]*)[`'\"`]" },
                   {
                     "tv\\(([^)]*)\\)",
                     "{?\\s?[\\w].*:\\s*?[\"'`]([^\"'`]*).*?,?\\s?}?",
@@ -40,28 +41,16 @@ return {
       },
       setup = {
         tailwindcss = function(_, opts)
-          local tw = Cantrip.get_raw_config("tailwindcss")
           opts.filetypes = opts.filetypes or {}
 
           -- Add default filetypes
-          vim.list_extend(opts.filetypes, tw.default_config.filetypes)
+          vim.list_extend(opts.filetypes, vim.lsp.config.tailwindcss.filetypes)
 
           -- Remove excluded filetypes
           --- @param ft string
           opts.filetypes = vim.tbl_filter(function(ft)
             return not vim.tbl_contains(opts.filetypes_exclude or {}, ft)
           end, opts.filetypes)
-
-          -- Additional settings for Phoenix projects
-          opts.settings = {
-            tailwindCSS = {
-              includeLanguages = {
-                elixir = "html-eex",
-                eelixir = "html-eex",
-                heex = "html-eex",
-              },
-            },
-          }
 
           -- Add additional filetypes
           vim.list_extend(opts.filetypes, opts.filetypes_include or {})
@@ -70,14 +59,12 @@ return {
     },
   },
   {
-    "williamboman/mason.nvim",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, {
-          "tailwind-language-server",
-        })
-      end
-    end,
+    "mason-org/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "tailwindcss-language-server",
+      },
+    },
   },
   {
     -- Optional plugin for tailwind color preview
@@ -96,32 +83,9 @@ return {
       "typescriptreact",
     },
     config = function()
-      require("tailwindcss-colorizer-cmp").setup {
+      require("tailwindcss-colorizer-cmp").setup({
         color_square_width = 2,
-      }
+      })
     end,
-  },
-  -- blink.cmp + tailwind colorizer
-  {
-    "saghen/blink.cmp",
-    dependencies = {
-      "roobert/tailwindcss-colorizer-cmp.nvim",
-      "saghen/blink.compat",
-    },
-    optional = true,
-    opts = {
-      sources = {
-        providers = {
-          tailwindcmp = {
-            name = "tailwindcss-colorizer-cmp",
-            score_offset = -3,
-            async = true,
-          },
-        },
-        compat = {
-          "tailwindcmp",
-        },
-      },
-    },
   },
 }

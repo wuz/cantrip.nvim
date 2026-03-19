@@ -1,204 +1,252 @@
 local Cantrip = require("cantrip.utils")
 
 return {
-  { "folke/neoconf.nvim",                  cmd = "Neoconf", config = true },
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      "williamboman/mason.nvim",
-      { "mason-org/mason-lspconfig.nvim", config = function() end },
-      "j-hui/fidget.nvim",
-      {
-        "smjonas/inc-rename.nvim",
-        cmd = "IncRename",
-        opts = {},
-      },
-      { "nvim-lua/lsp-status.nvim",       dependencies = "nvim-lspconfig" },
-      {
-        "hedyhli/outline.nvim",
-        lazy = true,
-        cmd = { "Outline", "OutlineOpen" },
-        keys = {
-          { "<leader>o", "<cmd>Outline<CR>", desc = "Toggle outline" },
-        },
-        config = true,
-      },
+      { "mason-org/mason.nvim", opts = {} },
+      -- { "mason-org/mason-lspconfig.nvim", opts = {}, config = function() end },
+      -- { "nvim-lua/lsp-status.nvim" },
+      { "j-hui/fidget.nvim" },
     },
-    opts = {
-      -- options for vim.diagnostic.config()
-      diagnostics = {
-        underline = true,
-        update_in_insert = false,
-        virtual_text = {
-          spacing = 4,
-          source = "if_many",
-          -- prefix = "●",
-          prefix = "icons",
-        },
-        severity_sort = true,
-        float = {
-          header = "",
-          source = true,
-          border = "solid",
-          focusable = true,
-        },
-      },
-      inlay_hints = {
-        enabled = true,
-      },
-      codelens = {
-        enabled = true,
-      },
-      capabilities = {
-        workspace = {
-          fileOperations = {
-            didRename = true,
-            willRename = true,
+    opts_extend = { "servers.*.keys" },
+    opts = function(_, opts)
+      ---@class PluginLspOpts
+      local options = {
+        diagnostics = {
+          underline = true,
+          update_in_insert = false,
+          virtual_text = {
+            spacing = 4,
+            source = "if_many",
+            -- prefix = "●",
+            prefix = "icons",
+          },
+          severity_sort = true,
+          float = {
+            header = "",
+            source = true,
+            border = "solid",
+            focusable = true,
           },
         },
-      },
-      servers = {},
-      setup = {},
-    },
-    config = function(_, opts)
-      local fidget = require("fidget")
-      local config = require("cantrip").getConfig()
-      local servers = vim.tbl_deep_extend("force", opts.servers, config.lsp.servers or {})
-      local setup_fns = vim.tbl_deep_extend("force", opts.setup, config.lsp.setup or {})
-      local cmp_present, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-      local blink_present, blink = pcall(require, "blink.cmp")
-
-      -- diagnostics signs
-      if vim.fn.has("nvim-0.10.0") == 0 then
-        if type(opts.diagnostics.signs) ~= "boolean" then
-          for severity, icon in pairs(opts.diagnostics.signs.text) do
-            local name = vim.diagnostic.severity[severity]:lower():gsub("^%l", string.upper)
-            name = "DiagnosticSign" .. name
-            vim.fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
-          end
-        end
-      end
-
-      if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
-        opts.diagnostics.virtual_text.prefix = vim.fn.has("nvim-0.10.0") == 0 and "●"
-            or function(diagnostic)
-              local icons = {
-                Error = " ",
-                Warn = " ",
-                Hint = " ",
-                Info = " ",
-              }
-              for d, icon in pairs(icons) do
-                if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
-                  return icon
-                end
-              end
-            end
-      end
-
-      vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
-
-      local register_capability = vim.lsp.handlers["client/registerCapability"]
-
-      vim.lsp.handlers["client/registerCapability"] = function(err, res, ctx)
-        local ret = register_capability(err, res, ctx)
-        local client_id = ctx.client_id
-        ---@type lsp.Client
-        local client = vim.lsp.get_client_by_id(client_id)
-        local buffer = vim.api.nvim_get_current_buf()
-        require("cantrip.plugins.lsp.keymaps").on_attach(client, buffer)
-        return ret
-      end
-
-      Cantrip.lsp.on_attach(function(client, buffer)
-        fidget.notify("Attached to " .. client.name)
-        if vim.fn.has("nvim-0.10") == 1 then
-          -- inlay hints
-          if opts.inlay_hints.enabled and client:supports_method("textDocument/inlayHint") then
-            vim.lsp.handlers["textDocument/inlayHint"] = function(client, buffer)
-              if
-                  vim.api.nvim_buf_is_valid(buffer)
-                  and vim.bo[buffer].buftype == ""
-                  and not vim.tbl_contains(opts.inlay_hints.exclude, vim.bo[buffer].filetype)
-              then
-                vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
-              end
-            end
-          end
-        end
-
-        -- code lens
-        if opts.codelens.enabled and vim.lsp.codelens and client:supports_method("textDocument/codeLens") then
-          vim.lsp.handlers["textDocument/codeLens"] = function(client, buffer)
-            vim.lsp.codelens.refresh()
-            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-              buffer = buffer,
-              callback = vim.lsp.codelens.refresh,
-            })
-          end
-        end
-        require("cantrip.plugins.lsp.format").on_attach(client, buffer)
-        require("cantrip.plugins.lsp.keymaps").on_attach(client, buffer)
-      end)
-
-      local capabilities = {}
-
-      if cmp_present then
-        capabilities = cmp_nvim_lsp.default_capabilities()
-      elseif blink_present then
-        capabilities = blink.get_lsp_capabilities()
-      else
-        capabilities = vim.lsp.protocol.make_client_capabilities()
-      end
-
-      local function setup(server)
-        local server_opts = vim.tbl_deep_extend("force", {
-          capabilities = vim.deepcopy(capabilities),
-        }, servers[server] or {})
-
-        if setup_fns[server] then
-          if opts.setup[server](server, server_opts) then
-            return
-          end
-        elseif setup_fns["*"] then
-          if setup_fns["*"](server, server_opts) then
-            return
-          end
-        end
-        vim.lsp.config(server, server_opts)
-      end
-
-      vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
-
-      local have_mason, mlsp = pcall(require, "mason-lspconfig")
-      local all_mslp_servers = {}
-      if have_mason then
-        all_mslp_servers = vim.tbl_keys(require("mason-lspconfig").get_mappings().lspconfig_to_package)
-      end
-      local ensure_installed = {} ---@type string[]
-      for server, server_opts in pairs(servers) do
-        if server_opts then
-          server_opts = server_opts == true and {} or server_opts
-          if server_opts.mason == false or not vim.tbl_contains(all_mslp_servers, server) then
-            setup(server)
-          else
-            ensure_installed[#ensure_installed + 1] = server
-          end
-        end
-      end
-
-      if have_mason then
-        mlsp.setup({ ensure_installed = ensure_installed, handlers = { setup } })
-      end
-
-      vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-        border = "solid",
-      })
+        inlay_hints = {
+          enabled = true,
+          exclude = { "vue" },
+        },
+        codelens = {
+          enabled = true,
+        },
+        folds = {
+          enabled = true,
+        },
+        -- LSP Server Settings
+        -- Sets the default configuration for an LSP client (or all clients if the special name "*" is used).
+        ---@alias lazyvim.lsp.Config vim.lsp.Config
+        ---@type table<string, lazyvim.lsp.Config|boolean>
+        servers = {
+          -- configuration for all lsp servers
+          ["*"] = {
+            capabilities = {
+              workspace = {
+                fileOperations = {
+                  didRename = true,
+                  willRename = true,
+                },
+              },
+            },
+            --   vim.diagnostic.open_float({
+            --     border = "single",
+            --     width = 80,
+            --   })
+            -- stylua: ignore
+            keys = {
+              { "<leader>cl", function() Snacks.picker.lsp_config() end,          desc = "Lsp Info" },
+              { "gd",         vim.lsp.buf.definition,                             desc = "Goto Definition",            has = "definition" },
+              { "gr",         vim.lsp.buf.references,                             desc = "References",                 nowait = true },
+              { "gI",         vim.lsp.buf.implementation,                         desc = "Goto Implementation" },
+              { "gy",         vim.lsp.buf.type_definition,                        desc = "Goto T[y]pe Definition" },
+              { "gD",         vim.lsp.buf.declaration,                            desc = "Goto Declaration" },
+              { "K",          function() return vim.lsp.buf.hover() end,          desc = "Hover" },
+              { "gK",         function() return vim.lsp.buf.signature_help() end, desc = "Signature Help",             has = "signatureHelp" },
+              { "<c-k>",      function() return vim.lsp.buf.signature_help() end, mode = "i",                          desc = "Signature Help", has = "signatureHelp" },
+              { "<leader>ca", vim.lsp.buf.code_action,                            desc = "Code Action",                mode = { "n", "x" },     has = "codeAction" },
+              { "<leader>cc", vim.lsp.codelens.run,                               desc = "Run Codelens",               mode = { "n", "x" },     has = "codeLens" },
+              { "<leader>cC", vim.lsp.codelens.refresh,                           desc = "Refresh & Display Codelens", mode = { "n" },          has = "codeLens" },
+              { "<leader>cR", function() Snacks.rename.rename_file() end,         desc = "Rename File",                mode = { "n" },          has = { "workspace/didRenameFiles", "workspace/willRenameFiles" } },
+              { "<leader>cr", vim.lsp.buf.rename,                                 desc = "Rename",                     has = "rename" },
+              {
+                "<leader>cA",
+                function()
+                  vim.lsp.buf.code_action({
+                    apply = true,
+                    context = {
+                      only = { "source" },
+                      diagnostics = {},
+                    },
+                  })
+                end,
+                desc = "Source Action",
+                has = "codeAction"
+              },
+              {
+                "]]",
+                function() Snacks.words.jump(vim.v.count1) end,
+                has = "documentHighlight",
+                desc = "Next Reference",
+                enabled = function() return Snacks.words.is_enabled() end
+              },
+              {
+                "[[",
+                function() Snacks.words.jump(-vim.v.count1) end,
+                has = "documentHighlight",
+                desc = "Prev Reference",
+                enabled = function() return Snacks.words.is_enabled() end
+              },
+              {
+                "<a-n>",
+                function() Snacks.words.jump(vim.v.count1, true) end,
+                has = "documentHighlight",
+                desc = "Next Reference",
+                enabled = function() return Snacks.words.is_enabled() end
+              },
+              {
+                "<a-p>",
+                function() Snacks.words.jump(-vim.v.count1, true) end,
+                has = "documentHighlight",
+                desc = "Prev Reference",
+                enabled = function() return Snacks.words.is_enabled() end
+              },
+            },
+          },
+        },
+        setup = {
+          -- example to setup with typescript.nvim
+          -- tsserver = function(_, opts)
+          --   require("typescript").setup({ server = opts })
+          --   return true
+          -- end,
+          -- Specify * to use this function as a fallback for any server
+          -- ["*"] = function(server, opts) end,
+        },
+      }
+      return options
     end,
+    config = vim.schedule_wrap(function(_, opts)
+      local fidget = require("fidget")
+
+      require("cantrip.plugins.lsp.format").setup()
+      -- setup keymaps
+      for server, server_opts in pairs(opts.servers) do
+        if type(server_opts) == "table" and server_opts.keys then
+          require("cantrip.plugins.lsp.keymaps").set({ name = server ~= "*" and server or nil }, server_opts.keys)
+        end
+      end
+
+      -- inlay hints
+      if opts.inlay_hints.enabled then
+        Snacks.util.lsp.on({ method = "textDocument/inlayHint" }, function(buffer)
+          if
+            vim.api.nvim_buf_is_valid(buffer)
+            and vim.bo[buffer].buftype == ""
+            and not vim.tbl_contains(opts.inlay_hints.exclude, vim.bo[buffer].filetype)
+          then
+            vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
+          end
+        end)
+      end
+
+      -- folds
+      -- if opts.folds.enabled then
+      --   Snacks.util.lsp.on({ method = "textDocument/foldingRange" }, function()
+      --     if LazyVim.set_default("foldmethod", "expr") then
+      --       LazyVim.set_default("foldexpr", "v:lua.vim.lsp.foldexpr()")
+      --     end
+      --   end)
+      -- end
+
+      -- code lens
+      if opts.codelens.enabled and vim.lsp.codelens then
+        Snacks.util.lsp.on({ method = "textDocument/codeLens" }, function(buffer)
+          vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+            buffer = buffer,
+            callback = function()
+              vim.lsp.codelens.enable(true, { bufnr = buffer })
+            end,
+          })
+        end)
+      end
+
+      -- override diagnostic icons
+      if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
+        opts.diagnostics.virtual_text.prefix = function(diagnostic)
+          local icons = {
+            Error = " ",
+            Warn = " ",
+            Hint = " ",
+            Info = " ",
+          }
+          for d, icon in pairs(icons) do
+            if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
+              return icon
+            end
+          end
+        end
+      end
+
+      vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
+
+      if opts.servers["*"] then
+        vim.lsp.config("*", opts.servers["*"])
+      end
+
+      -- get all the servers that are available through mason-lspconfig
+      local have_mason = Cantrip.has("mason-lspconfig.nvim")
+      local mason_all = have_mason
+          and vim.tbl_keys(require("mason-lspconfig.mappings").get_mason_map().lspconfig_to_package)
+        or {} --[[ @as string[] ]]
+      local mason_exclude = {} ---@type string[]
+
+      ---@return boolean? exclude automatic setup
+      local function configure(server)
+        if server == "*" then
+          return false
+        end
+        fidget.notify("Attached to " .. server)
+        local sopts = opts.servers[server]
+        sopts = sopts == true and {} or (not sopts) and { enabled = false } or sopts --[[@as lazyvim.lsp.Config]]
+
+        if sopts.enabled == false then
+          mason_exclude[#mason_exclude + 1] = server
+          return
+        end
+
+        local use_mason = sopts.mason ~= false and vim.tbl_contains(mason_all, server)
+        local setup = opts.setup[server] or opts.setup["*"]
+        if setup and setup(server, sopts) then
+          mason_exclude[#mason_exclude + 1] = server
+        else
+          vim.lsp.config(server, sopts) -- configure the server
+          if not use_mason then
+            vim.lsp.enable(server)
+          end
+        end
+        return use_mason
+      end
+
+      local install = vim.tbl_filter(configure, vim.tbl_keys(opts.servers))
+      if have_mason then
+        require("mason-lspconfig").setup({
+          ensure_installed = vim.list_extend(install, Cantrip.opts("mason-lspconfig.nvim").ensure_installed or {}),
+          automatic_enable = { exclude = mason_exclude },
+        })
+      end
+    end),
   },
   { import = "cantrip.plugins.lsp.conform" },
   { import = "cantrip.plugins.lsp.lint" },
+  { import = "cantrip.plugins.lsp.mason" },
 
   {
     "neovim/nvim-lspconfig",
@@ -208,32 +256,15 @@ return {
         cmd = "Glance",
       },
     },
-    opts = function()
-      local Keys = require("cantrip.plugins.lsp.keymaps").get()
-      -- stylua: ignore
-      vim.list_extend(Keys, {
-        { "gD", "<cmd>Glance definitions<cr>",      desc = "Glance Definition",     has = "definition" },
-        { "gR", "<cmd>Glance references<cr>",       desc = "Glance References",     nowait = true },
-        { "gM", "<cmd>Glance implementations<cr>",  desc = "Glance implementations" },
-        { "gY", "<cmd>Glance type_definitions<cr>", desc = "Goto T[y]pe Definition" },
-      })
-    end,
-  },
-  {
-    "rachartier/tiny-code-action.nvim",
-    dependencies = {
-      { "nvim-lua/plenary.nvim" },
-      -- optional picker via fzf-lua
-      { "ibhagwan/fzf-lua" },
-    },
-    event = "LspAttach",
     opts = {
-      picker = {
-        "buffer",
-        opts = {
-          hotkeys = true,
-          hotkeys_mode = "text_diff_based",
-          auto_preview = true,
+      servers = {
+        ["*"] = {
+          keys = {
+            { "gD", "<cmd>Glance definitions<cr>", desc = "Glance Definition", has = "definition" },
+            { "gR", "<cmd>Glance references<cr>", desc = "Glance References", nowait = true },
+            { "gM", "<cmd>Glance implementations<cr>", desc = "Glance implementations" },
+            { "gY", "<cmd>Glance type_definitions<cr>", desc = "Goto T[y]pe Definition" },
+          },
         },
       },
     },

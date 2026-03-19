@@ -1,6 +1,6 @@
 return {
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     cmd = "Mason",
     dependencies = {
       "mfussenegger/nvim-dap",
@@ -8,6 +8,7 @@ return {
     },
     keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
     build = ":MasonUpdate",
+    opts_extend = { "ensure_installed" },
     opts = {
       ensure_installed = {
         "stylua",
@@ -23,10 +24,10 @@ return {
       mr:on("package:install:success", function()
         vim.defer_fn(function()
           -- trigger FileType event to possibly load this newly installed LSP server
-          require("lazy.core.handler.event").trigger {
+          require("lazy.core.handler.event").trigger({
             event = "FileType",
             buf = vim.api.nvim_get_current_buf(),
-          }
+          })
         end, 100)
       end)
       local function ensure_installed()
@@ -42,12 +43,12 @@ return {
       else
         ensure_installed()
       end
-      require("mason-nvim-dap").setup {
+      require("mason-nvim-dap").setup({
         ensure_installed = { "stylua", "jq" },
         automatic_installation = true,
         handlers = {},
         automatic_setup = true,
-      }
+      })
     end,
   },
 }

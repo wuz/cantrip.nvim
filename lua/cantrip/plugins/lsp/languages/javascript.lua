@@ -3,38 +3,37 @@ local Cantrip = require("cantrip.utils")
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, { "javascript", "typescript", "tsx" })
-      end
-    end,
+    opts = {
+      ensure_installed = {
+        "javascript",
+        "typescript",
+        "tsx",
+      },
+    },
   },
   {
-    "williamboman/mason.nvim",
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, {
+    "mason-org/mason.nvim",
+
+    opts = {
+      ensure_installed = {
         "js-debug-adapter",
         "biome",
-        "eslint-lsp@4.8.0",
+        -- "eslint-lsp@4.8.0",
         "vtsls",
-      })
-    end,
+      },
+    },
   },
   {
     "jay-babu/mason-nvim-dap.nvim",
     dependencies = {
-      "williamboman/mason.nvim",
+      "mason-org/mason.nvim",
     },
     cmd = { "DapInstall", "DapUninstall" },
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, {
-          "js",
-        })
-      end
-    end,
+    opts = {
+      ensure_installed = {
+        "js",
+      },
+    },
   },
   {
     "mfussenegger/nvim-dap",
@@ -98,59 +97,35 @@ return {
     end,
   },
   {
-    "haydenmeade/neotest-jest",
-    lazy = true,
-    ft = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
-  },
-  {
-    "marilari88/neotest-vitest",
-    lazy = true,
-    ft = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
-  },
-  {
-    "thenbe/neotest-playwright",
-    lazy = true,
-    ft = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
-  },
-  {
     "nvim-neotest/neotest",
-    lazy = true,
-    ft = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
+    optional = true,
     dependencies = {
-      "haydenmeade/neotest-jest",
       "marilari88/neotest-vitest",
       "thenbe/neotest-playwright",
     },
-    opts = {
-      adapters = {
-        ["neotest-vitest"] = {
-          filter_dir = function(name)
-            return name ~= "node_modules"
-          end,
+    opts = function(_, opts)
+      return vim.tbl_deep_extend("force", opts, {
+        adapters = {
+          require("neotest-vitest")({
+            filter_dir = function(name)
+              return name ~= "node_modules"
+            end,
+          }),
+          require("neotest-playwright").adapter({
+            options = {
+              persist_project_selection = true,
+              enable_dynamic_test_discovery = true,
+            },
+          }),
         },
-        ["neotest-jest"] = {},
-        ["neotest-playwright"] = {},
-      },
-    },
-    keys = function()
-      local neotest = require("neotest")
-      ---@type LazyKeys[]
-      return {
-        {
-          "<leader>tn",
-          function()
-            neotest.run.run()
-          end,
-          desc = "Test File",
-        },
-      }
+      })
     end,
   },
   {
     "neovim/nvim-lspconfig",
     dependencies = {
       "jose-elias-alvarez/typescript.nvim",
-      "williamboman/mason.nvim",
+      "mason-org/mason.nvim",
     },
     opts = {
       -- LSP Server Settings
@@ -173,6 +148,7 @@ return {
               enableMoveToFileCodeAction = true,
               autoUseWorkspaceTsdk = true,
               experimental = {
+                maxInlayHintLength = 30,
                 completion = {
                   enableServerSideFuzzyMatch = true,
                 },
@@ -198,22 +174,22 @@ return {
               "gD",
               function()
                 local params = vim.lsp.util.make_position_params()
-                Cantrip.lsp.execute {
+                Cantrip.lsp.execute({
                   command = "typescript.goToSourceDefinition",
                   arguments = { params.textDocument.uri, params.position },
                   open = true,
-                }
+                })
               end,
               desc = "Goto Source Definition",
             },
             {
               "gR",
               function()
-                Cantrip.lsp.execute {
+                Cantrip.lsp.execute({
                   command = "typescript.findAllFileReferences",
                   arguments = { vim.uri_from_bufnr(0) },
                   open = true,
-                }
+                })
               end,
               desc = "File References",
             },
@@ -240,7 +216,7 @@ return {
             {
               "<leader>cV",
               function()
-                Cantrip.lsp.execute { command = "typescript.selectTypeScriptVersion" }
+                Cantrip.lsp.execute({ command = "typescript.selectTypeScriptVersion" })
               end,
               desc = "Select TS workspace version",
             },
@@ -272,7 +248,7 @@ return {
             quiet = false,
             onIgnoredFiles = "off",
             run = "onType",
-            workingDirectory = { mode = "location" },
+            workingDirectory = { mode = "auto" },
             codeAction = {
               disableRuleComment = {
                 enable = true,
@@ -283,19 +259,34 @@ return {
               },
             },
           },
-          root_dir = require("lspconfig").util.root_pattern(
-            ".eslintrc.json",
-            "eslint.config.mjs",
-            "eslint.config.js",
-            "eslint.config.cjs",
-            ".eslintrc.js"
-          ),
         },
       },
       ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
         vtsls = function(_, opts)
-          Cantrip.lsp.on_attach(function(client, buffer)
+          if vim.lsp.config.denols and vim.lsp.config.vtsls then
+            ---@param server string
+            local resolve = function(server)
+              local markers, root_dir = vim.lsp.config[server].root_markers, vim.lsp.config[server].root_dir
+              vim.lsp.config(server, {
+                root_dir = function(bufnr, on_dir)
+                  local is_deno = vim.fs.root(bufnr, { "deno.json", "deno.jsonc" }) ~= nil
+                  if is_deno == (server == "denols") then
+                    if root_dir then
+                      return root_dir(bufnr, on_dir)
+                    elseif type(markers) == "table" then
+                      local root = vim.fs.root(bufnr, markers)
+                      return root and on_dir(root)
+                    end
+                  end
+                end,
+              })
+            end
+            resolve("denols")
+            resolve("vtsls")
+          end
+
+          Snacks.util.lsp.on({ name = "vtsls" }, function(buffer, client)
             client.commands["_typescript.moveToFileRefactoring"] = function(command, ctx)
               ---@type string, string, lsp.Range
               local action, uri, range = unpack(command.arguments)
@@ -344,7 +335,7 @@ return {
                 end)
               end)
             end
-          end, "vtsls")
+          end)
           -- copy typescript settings to javascript
           opts.settings.javascript =
             vim.tbl_deep_extend("force", {}, opts.settings.typescript, opts.settings.javascript or {})
@@ -363,14 +354,16 @@ return {
   },
   {
     "stevearc/conform.nvim",
-    opts = function(_, opts)
-      local js_format = { "biome", lsp_format = "first" }
-      opts.formatters_by_ft = opts.formatters_by_ft or {}
-      opts.formatters_by_ft.javascript = js_format
-      opts.formatters_by_ft.javascriptreact = js_format
-      opts.formatters_by_ft.typescript = js_format
-      opts.formatters_by_ft.typescriptreact = js_format
-    end,
+    ---@class ConformOpts
+    opts = {
+      ---@type table<string, conform.FormatterUnit[]>
+      formatters_by_ft = {
+        javascript = { "biome", lsp_format = "first" },
+        javascriptreact = { "biome", lsp_format = "first" },
+        typescript = { "biome", lsp_format = "first" },
+        typescriptreact = { "biome", lsp_format = "first" },
+      },
+    },
   },
   -- Filetype icons
   {

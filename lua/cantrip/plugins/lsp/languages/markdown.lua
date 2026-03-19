@@ -1,14 +1,12 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, {
-          "markdown",
-          "markdown_inline",
-        })
-      end
-    end,
+    opts = {
+      ensure_installed = {
+        "markdown",
+        "markdown_inline",
+      },
+    },
     init = function()
       vim.treesitter.language.register("markdown", "mdx")
     end,
@@ -22,11 +20,23 @@ return {
   },
   { "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
   {
+    "stevearc/conform.nvim",
+    ---@class ConformOpts
+    opts = {
+      ---@type table<string, conform.FormatterUnit[]>
+      formatters_by_ft = {
+        markdown = { "markdownlint-cli2", "mdslw", "cbfmt", lsp_format = "first" },
+      },
+    },
+  },
+  {
     "MeanderingProgrammer/render-markdown.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.icons" },
     ---@module 'render-markdown'
     ---@type render.md.UserConfig
     opts = {
+      anti_conceal = { enabled = false },
+      file_types = { "markdown", "opencode_output" },
       completions = { lsp = { enabled = true }, blink = { enabled = true } },
       code = {
         sign = false,
@@ -42,21 +52,20 @@ return {
       },
     },
     config = true,
-    ft = "markdown",
+    ft = { "markdown", "Avante", "copilot-chat", "opencode_output" },
   },
   {
-    "williamboman/mason.nvim",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, {
-          "markdownlint-cli2",
-          "cbfmt",
-          "marksman",
-          "mdslw",
-          "proselint",
-          "vale-ls",
-        })
-      end
-    end,
+    "mason-org/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "markdownlint-cli2",
+        "cbfmt",
+        "marksman",
+        "actionlint",
+        "mdslw",
+        "proselint",
+        "vale-ls",
+      },
+    },
   },
 }

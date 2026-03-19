@@ -3,7 +3,7 @@ return {
     "wuz/lackluster.nvim",
     lazy = false,
     priority = 1000,
-    opts = function(opts)
+    opts = function()
       local lackluster = require("lackluster")
       local color = lackluster.color -- blue, green, red, orange, black, lack, luster, gray1-9
       return {
